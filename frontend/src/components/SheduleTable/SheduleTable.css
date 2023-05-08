@@ -1,0 +1,76 @@
+.shedule-table {
+  margin: 0 auto;
+  width: 100%;
+  padding-bottom: 100px;
+  overflow: auto;
+}
+
+.table {
+  /* min-width: 300px; */
+  margin-top: 30px;
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 2px;
+}
+
+td {
+  padding: 10px;
+}
+
+thead {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 20px;
+  text-align: center;
+  color: #000000;
+  background: rgba(237, 238, 240, 0.5);
+}
+
+.table-tr {
+  border: 1px solid #cccccc;
+}
+
+.table-td {
+  border: 1px solid #cccccc;
+}
+
+tbody tr {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 15px;
+  color: #000000;
+}
+
+li:not(:last-child) {
+  margin-bottom: 5px;
+}
+
+.shedule_card_container {
+  display: flex;
+  margin-top: 20px;
+}
+
+.number_of_lesson {
+  width: 160px;
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #cccccc;
+}
+
+.table-tr2 {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #cccccc;
+}
+
+.table-td2 {
+  width: 160px;
+
+  border: 1px solid #cccccc;
+}
+
+.number_of_lesson_title {}

@@ -1,0 +1,26 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 60px 54px 20px;
+  background-color: #fff;
+}
+.footer-title {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  position: relative;
+  color: #000000;
+}
+.footer-title::after {
+  content: "";
+  position: absolute;
+  left: calc(0px - 54px);
+  top: -20px;
+  height: 1px;
+  width: calc(100% + 108px);
+  background-color: #cccccc;
+}

@@ -1,0 +1,104 @@
+.folder_row{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start; 
+}
+.button_delete {
+    transition: all 0.4s ease-in;
+    
+    background: rgb(54, 52, 52);
+    color: rgb(255, 255, 255);
+    width: 100%;
+    outline: none;
+    height: 31px;
+    font-weight: 700;
+    border-radius: 30px;
+    font-size: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    
+  }
+
+
+.button_delete:hover {
+    background-color: rgb(255, 0, 0);
+  }
+
+.button_delete_active {
+    transition: all 0.4s ease-in;
+    background-color: white;
+    color: #233554;
+    
+    width: 100%;
+    outline: none;
+    height: 31px;
+    font-weight: 700;
+    border-radius: 5px;
+    font-size: 15px;
+    
+    transition: all 0.5s ease;
+  }
+/* .folderBlock{
+    background-color: aquamarine;
+} */
+.ffff{
+  padding-left: 30px;
+ 
+}
+.folder_container{
+  background-color: rgb(54, 52, 52);
+  color: white;
+  width: 200px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top:10px ;
+  padding-bottom :10px ;
+  border-radius: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.selected{
+  background-color: rgb(67, 58, 190);
+  width: 200px;
+  padding-right: 10px;
+  padding-left: 10px;
+  padding-top:10px ;
+  padding-bottom :10px ;
+  border-radius: 20px;
+}
+.folder_container:hover {
+  background-color: rgb(67, 58, 190);
+}
+.folder_name{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.file_block{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.file_block_components{
+  padding-left: 10px;
+}
+.folder_block_component{
+  padding-left: 10px;
+}
+.folder_create_block{
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+.createFolderBlock{
+ 
+}
+.create_folder_block_component{
+width: 400px;
+}
+.Lexa{padding-left: 50px;}

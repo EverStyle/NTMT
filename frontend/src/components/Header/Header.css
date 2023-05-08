@@ -1,0 +1,59 @@
+.header,
+.user,
+.logout,
+.user-profile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.logo-img{
+  width: 200px;
+}
+
+.header {
+  padding: 20px;
+}
+.user-icon,
+.logout-icon {
+  margin-right: 10px;
+}
+.logout {
+  position: relative;
+  padding-left: 20px;
+  margin-left: 20px;
+}
+.logout::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 1px;
+  height: calc(100% + 30px);
+  background: rgba(162, 162, 184, 0.3);
+}
+.user {
+  padding: 15px 20px;
+  background: rgba(237, 238, 240, 0.5);
+  border: 1px solid rgba(162, 162, 184, 0.3);
+  box-sizing: border-box;
+  border-radius: 16px;
+}
+.user-profile,
+.logout {
+  cursor: pointer;
+}
+@media (max-width: 770px) {
+  .btn-logout,
+  .user-fio,
+  .user-group {
+    display: none;
+  }
+  .user-icon,
+  .logout-icon {
+    margin-right: 0px;
+  }
+}
+@media (max-width: 400px) {
+  .logo-img {
+    width: 120px;
+  }
+}

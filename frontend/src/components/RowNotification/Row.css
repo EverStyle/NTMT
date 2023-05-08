@@ -1,0 +1,50 @@
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  position: relative;
+}
+.row-n::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: calc(0px - 25px);
+  width: calc(100% + 50px);
+  height: 1px;
+  background: rgba(162, 162, 184, 0.3);
+}
+.row-icon {
+  margin-right: 20px;
+}
+.row-info {
+  margin-right: 40px;
+}
+.row-add {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #000000;
+}
+.row-date {
+  font-weight: 400;
+  font-size: 10px;
+  line-height: 12px;
+  display: flex;
+  align-items: flex-end;
+  color: rgba(0, 0, 0, 0.7);
+  margin-top: 5px;
+}
+.row-description {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 20px;
+  color: #000000;
+}
+
+@media (max-width:620px) {
+    .row-description{
+        margin-top: 5px;
+    }
+}

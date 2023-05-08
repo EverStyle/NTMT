@@ -1,0 +1,29 @@
+{
+    "message": {
+        "id": "1",
+        "name": "Задание",
+        "files": [],
+        "folders": [
+            {
+                "id": "4",
+                "name": "myfile",
+                "files": [],
+                "folders": [
+                    {
+                        "id": "6",
+                        "name": "myfile1",
+                        "files": [],
+                        "folders": []
+                    }
+                ]
+            },
+            {
+                "id": "5",
+                "name": "myfile",
+                "files": [],
+                "folders": []
+            }
+        ]
+    },
+    "statusCode": 200
+}
