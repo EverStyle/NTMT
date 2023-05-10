@@ -100,10 +100,10 @@ function AdminFileScreen() {
                 <LessonBlock></LessonBlock>
             </div>
 
-            <div className="file_container">
+            {/* <div className="file_container">
                 <div className='title'>Мои файлы</div>
                 <MyFileBlock></MyFileBlock>
-            </div>
+            </div> */}
 
             <div className="file_container">
                 <div className='title'>Все файлы</div>
