@@ -1,104 +1,184 @@
-.folder_row{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start; 
+.folder_row {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
-.button_delete {
-    transition: all 0.4s ease-in;
-    
-    background: rgb(54, 52, 52);
-    color: rgb(255, 255, 255);
-    width: 100%;
-    outline: none;
-    height: 31px;
-    font-weight: 700;
-    border-radius: 30px;
-    font-size: 15px;
-    padding-left: 10px;
-    padding-right: 10px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    
-  }
 
+.button_delete {
+  transition: all 0.4s ease-in;
+  background: rgb(255, 135, 135);
+  color: rgb(255, 255, 255);
+  width: 350px;
+  outline: none;
+  height: 31px;
+  font-weight: 700;
+  border-radius: 30px;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+}
+
+.button_delete_file {
+  transition: all 0.4s ease-in;
+  background: rgb(255, 124, 124);
+  color: rgb(255, 255, 255);
+  width: 90px;
+  outline: none;
+  height: 31px;
+  font-weight: 700;
+  border-radius: 30px;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.button_delete_file:hover {
+  background-color: rgb(255, 0, 0);
+}
+
+.button_upload {
+  transition: all 0.4s ease-in;
+  background: rgb(111, 173, 255);
+  color: rgb(255, 255, 255);
+  width: 90px;
+  outline: none;
+  height: 31px;
+  font-weight: 700;
+  border-radius: 30px;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: 10px;
+}
+
+.button_upload:hover {
+  background-color: rgb(0, 17, 255);
+}
 
 .button_delete:hover {
-    background-color: rgb(255, 0, 0);
-  }
+  background-color: rgb(255, 0, 0);
+}
 
 .button_delete_active {
-    transition: all 0.4s ease-in;
-    background-color: white;
-    color: #233554;
-    
-    width: 100%;
-    outline: none;
-    height: 31px;
-    font-weight: 700;
-    border-radius: 5px;
-    font-size: 15px;
-    
-    transition: all 0.5s ease;
-  }
+  transition: all 0.4s ease-in;
+  background-color: white;
+  color: #233554;
+
+  width: 100%;
+  outline: none;
+  height: 31px;
+  font-weight: 700;
+  border-radius: 5px;
+  font-size: 15px;
+
+  transition: all 0.5s ease;
+}
+
+.button_create{
+  transition: all 0.4s ease-in;
+  background: rgb(111, 173, 255);
+  color: rgb(255, 255, 255);
+  width: 350px;
+  outline: none;
+  height: 31px;
+  font-weight: 700;
+  border-radius: 30px;
+  font-size: 15px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+.button_create:hover {
+  background-color: rgb(0, 17, 255);
+}
+
 /* .folderBlock{
     background-color: aquamarine;
 } */
-.ffff{
+.ffff {
   padding-left: 30px;
- 
+
 }
-.folder_container{
+
+.folder_container {
   background-color: rgb(54, 52, 52);
   color: white;
   width: 200px;
   padding-right: 10px;
   padding-left: 10px;
-  padding-top:10px ;
-  padding-bottom :10px ;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-radius: 20px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
-.selected{
+
+.selected {
   background-color: rgb(67, 58, 190);
   width: 200px;
   padding-right: 10px;
   padding-left: 10px;
-  padding-top:10px ;
-  padding-bottom :10px ;
+  padding-top: 10px;
+  padding-bottom: 10px;
   border-radius: 20px;
 }
+
 .folder_container:hover {
   background-color: rgb(67, 58, 190);
 }
-.folder_name{
+
+.folder_name {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.file_block{
+
+.file_block {
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  padding-bottom: 10px;
+
   margin-top: 10px;
   margin-bottom: 10px;
+  border-bottom: 2px solid rgb(0, 0, 0);
 }
-.file_block_components{
+
+.file_block_components {
   padding-left: 10px;
 }
-.folder_block_component{
+
+.folder_block_component {
   padding-left: 10px;
 }
-.folder_create_block{
+
+.folder_create_block {
   display: flex;
   justify-content: flex-start;
   align-items: center;
 }
-.createFolderBlock{
- 
+
+.createFolderBlock {
+  padding-top: 20px;
+  margin-bottom: 20px;
 }
-.create_folder_block_component{
-width: 400px;
+
+.create_folder_block_component {
+  width: 400px;
 }
-.Lexa{padding-left: 50px;}
+
+.Lexa {
+  padding-left: 50px;
+}
+
+.create_input {
+  width: 100%;
+  border: 2px solid #000000;
+  border-radius: 5px;
+}

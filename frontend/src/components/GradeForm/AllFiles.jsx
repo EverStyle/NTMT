@@ -5,6 +5,7 @@ import './LessonRow.css';
 import file_downloader from '../../scripts/file_downloader';
 import { useEffect } from "react";
 import apiFiles from "../../api/files";
+import apiSchedule from '../../api/schedule';
 import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
 import MyFileBlock from './MyFileBlock';
@@ -13,10 +14,6 @@ import { Button } from '@mui/material';
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
     const [isOpen, setIsOpen] = useState(false);
-    console.log(id)
-    console.log(name)
-    console.log(files)
-    console.log(folders)
 
 
     const handleClick = (event) => {
@@ -104,7 +101,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                     {files.length > 0 && (
 
                         <ul>
-                            {files.map(file => (
+                            {files?.map(file => (
                                 <li key={file.id}>
                                     <div className='file_block'>
                                         <div className='file_block_components'>
@@ -126,7 +123,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
 
                     )}
 
-                    {folders.map((folder) => (
+                    {folders?.map((folder) => (
                         <Folder
                             key={folder.id}
                             {...folder}
@@ -258,8 +255,9 @@ function AllRow() {
         };
         try {
             const response = await apiFiles.getAllList(request);
-            setFiles(response.data);
-
+            setFiles(response.data.message);
+            const response2 = await apiSchedule.groups();
+            setGroups(response2.data.message);
 
         } catch (error) {
             console.error(error);
@@ -277,29 +275,69 @@ function AllRow() {
         return () => clearTimeout(delay);
     }, []);
 
+    const [certainFiles, setCertainFiles] = useState([]);
+    const [students, setStudents] = useState([]);
+    const [newStudents, setNewStudents] = useState(0);
+    const [newStudents2, setNewStudents2] = useState(0);
+    const [groups, setGroups] = useState([]);
+    const [newGroups, setNewGroups] = useState([]);
 
 
-    const njes = {
-        "message": [
-            {
-                "id": "3",
-                "name": "student",
-                "files": [],
-                "folders": []
-            },
-            {
-                "id": "4",
-                "name": "Бронникова Виктория",
-                "files": [],
-                "folders": []
-            }
-        ],
-        "statusCode": 200
+
+    const [fileList, setFileList] = useState([]);
+
+    const fetchStudents = async (groupId) => {
+        try {
+            const response = await apiSchedule.certainGroups(groupId);
+            console.log(response.data.message)
+            setStudents(response.data.message);
+        } catch (error) {
+            console.error(error);
+            console.error('ERROR GET STUDENTS');
+            toast.error(
+                'Произошла ошибка при получении студентов. Попробуйте позже или обратитесь в техподдержку'
+            );
+        }
     };
 
-    console.log(files)
+    const handleGroupChange = (e) => {
+        const groupId = e.target.value;
+        setNewGroups(groupId);
 
-    console.log(njes)
+        if (groupId === "") {
+            setFiles([]);
+            setStudents([]); // Clear the students array when the default value is selected
+
+        } else {
+            fetchStudents(groupId);
+            // setFiles([]); // Send an empty array when the group changes
+        }
+    };
+
+    const handleStudentChange = (e) => {
+        const studentId = e.target.value;
+        setNewStudents2(studentId);
+        filesFilter(studentId)
+    };
+
+    const filesFilter = async (userId) => {
+        if (!userId) {
+            // No userId provided, set all folders empty
+            setFiles([]);
+        } else {
+            // Filter folders based on userId
+            const request = {
+                group: ""
+            };
+            const response = await apiFiles.getAllList(request);
+            console.log(response)
+            setFiles(response.data.message);
+
+            const filteredFolders = response.data.message.filter((folder) => folder.userId === userId);
+            console.log(filteredFolders)
+            setFiles(filteredFolders);
+        }
+    };
 
     const validateFolderName = (folderName) => {
         const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
@@ -449,6 +487,7 @@ function AllRow() {
         setFiles(newData);
     };
 
+    console.log(files)
     return (
         <>
 
@@ -457,10 +496,10 @@ function AllRow() {
 
                     <div className='createFolderBlock'>
                         <div className='create_folder_block_component'>
-                            <input type="text" placeholder='Введите название папки' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
+                            <input type="text" placeholder='Введите название папки' className='create_input' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
                         </div>
                         <div className='create_folder_block_component'>
-                            <button type='button' className='button_delete' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
+                            <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
                         </div>
 
                         {/* <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button> */}
@@ -497,9 +536,31 @@ function AllRow() {
 
 
 
-            <div>Current folder ID: {currentFolderId}</div>
-            <div>Ваша текущая папка: {currentFolderName}</div>
+            {/* <div>Текущий номер папки: {currentFolderId}</div> */}
+      <div>Название текущей папки: {currentFolderName}</div>
 
+            <div>
+                <select className="select_block" value={newGroups} onChange={handleGroupChange}>
+                    <option value="">Выберите группу</option>
+                    {groups.map((grp) => (
+                        <option key={grp.id} value={grp.id}>
+                            {grp.code} {grp.groupName} {grp.type}
+                        </option>
+                    ))}
+                </select>
+
+                <select className="select_block" value={newStudents2} onChange={(e) => {
+                    setNewStudents2(e.target.value);
+                    handleStudentChange(e); // Call the function here
+                }}>
+                    <option value={0}>Выберите студента</option>
+                    {students.map((std) => (
+                        <option key={std.id} value={std.id}>
+                            {std.fio}
+                        </option>
+                    ))}
+                </select>
+            </div>
 
             {/* <div className="folder_row">
         <Folder {...files} onDataChanged={handleDataChange} path={files.id} onFolderSelect={handleFolderSelect} onFolderName={handleFolderSelectName} selectedFolderId={currentFolderId} depth={1} />
@@ -514,10 +575,20 @@ function AllRow() {
             <div>
                 {showFolders && (
                     <div className="folder_row">
-                        {files.message.map((folder) => (
-                            <Folder key={folder.id} {...folder} onDataChanged={handleDataChange} path={files.id} onFolderSelect={handleFolderSelect} onFolderName={handleFolderSelectName} selectedFolderId={currentFolderId} depth={1} />
-                        ))}
-                    </div>
+                    {Array.isArray(files) &&
+                      files.map((folder) => (
+                        <Folder
+                          key={folder.id}
+                          {...folder}
+                          onDataChanged={handleDataChange}
+                          path={files.id}
+                          onFolderSelect={handleFolderSelect}
+                          onFolderName={handleFolderSelectName}
+                          selectedFolderId={currentFolderId}
+                          depth={1}
+                        />
+                      ))}
+                  </div>
                 )}
             </div>
 

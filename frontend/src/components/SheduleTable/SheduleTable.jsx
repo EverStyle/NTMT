@@ -7,6 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ru from 'date-fns/locale/ru';
 import { ToastContainer, toast } from "react-toastify";
+import UploadIcon from '@mui/icons-material/Upload';
 
 function SheduleTable() {
   const [lessons, setLessons] = useState([]);
@@ -18,10 +19,18 @@ function SheduleTable() {
   const [sertainGroups, setsertainGroups] = useState({});
 
   const [switchSchedule, setswitchSchedule] = useState(false);
- 
+  const [file, setFile] = useState('');
+
   const handleChange = (event) => {
-    setswitchSchedule(true)
-    setSelectedGroup(event.target.value);
+    const selectedGroup = event.target.value;
+    if (selectedGroup == "retShedule") {
+      setswitchSchedule(false)
+      setSelectedGroup(event.target.value);
+    } else {
+      setswitchSchedule(true)
+      setSelectedGroup(event.target.value);
+    }
+
   };
 
   const handlscheduleChange = (event) => {
@@ -48,18 +57,6 @@ function SheduleTable() {
   useEffect(async () => {
     try {
 
-      // let request
-      // if (!trackPress) {
-      //   request = {
-      //     date: formattedDate,
-      //     // group: selectedGroup
-      //   };
-      // } else {
-      //   request = {
-      //     date: formattedDate,
-      //     group: selectedGroup
-      //   };
-      // }
       const request = {
         date: formattedDate,
         // group: selectedGroup
@@ -84,70 +81,182 @@ function SheduleTable() {
       toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
     }
 
-  }, [startDate, selectedGroup,switchSchedule]);
+  }, [startDate, selectedGroup, switchSchedule, file]);
 
   // console.log(sertainGroups)
   // console.log(typeof sertainGroups)
   // console.log(Array.isArray(sertainGroups))
 
+  async function uploadSchedule(file) {
 
+    const fileTypes = {
+      'txt': 1,
+      'xlsx': 2,
+      'docx': 3,
+    };
+    const request = new FormData();
+    request.append('files', file[0])
+    request.append('fileType', fileTypes[file[0].name.split('.').pop()])
+
+    const request2 = {
+    };
+
+    try {
+      const response = await apiSchedule.sendSched(request);
+      const data = response.data.message[0];
+
+      const response2 = await apiSchedule.get(request2);
+      console.log(data)
+      toast.success("Загрузка успешна, обновите дату");
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR UPLOAD FILES');
+      toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }
+  console.log(sertainGroups.schedule)
+  console.log(lessons)
   return (
     <div className='shedule-table'>
 
       <div className="date_block" >
         <div className="date_container">
-          Выберите дату
+
+          <div className="subblock_text">
+            Выберите дату
+          </div>
+          <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
         </div>
         <div className="date_container">
-          <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
           {/* <button onClick={() => setStartDate(new Date())}>Reset</button> */}
           <div>
-            Выберите группу
-            <div>
-              <select value={selectedGroup} onChange={handleChange}>
-                {
-                  allGroups?.map(groups => (
-                    <option key={groups.id} value={groups.code}>{groups.groupName} ({groups.code})</option>
-                  ))
-                }
+
+            <div className="subblock_text">
+              Выберите группу
+            </div>
+            <div >
+              <select className="select_block" value={selectedGroup} onChange={handleChange}>
+                <option value="retShedule">Рассписание всех групп</option>
+                {allGroups?.map(groups => (
+                  <option key={groups.id} value={groups.code}>{groups.groupName} ({groups.code})</option>
+                ))}
               </select>
               {/* {selectedGroup && <p>You selected {selectedGroup}</p>} */}
             </div>
           </div>
         </div>
+
+        <div className="lexa">
+          <div
+            style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
+            className="file-link"
+          >
+            <label htmlFor="file2" style={{ position: 'absolute', opacity: '0', width: '100%', height: '100%', cursor: 'pointer' }}></label>
+            <input
+              value={file}
+              type="file"
+              id="file2"
+              //Важно id html и id input изменить и все работает
+              style={{ position: 'absolute', display: 'none', width: '100%', height: '100%' }}
+              onChange={(e) => uploadSchedule(e.target.files)}
+            />
+            <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
+            <p style={{ textAlign: 'center' }}>Загрузить расписание</p>
+          </div>
+        </div>
+
       </div>
 
 
-      <div className='lessons_container'>
-        {/* <div>
-          {lessons.date}
-        </div> */}
-        {/* <div>
-          {lessons.day_of_the_week}
-        </div> */}
 
-        <div>
+      <div className='lessons_container'>
+
+
+
+        {/* <div className="sub_text_schedule">
+          <div>
+            Выбранная дата {lessons.date}
+          </div>
+          <div>
+            День недели {lessons.day_of_the_week}
+          </div>
+        </div> */}
+        {lessons.length == 0 ? <div className="subblock_text">Не выбранна дата или нет данных </div> : <div className="sub_text_schedule">
+          <div className="subblock_text">
+            Выбранная дата / {lessons.date}
+          </div>
+          <div className="subblock_text">
+            День недели / {lessons.day_of_the_week}
+          </div>
+        </div>}
+
+
+
+        <div className="all_schedule_block">
+
+          <div className="heading_shedule">
+            <div className="rec_shedule"> Номер группы</div>
+            <div className="rec_shedule"> Номер пары</div>
+            <div className="rec_shedule"> Предмет</div>
+            <div className="rec_shedule"> Аудитория</div>
+            <div className="rec_shedule">Преподаватель</div>
+          </div>
           {
-            !switchSchedule ? lessons.groups?.map(lesson => (
-              <SheduleCard {...lesson} />
-            )) :
+            !switchSchedule ? (
+              lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
+            ) : lessons.length === 0 ? (
+              <div className="subblock_text">Нет данных</div>
+            ) : (
               <div>
-                <h2>{sertainGroups && sertainGroups.code}</h2>
-                {typeof sertainGroups === 'object' ? (
-                  <ul>
-                    <button onClick={handlscheduleChange}>
-                      Вернуть все расписание
-                    </button>
-                    {sertainGroups?.schedule && Object.entries(sertainGroups.schedule).map(([key, value]) => (
-                      <li key={key}>
-                        {value.subject} ({value.fo}) - {value.fio}
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div>{sertainGroups}</div>
-                )}
+                <div className="certain_schedule">
+                  {typeof sertainGroups === 'object' ? (
+                    <ul className="custom-ul">
+                      {!sertainGroups ? (
+                        <div className="heading_shedule">
+                          <div className="rec_shedule"> Номер группы</div>
+                          <div className="rec_shedule"> Номер пары</div>
+                          <div className="rec_shedule"> Предмет</div>
+                          <div className="rec_shedule"> Аудитория</div>
+                          <div className="rec_shedule">Преподаватель</div>
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
+
+                      <div className="all_certain_schedule_block">
+                        <div className="group_number">
+                          {sertainGroups && sertainGroups.code}
+                        </div>
+
+                        <div className="all_certain_schedule_subblock">
+                          {sertainGroups?.schedule &&
+                            Object.entries(sertainGroups.schedule).map(
+                              ([key, value]) => (
+                                <li className="custom-li" key={key}>
+                                  {value.subject ? (
+                                    <>
+                                      <div className="rec_shedule">{key}</div>
+                                      <div className="rec_shedule">{value.subject}</div>
+                                      <div className="rec_shedule">({value.fo})</div>
+                                      <div className="rec_shedule">{value.fio}</div>
+                                    </>
+                                  ) : (
+                                    <div className="no_lessons">
+                                      Номер пары {key} / Нет занятий
+                                    </div>
+                                  )}
+                                </li>
+                              )
+                            )}
+                        </div>
+                      </div>
+                    </ul>
+                  ) : (
+                    <div>{sertainGroups}</div>
+                  )}
+                </div>
               </div>
+            )
           }
         </div>
       </div>

@@ -8,6 +8,7 @@ import UploadIcon from '@mui/icons-material/Upload';
 import LessonBlock from "../components/GradeForm/LessonBlock";
 import './style/FileScreen.css';
 import MyFileBlock from "../components/GradeForm/MyFileBlock";
+import StudentsFilesLessons from "../components/GradeForm/StudentsFilesLessons";
 
 
 function FileScreen() {
@@ -97,7 +98,7 @@ function FileScreen() {
       </div> */}
             <div className="file_container">
                 <div className='title'>Задания</div>
-                <LessonBlock></LessonBlock>
+                <StudentsFilesLessons></StudentsFilesLessons>
             </div>
 
             <div className="file_container">

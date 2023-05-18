@@ -1,4 +1,13 @@
 .file_container{
     border: 2px solid #000000;
     border-radius: 20px;
+    margin-top: 3rem;
+    padding-bottom: 3rem;
+}
+.title{
+    padding-left: 30px;
+    padding-top: 20px;
+}
+.two_blocks{
+    
 }

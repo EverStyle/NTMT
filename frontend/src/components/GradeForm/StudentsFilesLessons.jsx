@@ -14,12 +14,6 @@ import { Button } from '@mui/material';
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
   const [isOpen, setIsOpen] = useState(false);
-
-
-  console.log(files)
-  console.log()
-
-
   const handleClick = (event) => {
     if (event.detail === 1) {
       if (isOpen) {
@@ -118,7 +112,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                     </div>
 
                     <div className='file_block_components'>
-                      <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
+                     
                       {file.id && (
                         <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
                       )}
@@ -221,7 +215,6 @@ function LessonRow() {
   const [allfiles, setAllFiles] = useState({});
 
   // ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
-
   // async function fetchFiles() {
   //   const request = {
   //     folderId: 1
@@ -244,7 +237,6 @@ function LessonRow() {
   // useEffect(() => {
   //   console.log(files);
   // }, [files]);
-  
   // ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
   useEffect(async () => {
@@ -281,6 +273,7 @@ function LessonRow() {
   }
 
   async function createFolderLessons(newFolderNameLesson, nextFolderid) {
+    //типа создание папки в папке задание 
     const request = {
       name: newFolderNameLesson,
       folderId: nextFolderid
@@ -288,6 +281,7 @@ function LessonRow() {
     const request2 = {
       folderId: 1
     };
+
     try {
       validateFolderName(newFolderNameLesson);
       const response = await apiFiles.newFolderLesson(request);
@@ -295,7 +289,17 @@ function LessonRow() {
 
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
-    
+      // console.log(data)
+      // setFiles(prevFiles => {
+      //   const newFolder = {
+      //     id: data.id,
+      //     name: data.name,
+      //     files: [],
+      //     folders: []
+      //   };
+      //   return { ...prevFiles, folders: [...prevFiles.folders, newFolder] };
+      // });
+
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -349,6 +353,11 @@ function LessonRow() {
       const response = await apiFiles.deleteFolderLessonApi(request);
       const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
 
+      // create a new object with the modified state
+      // const updatedFiles = {...files, folders: files.folders.filter(folder => folder.id !== request)};
+
+      // update the state using the setter function
+      // setFiles(updatedFiles);
 
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
@@ -385,7 +394,7 @@ function LessonRow() {
       //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
       // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
       //ВАЖНО ЗАПОМНИ
-
+      console.log(data)
     } catch (error) {
       console.error(error);
       console.error('ERROR UPLOAD FILES');
@@ -403,15 +412,15 @@ function LessonRow() {
       <div className='folder_create_block'>
         <div>
 
-          <div className='createFolderBlock'>
+          {/* <div className='createFolderBlock'>
             <div className='create_folder_block_component'>
-              <input type="text" placeholder='Введите название папки' className='create_input' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
+              <input type="text" placeholder='Введите название папки' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
             </div>
             <div className='create_folder_block_component'>
-              <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
+              <button type='button' className='button_delete' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
             </div>
 
-            {/* <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button> */}
+            <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button>
             <div className='create_folder_block_component'>
               <button className='button_delete' onClick={(event) => {
                 if (event.detail === 1) {
@@ -420,9 +429,9 @@ function LessonRow() {
               }}>Удалить выделенную папку</button>
             </div>
 
-          </div>
+          </div> */}
         </div>
-        <div className='Lexa'>
+        {/* <div className='Lexa'>
           <div
             style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
             className="file-link"
@@ -439,14 +448,11 @@ function LessonRow() {
             <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
             <p style={{ textAlign: 'center' }}>Загрузить файлы</p>
           </div>
-        </div>
+        </div> */}
       </div>
 
 
-
-
-      {/* <div>Текущий номер папки: {currentFolderId}</div> */}
-      <div>Название текущей папки: {currentFolderName}</div>
+      <div>Ваша текущая папка: {currentFolderName}</div>
 
 
       <div className="folder_row">
@@ -457,7 +463,7 @@ function LessonRow() {
   );
 }
 
-function LessonBlock() {
+function StudentsFilesLessons() {
 
   return (
     <div className='ffff'>
@@ -466,4 +472,4 @@ function LessonBlock() {
 
   )
 }
-export default LessonBlock;
+export default StudentsFilesLessons;

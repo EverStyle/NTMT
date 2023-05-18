@@ -5,72 +5,117 @@
   overflow: auto;
 }
 
-.table {
-  /* min-width: 300px; */
-  margin-top: 30px;
-  width: 100%;
-  border-collapse: collapse;
-  border-spacing: 2px;
-}
-
-td {
-  padding: 10px;
-}
-
-thead {
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 20px;
-  text-align: center;
-  color: #000000;
-  background: rgba(237, 238, 240, 0.5);
-}
-
-.table-tr {
-  border: 1px solid #cccccc;
-}
-
-.table-td {
-  border: 1px solid #cccccc;
-}
-
-tbody tr {
-  font-family: "Montserrat";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  line-height: 15px;
-  color: #000000;
-}
-
-li:not(:last-child) {
-  margin-bottom: 5px;
-}
 
 .shedule_card_container {
   display: flex;
   margin-top: 20px;
 }
 
-.number_of_lesson {
-  width: 160px;
+.date_container {
+  padding: 30px;
+  display: inline-block;
+  position: relative;
+}
+
+.date_container input {
+  appearance: none;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #555;
+  cursor: pointer;
+  display: block;
+  font-size: 14px;
+  height: 32px;
+  padding: 0 16px;
+  text-align: left;
+  width: 100%;
+}
+
+.date_container input:focus {
+  outline: none;
+  border-color: #79baff;
+}
+
+.date_container button {
+  background-color: #85b6ff;
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  cursor: pointer;
+}
+
+.date_container button:hover {
+  background-color: aquamarine;
+}
+
+.lexa {}
+
+.date_block {
+  border: 1px solid black;
+  padding-bottom: 20px;
+  border-radius: 20px;
+  align-items: center;
   display: flex;
-  justify-content: space-between;
-  border: 1px solid #cccccc;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.select_block{
+  border: 1px solid black;
+  border-radius: 20px;
+}
+.custom-ul {
+  /* list-style-type: none;
+  padding: 0; */
 }
 
-.table-tr2 {
+.custom-li {
+  border: 2px solid black;
+  border-radius: 0px 20px 20px 0px;
+  padding: 10px;
   display: flex;
-  justify-content: space-between;
-  border: 1px solid #cccccc;
+  align-items: flex-start;
+  position: relative;
 }
 
-.table-td2 {
-  width: 160px;
 
-  border: 1px solid #cccccc;
+
+
+/* li.no_lessons_block {
+ background-color: #79baff;
+} */
+
+.heading_shedule {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  font-weight: bold;
+  border-bottom: 2px solid rgb(0, 0, 0);
+  padding-top: 20px;
+  padding-bottom: 5px;
+  margin-bottom: 30px;
+}
+.rec_shedule {
+  width: 25%;
+}
+.all_certain_schedule_block{
+display: flex;
+}
+.group_number{
+  flex-basis: 20%;
+  border: 2px solid black;
+  border-radius: 20px 00px 00px 20px;
+  padding-left: 1rem;
+  padding-top: 1rem;
+}
+.all_certain_schedule_subblock{
+  flex-basis: 80%;
 }
 
-.number_of_lesson_title {}
+.no_lessons{
+  font-weight: bold;
+}
+
+
+

@@ -7,8 +7,12 @@ import apiAccount from "../../api/account";
 
 function Headers({ setToken, setUser, user }) {
 
+
+  console.log(user)
   useEffect(async () => {
       try {
+
+        
         const response = await apiAccount.info();
         setUser(response.data.message);
       } catch(error) {
@@ -41,7 +45,8 @@ function Headers({ setToken, setUser, user }) {
             <p className='bio'>
               <span className='user-fio'>{ user.fio ? `${user.fio} /` : ''} </span>
               
-              <span className='user-group'>{user.groupName ? user.groupName : userRoles[user.roleId]}</span>
+              {/* <span className='user-group'>{user.groupName ? user.groupName : userRoles[user.roleId]}</span> */}
+              <span className='user-group'>{user.code}</span>
             </p>
           </div>
           <div

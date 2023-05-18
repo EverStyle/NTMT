@@ -95,20 +95,20 @@ function AdminFileScreen() {
               ))}
           </div>
       </div> */}
-            <div className="file_container">
-                <div className='title'>Задания</div>
-                <LessonBlock></LessonBlock>
+
+            <div className="two_blocks">
+                <div className="file_container">
+                    <div className='title'>Задания</div>
+                    <LessonBlock></LessonBlock>
+                </div>
+
+
+                <div className="file_container">
+                    <div className='title'>Все файлы</div>
+                    <AllFiles></AllFiles>
+                </div>
             </div>
 
-            {/* <div className="file_container">
-                <div className='title'>Мои файлы</div>
-                <MyFileBlock></MyFileBlock>
-            </div> */}
-
-            <div className="file_container">
-                <div className='title'>Все файлы</div>
-                <AllFiles></AllFiles>
-            </div>
 
             <ToastContainer
                 position="bottom-left"

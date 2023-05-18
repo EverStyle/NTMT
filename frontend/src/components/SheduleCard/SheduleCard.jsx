@@ -27,39 +27,31 @@ function SheduleCard(props) {
   return (
 
     <div className="card_container">
-      <div className="group_name_block">
+      <div className="group_number">
         {props.code}
       </div>
-      <div >
-        <div className="card_lessons_subblock">
-          <div className="card_number_block">
-            Номер пары
-          </div>
-          <div className="card_name_block">
-            Предмет
-          </div>
-          <div className="card_number_block">
-            Аудитория
-          </div>
-          <div className="card_name_block">
-            Преподаватель
-          </div>
-        </div>
+      <div className="all_certain_schedule_subblock" >
         {arr?.map((lesson, index) => (
-          <div className="card_lessons_subblock">
-            <div className="card_number_block">
-              {index + 1}
-            </div>
-            <div className="card_name_block">
-              {lesson.subject}
-            </div>
-            <div className="card_number_block">
-              {lesson.fo}
-            </div>
-            <div className="card_name_block">
-              {lesson.fio}
-            </div>
-          </div>
+          <li className={`custom-li ${!lesson.subject && 'no_lessons'}`} key={index}>
+            {lesson.subject ? (
+              <>
+                <div className="rec_shedule">
+                  {index + 1}
+                </div>
+                <div className="rec_shedule">
+                  {lesson.subject}
+                </div>
+                <div className="rec_shedule">
+                  {lesson.fo}
+                </div>
+                <div className="rec_shedule">
+                  {lesson.fio}
+                </div>
+              </>
+            ) : (
+              <div>Номер пары {index + 1} / Нет занятий</div>
+            )}
+          </li>
         ))}
       </div>
     </div>
@@ -67,3 +59,39 @@ function SheduleCard(props) {
 }
 
 export default SheduleCard;
+
+{/* <li className="custom-li" key={key}>
+  {value.subject ? (
+    <>
+      <div className="rec_shedule">
+        {key}
+      </div>
+      <div className="rec_shedule">
+        {value.subject}
+      </div>
+      <div className="rec_shedule">
+        ({value.fo})
+      </div>
+      <div className="rec_shedule">
+        {value.fio}
+      </div>
+    </>
+  ) : (
+    <div className="no_lessons"> Номер пары {key} / Нет занятий</div>
+  )}
+</li> */}
+
+ // <div className="card_lessons_subblock">
+          //   <div className="card_number_block">
+          //     {index + 1}
+          //   </div>
+          //   <div className="card_name_block">
+          //     {lesson.subject}
+          //   </div>
+          //   <div className="card_number_block">
+          //     {lesson.fo}
+          //   </div>
+          //   <div className="card_name_block">
+          //     {lesson.fio}
+          //   </div>
+          // </div>
