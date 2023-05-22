@@ -406,7 +406,7 @@ function AdminRecordBook() {
                     {userRecord.map((records) => (
                         <div key={records.id}>
                             <div className="record_student_block">
-                                <div className="rec">{records.groupName}</div>
+                                <div className="rec">{records.subjectName}</div>
                                 <div className="rec">{records.summaryHours}</div>
                                 <div className="rec">{records.endMark}</div>
                                 <div className="rec">{records.date}</div>

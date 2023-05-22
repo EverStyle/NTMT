@@ -120,7 +120,7 @@ function Login({setToken, setUser}) {
 
                                     
 
-                                    <div className="mb-5">
+                                    {/* <div className="mb-5">
                                         <Select
                                             size="small"
                                             value={role}
@@ -130,7 +130,7 @@ function Login({setToken, setUser}) {
                                             <MenuItem value="2">Студент/Преподаватель</MenuItem>
                                             <MenuItem value="1">Родитель</MenuItem>
                                         </Select>
-                                    </div>
+                                    </div> */}
 
                                     <div>
                                         <Button

@@ -71,15 +71,18 @@
 }
 
 .custom-li {
-  border: 2px solid black;
-  border-radius: 0px 20px 20px 0px;
+  /* border: 2px solid black;
+  border-radius: 0px 20px 20px 0px; */
   padding: 10px;
   display: flex;
+  border-bottom: 2px solid black;
   align-items: flex-start;
   position: relative;
 }
 
-
+.custom-li:last-child {
+  border-bottom: none;
+}
 
 
 /* li.no_lessons_block {
@@ -103,7 +106,10 @@
 display: flex;
 }
 .group_number{
+  display: grid;
+  place-items: center;
   flex-basis: 20%;
+  font-size: x-large;
   border: 2px solid black;
   border-radius: 20px 00px 00px 20px;
   padding-left: 1rem;
@@ -111,10 +117,12 @@ display: flex;
 }
 .all_certain_schedule_subblock{
   flex-basis: 80%;
+  border: 2px solid black;
+  border-radius: 0px 20px 20px 0px;
 }
 
 .no_lessons{
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 

@@ -303,7 +303,7 @@ function RecordBookScreen() {
                     {userRecord.map((record) => (
                         <div key={record.id}>
                             <div className="record_student_block">
-                                <div className="rec">{record.groupName}</div>
+                                <div className="rec">{record.subjectName}</div>
                                 <div className="rec">{record.summaryHours}</div>
                                 <div className="rec">{record.endMark}</div>
                                 <div className="rec">
