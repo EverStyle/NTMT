@@ -12,5 +12,4 @@ const apiFiles = {
     getAllList: request => $api.post(`/files/get_student_folders`, request),
     getMyFolder: request => $api.get(`/files/get_my_folder`, request),
 }
-
 export default apiFiles;

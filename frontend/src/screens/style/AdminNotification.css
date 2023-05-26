@@ -4,7 +4,8 @@
     height: auto;
   }
   .input_block{
-   max-width: 400px;
+    width: 300px; /* Adjust the width as needed */
+  height: 100px; /* Adjust the height as needed */
     border: 2px solid #000000;
     border-radius: 5px;
     margin-top: 10px;
@@ -16,11 +17,7 @@
     background-color: rgb(190, 188, 255);
   }
   .stud_select{
-    border: 2px solid #000000;
-    border-radius: 5px;
-    max-width: 500px;
-    margin: 1rem;
-    padding: 3px;
+
     background-color: rgb(255, 255, 255);
     
   }
@@ -29,9 +26,11 @@
     background-color: rgb(162, 156, 255);
   }
   .stud_select.active {
-    background-color: rgb(190, 137, 58);
+    background-color: rgb(109, 143, 253);
   }
   .create_notifiaction_block{
+    display: flex;
+    justify-content: space-around;
     border: 2px solid #000000;
     border-radius: 20px;
     padding: 20px;

@@ -96,17 +96,21 @@ function FileScreen() {
               ))}
           </div>
       </div> */}
-            <div className="file_container">
-                <div className='title'>Задания</div>
-                <StudentsFilesLessons></StudentsFilesLessons>
+
+
+            <div className="two_blocks">
+                <div className="file_container">
+                    <div className='title'>Задания</div>
+                    <StudentsFilesLessons></StudentsFilesLessons>
+                </div>
+
+
+                <div className="file_container">
+                    <div className='title'>Мои файлы</div>
+                    <MyFileBlock></MyFileBlock>
+                </div>
             </div>
 
-            <div className="file_container">
-                <div className='title'>Мои файлы</div>
-                <MyFileBlock></MyFileBlock>
-            </div>
-
-          
 
             <ToastContainer
                 position="bottom-left"

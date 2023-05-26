@@ -9,8 +9,6 @@ import { Link } from "react-router-dom";
 function CardNews(props) {
   const path = window.location.pathname.substring(1);
   const [activeCard, setActiveCard] = useState(path);
-
-
   {
     switch (parseInt(props.cnrole)) {
       case 1:

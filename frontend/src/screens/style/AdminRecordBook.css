@@ -4,14 +4,6 @@
     padding: 20px;
 }
 
-.record_student_block {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    border-bottom: 1px solid rgb(0, 0, 0);
-    padding-top: 20px;
-    padding-bottom: 5px;
-}
 
 
 .record_buttons {
@@ -30,16 +22,43 @@
 }
 
 .heading {
-    display: flex;
-    width: 100%;
+    /* display: flex;
     justify-content: space-around;
-    font-weight: bold;
+    
     border-bottom: 2px solid rgb(0, 0, 0);
+    padding-top: 20px;
+    padding-bottom: 5px; */
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    width: 100%;
+    border-bottom: 2px solid rgb(0, 0, 0);
+    font-weight: bold;
     padding-top: 20px;
     padding-bottom: 5px;
 }
+
+.record_student_block {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 10px;
+    width: 100%;
+    border-bottom: 1px solid rgb(0, 0, 0);
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
 .rec {
-    width: 20%;
+    flex-shrink: 0;
+}
+
+.rec1 {
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.recordbook_buttons {
+    margin-left: 10px;
 }
 
 .create_record_block {
@@ -66,7 +85,8 @@
 .record_subblock {
     display: flex;
     margin-top: 10px;
-    margin-left: 5rem;
+    /* margin-left: 5rem; */
+    align-items: center;
 }
 
 .select_block_button {
@@ -75,10 +95,27 @@
     align-items: center;
     margin-top: 20px;
 }
-.subblock_text{
+
+.subblock_text {
     font-weight: bold;
     flex-basis: 50%;
 }
-.lock_input{
+
+.lock_input {
     flex-basis: 50%;
+}
+
+.short_user_info {
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.select_block_record {
+    border: 1px solid black;
+    border-radius: 20px;
+    margin-left: 10px;
+}
+.short_user_info_subblock{
+    
 }

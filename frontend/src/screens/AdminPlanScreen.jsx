@@ -3,6 +3,8 @@ import { useEffect, useState, useMemo } from "react";
 import { plan, practise } from "../json/plan";
 import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
+import apiSchedule from "../api/schedule";
+import './style/AdminPlanScreen.css';
 function AdminPlanScreen() {
   const { subjects } = plan[0];
   const { subjects_pr } = practise[0];
@@ -16,66 +18,6 @@ function AdminPlanScreen() {
   const [newSubjectTitle, setNewSubjectTitle] = useState('')
   const [newHours, setNewHours] = useState(0)
 
-  const toggleUserSelection = (userId) => {
-    if (selectedUserId === userId) {
-      setSelectedUserId(null);
-    } else {
-      setSelectedUserId(userId);
-    }
-  };
-
-  const toggleExamSelection = (examId) => {
-    if (selectedExamIds === examId) {
-      setSelectedExamIds(null);
-    } else {
-      setSelectedExamIds(examId);
-    }
-  };
-
-  console.log(selectedUserId)
-  console.log(typeof selectedUserId)
-  
-  useEffect(async () => {
-    try {
-      const request = {
-        roleId: 3
-      };
-      const response = await apiSubject.get(request);
-      setSubject(response.data.message);
-      const response2 = await apiSubject.getuser(request);
-      setTeachers(response2.data.message);
-      const response3 = await apiSubject.exams(request);
-      setExams(response3.data.message);
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
-    }
-
-  }, []);
-
-  async function createSubject(newTitle, newhours, exam, techerselect) {
-    //а это типа создание папки в папке студента типо разные папки 
-    const request = {
-      name: newTitle,
-      teacherId: techerselect,
-      examType: exam,
-      hours: newhours
-    };
-    const request2 = {};
-    try {
-      const response = await apiSubject.subjCreate(request);
-      toast.success("Data updated successfully");
-      const data = response.data;
-      const response2 = await apiSubject.get(request2);
-      setSubject(response2.data.message);
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
   const [editMode, setEditMode] = useState(false);
 
   const [editableSubject, setEditableSubject] = useState({});
@@ -84,6 +26,16 @@ function AdminPlanScreen() {
   const [newHoursSubj, setNewHoursSubj] = useState('');
   const [newExamType, setNewExamType] = useState('');
   const [newTeacherId, setNewTeacherId] = useState('');
+
+
+  const [groups, setGroups] = useState([]);
+  const [newGroups, setNewGroups] = useState([]);
+  const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
+  const [newSubject, setNewSubject] = useState([]);
+  const [newteachers, setNewTeachers] = useState([]);
+  const [selectSubject, setSelectSubject] = useState([]);
+  const [showGroupCurriculum, setShowGroupCurriculum] = useState(false);
+
 
   const handleEditClick = (subjId) => {
     setEditableSubject({
@@ -98,6 +50,54 @@ function AdminPlanScreen() {
       [subjId]: false,
     });
   };
+
+  useEffect(async () => {
+    try {
+      const request = {
+        roleId: 3
+      };
+      const response = await apiSubject.get(request);
+      setSubject(response.data.message);
+      setSelectSubject(response.data.message);
+      const response2 = await apiSubject.getuser(request);
+      setTeachers(response2.data.message);
+      const response3 = await apiSubject.exams(request);
+      setExams(response3.data.message);
+      const response4 = await apiSchedule.groups();
+      setGroups(response4.data.message);
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR GET LESSONS');
+      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+    }
+
+  }, []);
+
+  async function createSubject(newTitle, newhours, exam, techerselect) {
+
+    const request = {
+      name: newTitle,
+      teacherId: techerselect,
+      examType: exam,
+      hours: newhours
+    };
+    console.log(request);
+    const request2 = {};
+    try {
+      const response = await apiSubject.subjCreate(request);
+      toast.success("Data updated successfully");
+      const data = response.data;
+      const response2 = await apiSubject.get(request2);
+      setSubject(response2.data.message);
+      setSelectSubject(response2.data.message);
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR DOWNLOAD FILE');
+      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }
+
+
 
   async function updateSubject(subjId, newTitle, techerselect, exam, newhours) {
     const request = {
@@ -139,6 +139,7 @@ function AdminPlanScreen() {
 
       const response2 = await apiSubject.get(request2);
       setSubject(response2.data.message);
+      setSelectSubject(response2.data.message);
       toast.success("Data updated successfully");
     } catch (error) {
       console.error(error);
@@ -147,143 +148,397 @@ function AdminPlanScreen() {
     }
   }
 
+  async function createSubjectForGroup(newGroupId, newSubjId) {
+    //а это типа создание папки в папке студента типо разные папки 
+    const request = {
+      groupId: newGroupId,
+      subjects: newSubjId
+    };
+    const request2 = {
+      groupId: newGroupId
+    };
+    try {
+      const response = await apiSubject.addToGroup(request);
+      toast.success("Data updated successfully");
+
+
+      const response2 = await apiSubject.getGroupsSubject(request2);
+      console.log(response2);
+      setSubject(response2.data.message);
+
+
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR DOWNLOAD FILE');
+      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }
+  async function deleteSubjectFromGroup(id,newGroupId) {
+    const request = {
+      subjectGroupId: id
+    };
+    const request2 = {
+      groupId: newGroupId
+    };
+    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
+    if (!confirmed) {
+      return;
+    }
+    try {
+      const response = await apiSubject.deleteFromGroup(request);
+      toast.success("Data updated successfully");
+
+      const response2 = await apiSubject.getGroupsSubject(request2);
+      console.log(response2);
+      setSubject(response2.data.message);
+
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR DOWNLOAD FILE');
+      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }
+  const [newGroupCode, setNewGroupCode] = useState("");
+
+  const handleGroupChange = async (e) => {
+    const selectedGroupId = e.target.value;
+    console.log(selectedGroupId)
+    if (selectedGroupId === '') {
+      setNewGroupCode(''); // Set empty group code
+    } else {
+      const selectedGroup = groups.find((grp) => grp.id === selectedGroupId);
+      setNewGroupCode(selectedGroup.code);
+    }
+
+    const groupId = parseInt(e.target.value);
+    setNewGroups(groupId);
+    setShowGroupCurriculum(true);
+    // setSubject([])
+    try {
+      const request = {
+        groupId: groupId
+      };
+      console.log(request);
+      const response = await apiSubject.getGroupsSubject(request);
+      console.log(response);
+      setSubject(response.data.message);
+
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR GET LESSONS');
+      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+    }
+  };
+  const handleMultipleGroupChange = async (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions);
+    const selectedGroups = selectedOptions.map((option) => option.value);
+    setnewMultipleSubjects(selectedGroups);
+    setShowGroupCurriculum(true);
+  };
+
+  const handleSubjectChange = (e) => {
+    const subjId = e.target.value;
+    setNewSubject(subjId);
+    setShowGroupCurriculum(false);
+  };
+  const handleTeacherChange = (e) => {
+    const teachId = e.target.value;
+    setNewTeachers(teachId)
+  };
+  const handleExamChange = (e) => {
+    const exId = e.target.value;
+    setSelectedExamIds(exId)
+  };
+  const [selectedBlockId, setSelectedBlockId] = useState(null);
+
+  const handleBlockClick = async (blockId) => {
+    if (blockId === selectedBlockId) {
+      return; // Do nothing if the block is already selected
+    }
+    setSubject([])
+    setSelectedBlockId(blockId);
+    setNewGroups(''); // Assuming an empty string is the default value
+    setNewGroupCode('')
+
+    if (blockId === 'plan') {
+      try {
+        const response = await apiSubject.get();
+        setSubject(response.data.message);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET LESSONS');
+        toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+      }
+    }
+  };
+
+  console.log(newGroups)
+  console.log(groups)
+console.log(selectedBlockId)
+
+
+
   return (
     <div>
-      <div>
-        Создание учебного плана
-        <div>
-          {subject?.map(subj => (
-            <div key={subj.id}>
-              {!editableSubject[subj.id] ? (
-                <div>
-                  {subj.name} {subj.summaryHours} {subj.examType} {subj.teacher}
-                  <button className="button_delete" onClick={() => deleteSubject(subj.id)}>
-                    Delete
-                  </button>
-                  <button className="button_delete" onClick={() => handleEditClick(subj.id)}>
-                    Update
-                  </button>
-                </div>
-              ) : (
-                <div>
-                  <input
-                    type="text"
-                    placeholder='Введите'
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                  />
-                  <input
-                    type="number"
-                    placeholder='Введите'
-                    value={newHoursSubj}
-                    onChange={(e) => setNewHoursSubj(e.target.value)}
-                  />
-                  <select value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
-                    <option value="">Select Exam Type</option>
-                    {exams.map((exam) => (
-                      <option key={exam.id} value={exam.id}>
-                        {exam.type}
-                      </option>
-                    ))}
-                  </select>
-                  <select value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
-                    <option value="">Select Teacher</option>
-                    {teachers.map((teacher) => (
-                      <option key={teacher.id} value={teacher.id}>
-                        {teacher.name}
-                      </option>
-                    ))}
-                  </select>
-                  <button onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Save</button>
-                  <button onClick={() => handleEditClickExit(subj.id)}>Exit</button>
-                </div>
-              )}
+      <div className="all_create_block">
+        <div className={`create_record_block ${selectedBlockId === 'group' ? 'active' : ''}`}
+          onClick={() => handleBlockClick('group')}>
+          <div className="title">
+            Присвоение дисциплины к группе
+          </div>
+          <div className="subblock_text">
+            Выбор дисциплин
+          </div>
+          <div className="subblock_text">
+            ** Пометка для администратора, для выделения нескольких дисциплин используйте CTRL или SHIFT
+          </div>
+          <div className="dropdown">
+            <select className="multiple_select" value={newMultipleSubjects} onChange={handleMultipleGroupChange} size={10} multiple>
+              {/* <option value="">Выберите группу</option> */}
+              {selectSubject.map((subj) => (
+                <option key={subj.id} value={subj.id}>
+                  {subj.name} {subj.teacher}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="record_subblock">
+            <div className="subblock_text">
+              Выбор группы
             </div>
-          ))}
+            <select className="select_block" value={newGroups.toString()} onChange={handleGroupChange}>
+              <option value="">Выберите группу</option>
+              {groups.map((grp) => (
+                <option key={grp.id} value={grp.id}>
+                  {grp.code} {grp.groupName} {grp.type}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type='button' className="button_create" onClick={() => createSubjectForGroup(newGroups, newMultipleSubjects)}>Создать</button>
         </div>
+
+        <div className={`create_record_block ${selectedBlockId === 'plan' ? 'active' : ''}`}
+          onClick={() => handleBlockClick('plan')}>
+          <div>
+            <div className="title">
+              Создание учебного плана
+            </div>
+
+            <div>
+              <div className="record_subblock">
+                <div className="subblock_text">
+                  Выберите преподавателя для новой дисциплины
+                </div>
+                <select className="select_block" value={newteachers} onChange={handleTeacherChange}>
+                  <option value="">Выберите прeподавателя</option>
+                  {teachers?.map((teach) => (
+                    <option key={teach.id} value={teach.id}>
+                      {teach.fio}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="record_subblock">
+                <div className="subblock_text">
+                  Выберите название дисциплины
+                </div>
+                <div>
+                  <input type="text" className="select_block" placeholder='Введите название дисциплины' onChange={(e) => setNewSubjectTitle(e.target.value)} />
+                </div>
+              </div>
+              <div className="record_subblock">
+                <div className="subblock_text">
+                  Введите количество часов
+                </div>
+
+                <div>
+                  <input id="number" className="select_block" type="number" placeholder='Введите количество часов' onChange={(e) => setNewHours(e.target.value)} />
+                </div>
+              </div>
+              <div className="record_subblock">
+                <div className="subblock_text">
+                  Выберите тип сдачи дисциплины
+                </div>
+                <select className="select_block" value={selectedExamIds} onChange={handleExamChange}>
+                  <option value="">Выберите тип</option>
+                  {exams?.map((ex) => (
+                    <option key={ex.id} value={ex.id}>
+                      {ex.type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <button type='button' className="button_create" onClick={() => createSubject(newSubjectTitle, newHours, selectedExamIds, newteachers)}>Создать</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Render curriculum based on selected block */}
+      {selectedBlockId === 'group' ? (
+        // Render curriculum for selected group
         <div>
-          {
-            teachers?.map(teach => (
-              <div key={teach.id} onClick={() => toggleUserSelection(teach.id)}>
-                {teach.fio} {selectedUserId === teach.id && '(выбран)'}{teach.id}
+          {/* Render curriculum for selected group here */}
+          <div>
+            {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>}
+            <div className="plan_heading">
+              <div className="plan_rec">Дисциплина</div>
+              <div className="plan_rec">Количество часов</div>
+              <div className="plan_rec">Отчетность</div>
+              <div className="plan_rec">Преподаватель</div>
+              <div className="plan_rec">Действия</div>
+            </div>
+            {subject?.map(subj => (
+              <div key={subj.id}>
+                <div className="plan_block">
+                    <div className="plan_rec">
+                      {subj.subjectName}
+                    </div>
+                    <div className="plan_rec">
+                      {subj.summaryHours}
+                    </div>
+                    <div className="plan_rec" >
+                      {subj.type}
+                    </div>
+                    <div className="plan_rec">
+                      {subj.teacher}
+                    </div>
+
+                    <div> <button className="recordbook_buttons" onClick={() => deleteSubjectFromGroup(subj.id,newGroups)}>
+                      Удалить
+                    </button>
+                      {/* <button onClick={() => handleEditClick(subj.id)}>
+                        Update
+                      </button> */}
+                      </div>
+                  </div>
+                {!editableSubject[subj.id] ? (
+                  <div>
+
+                  </div>
+                ) : (
+                  <div>
+                    <input
+                    className="select_block"
+                      type="text"
+                      placeholder='Введите'
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                    />
+                    <input
+                    className="select_block"
+                      type="number"
+                      placeholder='Введите'
+                      value={newHoursSubj}
+                      onChange={(e) => setNewHoursSubj(e.target.value)}
+                    />
+                    <select className="select_block" value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
+                      <option value="">Select Exam Type</option>
+                      {exams.map((exam) => (
+                        <option key={exam.id} value={exam.id}>
+                          {exam.type}
+                        </option>
+                      ))}
+                    </select>
+                    <select className="select_block" value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
+                      <option value="">Select Teacher</option>
+                      {teachers.map((teacher) => (
+                        <option key={teacher.id} value={teacher.id}>
+                          {teacher.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Save</button>
+                    <button onClick={() => handleEditClickExit(subj.id)}>Exit</button>
+                  </div>
+                )}
               </div>
-            ))
-          }
+            ))}
+          </div>
         </div>
+      ) : (
+        // Render entire curriculum
+        <div>
+          Все дисциплины
+          {/* Render entire curriculum here */}
+          <div>
+            <div className="plan_heading">
+              <div className="plan_rec">Дисциплина</div>
+              <div className="plan_rec">Количество часов</div>
+              <div className="plan_rec">Отчетность</div>
+              <div className="plan_rec">Преподаватель</div>
+              <div className="plan_rec">Действия</div>
+            </div>
+            {subject?.map(subj => (
+              <div key={subj.id}>
+                <div className="plan_block">
+                    <div className="plan_rec">
+                      {subj.name}
+                    </div>
+                    <div className="plan_rec">
+                      {subj.summaryHours}
+                    </div>
+                    <div className="plan_rec" >
+                      {subj.examType}
+                    </div>
+                    <div className="plan_rec">
+                      {subj.teacher}
+                    </div>
 
-        <input type="text" placeholder='Введите название уведомления' onChange={(e) => setNewSubjectTitle(e.target.value)} />
-        <input id="number" type="number" placeholder='Введите количество часов' onChange={(e) => setNewHours(e.target.value)} />
-        {
-          exams?.map(ex => (
-            <div key={ex.id} onClick={() => toggleExamSelection(ex.id)}>{ex.type} {selectedExamIds === ex.id && '(выбран)'}{ex.id}</div>
-          ))
-        }
-        {/* {
-            exams?.map(ex => (
-              <div key={teach.id} onClick={() => toggleUserSelection(teach.id)}>
-                {teach.fio} {selectedUserId === teach.id && '(выбран)'}
+                    <div> <button className="recordbook_buttons" onClick={() => deleteSubject(subj.id)}>
+                      Удалить
+                    </button>
+                      <button className="recordbook_buttons" onClick={() => handleEditClick(subj.id)}>
+                        Обновить
+                      </button></div>
+                  </div>
+                {!editableSubject[subj.id] ? (
+                  <div></div>
+                ) : (
+                  <div>
+                    <input
+                    className="select_block"
+                      type="text"
+                      placeholder='Введите название дициплины'
+                      value={newTitle}
+                      onChange={(e) => setNewTitle(e.target.value)}
+                    />
+                    <input
+                    className="select_block"
+                      type="number"
+                      placeholder='Введите количество часов'
+                      value={newHoursSubj}
+                      onChange={(e) => setNewHoursSubj(e.target.value)}
+                    />
+                    <select className="select_block" value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
+                      <option value="">Выберите тип экзамена</option>
+                      {exams.map((exam) => (
+                        <option key={exam.id} value={exam.id}>
+                          {exam.type}
+                        </option>
+                      ))}
+                    </select>
+                    <select className="select_block" value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
+                      <option value="">Выберите преподавателя</option>
+                      {teachers.map((teacher) => (
+                        <option key={teacher.id} value={teacher.id}>
+                          {teacher.name}
+                        </option>
+                      ))}
+                    </select>
+                    <button className="select_block" onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Сохранить</button>
+                    <button className="select_block" onClick={() => handleEditClickExit(subj.id)}>Отмена</button>
+                  </div>
+                )}
               </div>
-            ))
-          } */}
-        <button type='button' onClick={() => createSubject(newSubjectTitle, newHours, selectedExamIds, selectedUserId)}>Создать</button>
-      </div>
-
-      <div className='title'>Учебный план</div>
-
-      
-      <div className='detail-record-book'>
-        <div className='detail-napr'>
-          <span>Направление:</span> Компьютерные системы и комплексы
-        </div>
-        <div className='detail-qval'>
-          <span>Квалификация:</span> Техник
-        </div>
-        <div className='detail-form'>
-          <span>Выбор семестра:</span> Все семестры
-        </div>
-      </div>
-      <div className='details-table plan-table'>
-        <table className='detail-table'>
-          <thead className='detail-thead'>
-            <tr className='main-tr'>
-              <td>Дисциплина</td>
-              <td>Кол-во зачетных единиц/часов</td>
-              <td>Отчетность</td>
-              <td>Семестры</td>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className='main-tr'>
-              <td className='zach-detail'>{plan[0].disp}</td>
-              <td className='zach-detail'>{plan[0].allTime}</td>
-              <td className='zach-detail'></td>
-              <td className='zach-detail'></td>
-            </tr>
-            {subjects.map((sub, index) => (
-              <tr key={index}>
-                <td className='zach-detail'>{sub.subject}</td>
-                <td className='zach-detail'>{sub.hours}</td>
-                <td className='zach-detail'>{sub.result}</td>
-                <td className='zach-detail'>{sub.semestrs}</td>
-              </tr>
             ))}
-            <tr className='main-tr'>
-              <td className='zach-detail'>{practise[0].disp}</td>
-              <td className='zach-detail'>{practise[0].allTime}</td>
-              <td className='zach-detail'></td>
-              <td className='zach-detail'></td>
-            </tr>
-            {subjects_pr.map((pract, index) => (
-              <tr key={index}>
-                <td className='zach-detail'>{pract.subject}</td>
-                <td className='zach-detail'>{pract.hours}</td>
-                <td className='zach-detail'>{pract.result}</td>
-                <td className='zach-detail'>{pract.semestrs}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+          </div>
+        </div>
+      )}
+
+
       <ToastContainer
         position="bottom-left"
         autoClose={5000}

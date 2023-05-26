@@ -64,11 +64,11 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       // setFiles(response2.data.message);
 
       onDataChanged(response2.data.message)
-
+      toast.success("Файл успешно удален");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
   async function downloadFile(index) {
@@ -83,6 +83,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       const filename = files[index].fileName;
       const type = files[index].filePath.split('.').pop();
       file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
+      toast.success("Файл скачан");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -111,7 +112,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
           {files.length > 0 && (
 
             <ul>
-              {files.map((file, index) => (
+              {files?.map((file, index) => (
                 <li key={file.id}>
                   <div className='file_block'>
                     <div className='file_block_components'>
@@ -136,7 +137,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
             
           )}
 
-          {folders.map(folder => (
+          {folders?.map(folder => (
             <Folder
               key={folder.id}
               {...folder}
@@ -264,7 +265,7 @@ function StudentRow() {
     } catch (error) {
       console.error(error);
       console.error('ERROR GET FILES');
-      toast.error('Произошла ошибка при получении файлов. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при получении информации о файловой системе. Попробуйте позже или обратитесь в техподдержку');
     }
   }, []);
 
@@ -312,6 +313,7 @@ function StudentRow() {
       //   return { ...prevFiles, folders: [...prevFiles.folders, newFolder] };
       // });
 
+      toast.success("Папка успешно созданна");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -376,10 +378,11 @@ function StudentRow() {
 
       // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
 
+      toast.success("Папка успешно удалена");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении папки. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -406,7 +409,8 @@ function StudentRow() {
       //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
       // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
       //ВАЖНО ЗАПОМНИ
-      console.log(data)
+
+      toast.success("Файл успешно загружен");
     } catch (error) {
       console.error(error);
       console.error('ERROR UPLOAD FILES');
@@ -429,16 +433,12 @@ function StudentRow() {
               <input type="text" placeholder='Введите название папки' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
             </div>
             <div className='create_folder_block_component'>
-              <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
-            </div>
-
-            {/* <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button> */}
-            <div className='create_folder_block_component'>
+            <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
               <button className='button_delete' onClick={(event) => {
                 if (event.detail === 1) {
                   deleteFolderLessons(currentFolderId);
                 }
-              }}>Удалить выделенную папку</button>
+              }}>Удалить</button>
             </div>
 
           </div>
@@ -467,7 +467,8 @@ function StudentRow() {
 
 
 
-      <div>Ваша текущая папка: {currentFolderName}</div>
+      <div>
+        <strong>Ваша текущая папка : </strong>{currentFolderName}</div>
 
 
       <div className="folder_row">

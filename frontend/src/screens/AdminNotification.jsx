@@ -102,15 +102,7 @@ function AdminNotification({ math }) {
   //     setSelectedUserIds([...selectedUserIds, userId]);
   //   }
   // };
-  const toggleUserSelection = (userId) => {
-    setSelectedUserIds((prevSelectedUserIds) => {
-      if (prevSelectedUserIds.includes(userId)) {
-        return prevSelectedUserIds.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedUserIds, userId];
-      }
-    });
-  };
+
 
 
   const handleDeleteNotification = async (notificationId) => {
@@ -165,36 +157,76 @@ function AdminNotification({ math }) {
     }
   };
 
+  const toggleUserSelection = (userId) => {
+    setSelectedUserIds((prevSelectedUserIds) => {
+      if (prevSelectedUserIds.includes(userId)) {
+        return prevSelectedUserIds.filter((id) => id !== userId);
+      } else {
+        return [...prevSelectedUserIds, userId];
+      }
+    });
+  };
+  const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
+
+  const handleMultipleGroupChange = async (e) => {
+    const selectedOptions = Array.from(e.target.selectedOptions);
+    const selectedGroups = selectedOptions.map((option) => option.value);
+    setSelectedUserIds(selectedGroups);
+    // setShowGroupCurriculum(true);
+  };
+
+  console.log(selectedUserIds)
+
   return (
     <div>
       <div className="title">Уведомления</div>
       <div className="create_notifiaction_block">
+        <div className='createNotifBlock'>
+          <textarea
+            className="input_block"
+            placeholder="Введите название уведомления"
+            onChange={(e) => setNewNotificationTitle(e.target.value)}
+          />
 
-        <div className="select-container">
-          <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
-            <option value="">Выберите группу</option>
-            {groups.map((grp) => (
-              <option key={grp.id} value={grp.id}>
-                {grp.code} {grp.groupName} {grp.type}
-              </option>
-            ))}
-          </select>
+          <textarea
+            className="input_block"
+            placeholder="Введите текст уведомления"
+            onChange={(e) => setNewNotificationText(e.target.value)}
+          />
+          <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
+          {/* onClick={() => deleteFiles(file.id)} */}
         </div>
+        <div>
+          <div className="select-container">
+            <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
+              <option value="">Выберите группу</option>
+              {groups.map((grp) => (
+                <option key={grp.id} value={grp.id}>
+                  {grp.code} {grp.groupName} {grp.type}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* там 70 групп сделай скролл на селектор!!!!! */}
+          {/* там 70 групп сделай скролл на селектор!!!!! */}
 
-        <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
-        {students.map(user => (
+          <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
+          {/* {students.map(user => (
           <div className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} onClick={() => toggleUserSelection(user.id)}>
             {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
           </div>
-        ))}
 
-        <div className='createNotifBlock'>
-          <input type="textarea" className="input_block" placeholder='Введите название уведомления' onChange={(e) => setNewNotificationTitle(e.target.value)} />
-          <input type="textarea" className="input_block" placeholder='Введите текст уведомления' onChange={(e) => setNewNotificationText(e.target.value)} />
-          <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Создать и отправить</button>
-          {/* onClick={() => deleteFiles(file.id)} */}
+        ))} */}
+          <div className="dropdown">
+            <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
+              {/* <option value="">Выберите группу</option> */}
+              {students.map((user) => (
+                <option className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} value={user.id}>
+                  {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
       </div>

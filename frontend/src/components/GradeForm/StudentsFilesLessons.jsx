@@ -30,35 +30,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
   };
   const folderClass = selectedFolderId === id ? 'selected' : 'folder_container';
 
-  async function deleteFiles(id) {
-    const request = {
-      fileId: id
-    };
-    const request2 = {
-      folderId: 1
-    };
 
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-
-    if (!confirmed) {
-      return;
-    }
-
-    try {
-      const response = await apiFiles.delete(request);
-      const data = response.data;
-
-      const response2 = await apiFiles.getList(request2);
-      // setFiles(response2.data.message);
-
-      onDataChanged(response2.data.message)
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
   async function downloadFile(index) {
     const request = {
       fileId: files[index].id,
@@ -71,6 +43,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       const filename = files[index].fileName;
       const type = files[index].filePath.split('.').pop();
       file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
+      toast.success("Файл скачан");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -210,9 +183,7 @@ function LessonRow() {
   const handleFolderSelectName = (folderName) => {
     setCurrentFolderName(folderName);
   }
-  const [newFolderNameLesson, setNewFolderNameLesson] = useState('')
 
-  const [allfiles, setAllFiles] = useState({});
 
   // ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
   // async function fetchFiles() {
@@ -252,155 +223,13 @@ function LessonRow() {
     } catch (error) {
       console.error(error);
       console.error('ERROR GET FILES');
-      toast.error('Произошла ошибка при получении файлов. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при получении информации о файловой системе. Попробуйте позже или обратитесь в техподдержку');
     }
   }, []);
 
   // console.log(files)
 
-  const validateFolderName = (folderName) => {
-    const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
-    const isForbidden = forbiddenCharacters.some(char => folderName.includes(char));
-    const isTooLong = folderName.length > 50;
 
-    if (isForbidden) {
-      throw new Error('Folder name contains forbidden characters');
-    }
-
-    if (isTooLong) {
-      throw new Error('Folder name is too long');
-    }
-  }
-
-  async function createFolderLessons(newFolderNameLesson, nextFolderid) {
-    //типа создание папки в папке задание 
-    const request = {
-      name: newFolderNameLesson,
-      folderId: nextFolderid
-    };
-    const request2 = {
-      folderId: 1
-    };
-
-    try {
-      validateFolderName(newFolderNameLesson);
-      const response = await apiFiles.newFolderLesson(request);
-      const data = response.data.message[0];
-
-      const response2 = await apiFiles.getList(request2);
-      setFiles(response2.data.message)
-      // console.log(data)
-      // setFiles(prevFiles => {
-      //   const newFolder = {
-      //     id: data.id,
-      //     name: data.name,
-      //     files: [],
-      //     folders: []
-      //   };
-      //   return { ...prevFiles, folders: [...prevFiles.folders, newFolder] };
-      // });
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Ошибка при создании папки. Проверьте правильность названия и попробуйте еще раз');
-    }
-  }
-
-  // async function deleteFolderLessons(folderId) {
-  //   const request = {
-  //     folderId: 3
-  //   };
-  //   const request2 = {
-  //     folderId: 1
-  //   };
-  //   try {
-  //     const response = await apiFiles.deleteFolderLessonApi(request);
-  //     const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
-
-  //     // create a new object with the modified state
-  //     // const updatedFiles = {...files, folders: files.folders.filter(folder => folder.id !== request)};
-
-  //     // update the state using the setter function
-  //     // setFiles(updatedFiles);
-
-  //     const response2 = await apiFiles.getList(request2);
-  //     setFiles(response2.data.message);
-
-  //     // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
-
-  //   } catch (error) {
-  //     console.error(error);
-  //     console.error('ERROR DOWNLOAD FILE');
-  //     toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-  //   }
-  // }
-
-  async function deleteFolderLessons(newfolderId) {
-    const request = {
-      folderId: newfolderId
-    };
-    const request2 = {
-      folderId: 1
-    };
-
-    const confirmed = window.confirm('Вы точно хотите удалить выбранную папку ? Все находящиеся там файлы будут удалены !!');
-
-    if (!confirmed) {
-      return;
-    }
-    try {
-      const response = await apiFiles.deleteFolderLessonApi(request);
-      const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
-
-      // create a new object with the modified state
-      // const updatedFiles = {...files, folders: files.folders.filter(folder => folder.id !== request)};
-
-      // update the state using the setter function
-      // setFiles(updatedFiles);
-
-      const response2 = await apiFiles.getList(request2);
-      setFiles(response2.data.message)
-
-      // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  async function uploadFilesLesson(file, newfolderId) {
-    const requestFolder = newfolderId;
-    const fileTypes = {
-      'txt': 1,
-      'xlsx': 2,
-      'docx': 3,
-    };
-    const request2 = {
-      folderId: 1
-    };
-    const request = new FormData();
-    request.append('folderId', requestFolder)
-    request.append('files', file[0])
-    request.append('fileType', fileTypes[file[0].name.split('.').pop()])
-    try {
-
-      const response = await apiFiles.upload(request);
-      const data = response.data.message[0];
-      const response2 = await apiFiles.getList(request2);
-      setFiles(response2.data.message)
-      //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
-      // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
-      //ВАЖНО ЗАПОМНИ
-      console.log(data)
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR UPLOAD FILES');
-      toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
 
   const handleDataChange = (newData) => {
     setFiles(newData);
@@ -452,7 +281,7 @@ function LessonRow() {
       </div>
 
 
-      <div>Ваша текущая папка: {currentFolderName}</div>
+      <div><strong>Ваша текущая папка : </strong> {currentFolderName}</div>
 
 
       <div className="folder_row">

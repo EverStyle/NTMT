@@ -7,13 +7,16 @@ import NotificationsScreen from "./screens/NotificationsScreen";
 import PlanScreen from "./screens/PlanScreen";
 import RecordBookScreen from "./screens/RecordBookScreen";
 import ScheduleScreen from "./screens/ScheduleScreen";
-
 import AdminSchedule from "./screens/AdminSchedule";
 import AdminRecordBook from "./screens/AdminRecordBook";
 import AdminFileScreen from "./screens/AdminFileScreen";
 import AdminPlanScreen from "./screens/AdminPlanScreen";
 import AdminNotification from "./screens/AdminNotification";
-
+import TeacherFileScreen from "./screens/TeacherFileScreen";
+import TeacherNotification from "./screens/TeacherNotification";
+import TeacherPlanScreen from "./screens/TeacherPlanScreen";
+import TeacherSchedule from "./screens/TeacherShedule";
+import TeacherRecordBook from "./screens/TeacherRecordBook";
 import { useState, useEffect } from "react";
 import Login from "./screens/Login/Login";
 
@@ -42,11 +45,7 @@ function App() {
 
   return (
     <Router>
-
       {token ? (
-
-        //if пользователь админ выводи админку
-        // {user.roleId === 1 ? <div></div>}
         <>
           {(() => {
             let json43 = parseJwt(token);
@@ -87,7 +86,7 @@ function App() {
                     setUser={setUser}
                   />
                   <div className='content'>
-                    <PersonalArea />
+                    <PersonalArea role = {json43.roleId}/>
                     <div className='routers'>
                       <Route path='/yvedomlenia' component={NotificationsScreen} />
                       <Route path='/ras' component={ScheduleScreen} />
@@ -109,13 +108,13 @@ function App() {
                     setUser={setUser}
                   />
                   <div className='content'>
-                    <PersonalArea />
+                    <PersonalArea role = {json43.roleId}/>
                     <div className='routers'>
-                      <Route path='/teacheryvedomlenia' component={NotificationsScreen} />
-                      <Route path='/teacherras' component={ScheduleScreen} />
-                      <Route path='/teacherfail' component={FileScreen} />
-                      <Route path='/teacherzachetka' component={RecordBookScreen} />
-                      <Route path='/teacherplan' component={PlanScreen} />
+                      <Route path='/teacheryvedomlenia' component={TeacherNotification} />
+                      <Route path='/teacherras' component={TeacherSchedule} />
+                      <Route path='/teacherfail' component={TeacherFileScreen} />
+                      <Route path='/teacherzachetka' component={TeacherRecordBook} />
+                      <Route path='/teacherplan' component={TeacherPlanScreen} />
                     </div>
                   </div>
                 </main>
@@ -131,7 +130,7 @@ function App() {
                     setUser={setUser}
                   />
                   <div className='content'>
-                    <PersonalArea />
+                    <PersonalArea role = {json43.roleId}/>
                     <div className='routers'>
                       <Route path='/yvedomlenia' component={NotificationsScreen} />
                       <Route path='/ras' component={ScheduleScreen} />

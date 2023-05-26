@@ -5,64 +5,57 @@
 }
 
 .button_delete {
-  transition: all 0.4s ease-in;
-  background: rgb(255, 135, 135);
-  color: rgb(255, 255, 255);
-  width: 350px;
-  outline: none;
-  height: 31px;
-  font-weight: 700;
+  width: 150px;
+  border: 1px solid black;
   border-radius: 30px;
-  font-size: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 10px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 8px;
+  margin-top: 15px;
   margin-bottom: 10px;
-
+  outline: none;
+  height: 30px;
+  transition: all 0.4s ease-in;
 }
 
 .button_delete_file {
-  transition: all 0.4s ease-in;
-  background: rgb(255, 124, 124);
-  color: rgb(255, 255, 255);
-  width: 90px;
-  outline: none;
-  height: 31px;
-  font-weight: 700;
-  border-radius: 30px;
-  font-size: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 10px;
+  width: 100px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 8px;
+  margin-top: 15px;
   margin-bottom: 10px;
+  outline: none;
+  height: 30px;
+  transition: all 0.4s ease-in;
 }
+
 .button_delete_file:hover {
-  background-color: rgb(255, 0, 0);
+  background-color: rgb(255, 157, 157);
 }
 
 .button_upload {
-  transition: all 0.4s ease-in;
-  background: rgb(111, 173, 255);
-  color: rgb(255, 255, 255);
-  width: 90px;
-  outline: none;
-  height: 31px;
-  font-weight: 700;
-  border-radius: 30px;
-  font-size: 15px;
-  padding-left: 10px;
-  padding-right: 10px;
-  margin-top: 10px;
+  width: 100px;
+  border: 1px solid black;
+  border-radius: 20px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 8px;
+  margin-top: 15px;
   margin-bottom: 10px;
-  margin-left: 10px;
+  outline: none;
+  height: 30px;
+  transition: all 0.4s ease-in;
 }
 
 .button_upload:hover {
-  background-color: rgb(0, 17, 255);
+  background-color: rgb(145, 152, 255);
 }
 
 .button_delete:hover {
-  background-color: rgb(255, 0, 0);
+  background-color: rgb(255, 157, 157);
 }
 
 .button_delete_active {
@@ -80,23 +73,35 @@
   transition: all 0.5s ease;
 }
 
-.button_create{
+.button_create {
+  width: 150px;
+  border: 1px solid black;
+  border-radius: 30px;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 8px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  outline: none;
+  height: 30px;
   transition: all 0.4s ease-in;
+  /* transition: all 0.4s ease-in;
   background: rgb(111, 173, 255);
   color: rgb(255, 255, 255);
-  width: 350px;
+  width: 150px;
   outline: none;
-  height: 31px;
+  height: 30px;
   font-weight: 700;
   border-radius: 30px;
   font-size: 15px;
   padding-left: 10px;
   padding-right: 10px;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 10px; */
 }
+
 .button_create:hover {
-  background-color: rgb(0, 17, 255);
+  background-color: rgb(155, 161, 255);
 }
 
 /* .folderBlock{
@@ -161,7 +166,7 @@
 .folder_create_block {
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+
 }
 
 .createFolderBlock {
@@ -174,7 +179,7 @@
 }
 
 .Lexa {
-  padding-left: 50px;
+  padding-right: 20px;
 }
 
 .create_input {

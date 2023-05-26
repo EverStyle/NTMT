@@ -53,16 +53,14 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     try {
       const response = await apiFiles.delete(request);
       const data = response.data;
-
       const response2 = await apiFiles.getList(request2);
       // setFiles(response2.data.message);
-
       onDataChanged(response2.data.message)
-
+      toast.success("Файл успешно удален");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
   async function downloadFile(index) {
@@ -77,6 +75,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       const filename = files[index].fileName;
       const type = files[index].filePath.split('.').pop();
       file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
+      toast.success("Файл скачан");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -260,7 +259,7 @@ function LessonRow() {
     } catch (error) {
       console.error(error);
       console.error('ERROR GET FILES');
-      toast.error('Произошла ошибка при получении файлов. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при получении информации о файловой системе. Попробуйте позже или обратитесь в техподдержку');
     }
   }, []);
 
@@ -295,7 +294,7 @@ function LessonRow() {
 
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
-    
+      toast.success("Папка успешно созданна");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -348,17 +347,15 @@ function LessonRow() {
     try {
       const response = await apiFiles.deleteFolderLessonApi(request);
       const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
-
-
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
 
       // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
-
+      toast.success("Папка успешно удалена");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении папки. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -385,7 +382,7 @@ function LessonRow() {
       //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
       // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
       //ВАЖНО ЗАПОМНИ
-
+      toast.success("Файл успешно загружен");
     } catch (error) {
       console.error(error);
       console.error('ERROR UPLOAD FILES');
@@ -408,16 +405,12 @@ function LessonRow() {
               <input type="text" placeholder='Введите название папки' className='create_input' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
             </div>
             <div className='create_folder_block_component'>
-              <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
-            </div>
-
-            {/* <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button> */}
-            <div className='create_folder_block_component'>
+            <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
               <button className='button_delete' onClick={(event) => {
                 if (event.detail === 1) {
                   deleteFolderLessons(currentFolderId);
                 }
-              }}>Удалить выделенную папку</button>
+              }}>Удалить</button>
             </div>
 
           </div>

@@ -73,6 +73,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
             const filename = files[index].fileName;
             const type = files[index].filePath.split('.').pop();
             file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
+            toast.success("Файл скачан");
         } catch (error) {
             console.error(error);
             console.error('ERROR DOWNLOAD FILE');
@@ -101,20 +102,23 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                     {files.length > 0 && (
 
                         <ul>
-                            {files?.map(file => (
+                            {files.map((file, index) => (
                                 <li key={file.id}>
                                     <div className='file_block'>
                                         <div className='file_block_components'>
                                             <img src={filelogo} style={{ width: '30px', height: '30px' }} />
                                         </div>
 
-                                        <div className='file_block_components'>Номер = {file.id}</div>
+                                        {/* <div className='file_block_components'>Номер = {file.id}</div> */}
                                         <div className='file_block_components'>
                                             {file.fileMeta.fileName}
                                         </div>
 
                                         <div className='file_block_components'>
-                                            <button className='button_delete' onClick={() => deleteFiles(file.id)}>Удалить</button>
+
+                                            {file.id && (
+                                                <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                                            )}
                                         </div>
                                     </div>
                                 </li>
@@ -254,8 +258,8 @@ function AllRow() {
             group: ""
         };
         try {
-            const response = await apiFiles.getAllList(request);
-            setFiles(response.data.message);
+            // const response = await apiFiles.getAllList(request);
+            // setFiles(response.data.message);
             const response2 = await apiSchedule.groups();
             setGroups(response2.data.message);
 
@@ -500,15 +504,11 @@ function AllRow() {
                         </div>
                         <div className='create_folder_block_component'>
                             <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
-                        </div>
-
-                        {/* <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button> */}
-                        <div className='create_folder_block_component'>
                             <button className='button_delete' onClick={(event) => {
                                 if (event.detail === 1) {
                                     deleteFolderLessons(currentFolderId);
                                 }
-                            }}>Удалить выделенную папку</button>
+                            }}>Удалить</button>
                         </div>
 
                     </div>
@@ -537,7 +537,7 @@ function AllRow() {
 
 
             {/* <div>Текущий номер папки: {currentFolderId}</div> */}
-      <div>Название текущей папки: {currentFolderName}</div>
+            <div>Название текущей папки: {currentFolderName}</div>
 
             <div>
                 <select className="select_block" value={newGroups} onChange={handleGroupChange}>
@@ -575,20 +575,20 @@ function AllRow() {
             <div>
                 {showFolders && (
                     <div className="folder_row">
-                    {Array.isArray(files) &&
-                      files.map((folder) => (
-                        <Folder
-                          key={folder.id}
-                          {...folder}
-                          onDataChanged={handleDataChange}
-                          path={files.id}
-                          onFolderSelect={handleFolderSelect}
-                          onFolderName={handleFolderSelectName}
-                          selectedFolderId={currentFolderId}
-                          depth={1}
-                        />
-                      ))}
-                  </div>
+                        {Array.isArray(files) &&
+                            files.map((folder) => (
+                                <Folder
+                                    key={folder.id}
+                                    {...folder}
+                                    onDataChanged={handleDataChange}
+                                    path={files.id}
+                                    onFolderSelect={handleFolderSelect}
+                                    onFolderName={handleFolderSelectName}
+                                    selectedFolderId={currentFolderId}
+                                    depth={1}
+                                />
+                            ))}
+                    </div>
                 )}
             </div>
 

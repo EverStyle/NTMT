@@ -15,21 +15,16 @@ function Login({setToken, setUser}) {
         login: false,
         password: false,
     });
-
     const [showPassword, setShowPassword] = useState(false)
-
     const handleClickShowPassword = () => {
         setShowPassword(!showPassword);
     };
-
     const handleMouseDownPassword = (event) => {
         event.preventDefault();
     };
-
     const handleChange = (event) => {
         setRole(event.target.value)
     };
-
     const validate = () => {
         setErrors({
             login: !login.trim(),
@@ -37,34 +32,59 @@ function Login({setToken, setUser}) {
         });
         return login.trim() && password.trim();
     }
-
     const handleEnterClick = async (event) => {
         if (event.key === 'Enter') {
             await logIn();
         }
     }
-
     async function logIn() {
         const valid = await validate();
         if (valid) {
-            try {
-                const request = {
-                    login: login,
-                    password: password,
-                    type: role,
-                };
-                const response = await $api.login(request);
-                setUser(response.data.message);
-                setToken(response.data.message.token);
-            } catch (error) {
-                console.error(error);
-                console.error('ERROR LOG IN');
-                toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
+          try {
+            const request = {
+              login: login,
+              password: password,
+              type: role,
+            };
+            const response = await $api.login(request);
+            
+            if (response.status === 200) {
+              setUser(response.data.message);
+              setToken(response.data.message.token);
+            } else {
+              console.error('ERROR LOG IN');
+              toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
             }
+          } catch (error) {
+            console.error(error);
+            console.error('ERROR LOG IN');
+            toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
+          }
         } else {
-            toast.error('Пожалуйста, заполните выделенные поля');
+          toast.error('Пожалуйста, заполните выделенные поля');
         }
-    }
+      }
+    // async function logIn() {
+    //     const valid = await validate();
+    //     if (valid) {
+    //         try {
+    //             const request = {
+    //                 login: login,
+    //                 password: password,
+    //                 type: role,
+    //             };
+    //             const response = await $api.login(request);
+    //             setUser(response.data.message);
+    //             setToken(response.data.message.token);
+    //         } catch (error) {
+    //             console.error(error);
+    //             console.error('ERROR LOG IN');
+    //             toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
+    //         }
+    //     } else {
+    //         toast.error('Пожалуйста, заполните выделенные поля');
+    //     }
+    // }
 
     return (
         <div className="loginPage">
@@ -116,10 +136,6 @@ function Login({setToken, setUser}) {
                                         
                                         />
                                     </div>
-
-
-                                    
-
                                     {/* <div className="mb-5">
                                         <Select
                                             size="small"
@@ -131,7 +147,6 @@ function Login({setToken, setUser}) {
                                             <MenuItem value="1">Родитель</MenuItem>
                                         </Select>
                                     </div> */}
-
                                     <div>
                                         <Button
                                             style={{minWidth: '100%'}}

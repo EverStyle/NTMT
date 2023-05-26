@@ -4,6 +4,7 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import { userRoles } from "../../boot/contants";
 import apiAccount from "../../api/account";
+import { useHistory } from 'react-router-dom';
 
 function Headers({ setToken, setUser, user }) {
 
@@ -11,8 +12,6 @@ function Headers({ setToken, setUser, user }) {
   console.log(user)
   useEffect(async () => {
       try {
-
-        
         const response = await apiAccount.info();
         setUser(response.data.message);
       } catch(error) {
@@ -20,11 +19,14 @@ function Headers({ setToken, setUser, user }) {
         console.error('ERROR GET USER');
       }
   }, []);
-
-  function logOut() {
-    localStorage.removeItem('token');
-    setToken('');
-  }
+  const history = useHistory();
+  
+function logOut() {
+  localStorage.removeItem('token');
+  setToken('');
+  // Redirect to the standard URL
+  history.push('/');
+}
   return (
     <header>
       <div className='header'>

@@ -1,5 +1,4 @@
 import {$api} from "../../boot/axios";
-
 const apiRecordBook = {
     get: request => $api.post('/recordbook/get', request),
     getInf: request => $api.post('/recordbook/get_info', request),
@@ -9,5 +8,4 @@ const apiRecordBook = {
     getSem: request => $api.get('/semesters', request),
     getStudents: request => $api.get('/semesters', request),
 }
-
 export default apiRecordBook;
