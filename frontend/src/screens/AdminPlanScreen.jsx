@@ -68,7 +68,7 @@ function AdminPlanScreen() {
     } catch (error) {
       console.error(error);
       console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при получении информации о учебном плане. Попробуйте позже или обратитесь в техподдержку');
     }
 
   }, []);
@@ -85,7 +85,7 @@ function AdminPlanScreen() {
     const request2 = {};
     try {
       const response = await apiSubject.subjCreate(request);
-      toast.success("Data updated successfully");
+      toast.success("Создание успешно");
       const data = response.data;
       const response2 = await apiSubject.get(request2);
       setSubject(response2.data.message);
@@ -93,7 +93,7 @@ function AdminPlanScreen() {
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при создании учебного плана. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -115,12 +115,12 @@ function AdminPlanScreen() {
 
       const response2 = await apiSubject.get(request2);
       setSubject(response2.data.message);
-      toast.success("Data updated successfully");
+      toast.success("Обновление успешно");
     } catch (error) {
 
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при обновлении учебного плана. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -129,7 +129,7 @@ function AdminPlanScreen() {
       subjectId: id
     };
     const request2 = {};
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
+    const confirmed = window.confirm('Вы точно хотите удалить выбранный учебный план ?');
     if (!confirmed) {
       return;
     }
@@ -140,11 +140,11 @@ function AdminPlanScreen() {
       const response2 = await apiSubject.get(request2);
       setSubject(response2.data.message);
       setSelectSubject(response2.data.message);
-      toast.success("Data updated successfully");
+      toast.success("Удаление успешно");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении учебного плана. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -160,17 +160,13 @@ function AdminPlanScreen() {
     try {
       const response = await apiSubject.addToGroup(request);
       toast.success("Data updated successfully");
-
-
       const response2 = await apiSubject.getGroupsSubject(request2);
       console.log(response2);
       setSubject(response2.data.message);
-
-
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при получении информации ог учебном плане группы. Попробуйте позже или обратитесь в техподдержку');
     }
   }
   async function deleteSubjectFromGroup(id,newGroupId) {
@@ -180,7 +176,7 @@ function AdminPlanScreen() {
     const request2 = {
       groupId: newGroupId
     };
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
+    const confirmed = window.confirm('Вы точно хотите удалить выбранный учебный план ?');
     if (!confirmed) {
       return;
     }
@@ -195,7 +191,7 @@ function AdminPlanScreen() {
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка удалении. Попробуйте позже или обратитесь в техподдержку');
     }
   }
   const [newGroupCode, setNewGroupCode] = useState("");
@@ -294,7 +290,6 @@ console.log(selectedBlockId)
           </div>
           <div className="dropdown">
             <select className="multiple_select" value={newMultipleSubjects} onChange={handleMultipleGroupChange} size={10} multiple>
-              {/* <option value="">Выберите группу</option> */}
               {selectSubject.map((subj) => (
                 <option key={subj.id} value={subj.id}>
                   {subj.name} {subj.teacher}

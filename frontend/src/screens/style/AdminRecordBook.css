@@ -4,16 +4,10 @@
     padding: 20px;
 }
 
-
-
 .record_buttons {
     display: flex;
     justify-content: center;
 
-}
-
-.record_buttons button {
-    /* Add styling for the buttons */
 }
 
 .record_container {
@@ -116,6 +110,52 @@
     border-radius: 20px;
     margin-left: 10px;
 }
-.short_user_info_subblock{
-    
+
+@media (max-width: 600px) {
+    .record_container {
+        display: flex;
+        flex-direction: column;
+        overflow-x: auto;
+        margin-bottom: 30px;
+        scroll-behavior: smooth;
+        scroll-snap-type: x mandatory;
+        scroll-snap-align: start;
+        /* Scroll snap alignment at the start */
+    }
 }
+.record_container::-webkit-scrollbar {
+    width: 12px;
+  }
+  
+  .record_container::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+  }
+  
+  .record_container::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 6px;
+  }
+  
+  .record_container::-webkit-scrollbar-thumb:hover {
+    background-color: #555;
+  }
+
+@media (max-width: 600px) {
+    .short_user_info {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 600px) {
+    .heading {
+
+        width:50rem;
+    }
+  }
+  @media (max-width: 600px) {
+    .record_student_block {
+        width:50rem;
+        padding-bottom: 20px;
+
+    }
+  }

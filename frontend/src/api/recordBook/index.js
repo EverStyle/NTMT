@@ -4,6 +4,7 @@ const apiRecordBook = {
     getInf: request => $api.post('/recordbook/get_info', request),
     createRecord: request => $api.post('/recordbook/create', request),
     updateRecord: request => $api.post('/recordbook/update', request),
+    updateTeacherRecord: request => $api.post('/recordbook/update_for_teacher', request),
     deleteRecord: request => $api.post('/recordbook/delete', request),
     getSem: request => $api.get('/semesters', request),
     getStudents: request => $api.get('/semesters', request),

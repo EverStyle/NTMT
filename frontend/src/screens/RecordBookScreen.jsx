@@ -132,10 +132,14 @@ function RecordBookScreen() {
                         <strong> Направление : </strong>  {userGroupInfo.groupName}
                     </div>
                     <div className="short_user_info_subblock">
-                        <strong> Форма обучения : </strong>  {userGroupInfo.groupName} АНТОН ДОБАВЬ ОЧНОЕ В ЮЗЕР ИНФО
+                        <strong> Форма обучения : </strong>  {userGroupInfo.type}
                     </div>
+
                     <div className="short_user_info_subblock">
-                        <strong> Срок обучения : </strong>  {userGroupInfo.groupName} ОТ ЭТОГО  потом сделаю 3 года обучение
+                        <strong>Срок обучения:</strong> {
+                        userGroupInfo.type === 'Очная' ? '3 года' : 
+                        userGroupInfo.type === 'Заочная' ? '4 года' : 
+                        userGroupInfo.type === 'Очно-заочная' ? '5 лет' : ''}
                     </div>
 
 
@@ -154,8 +158,7 @@ function RecordBookScreen() {
                     </div>
                     {userRecord.length > 0 ? (
                         userRecord.map((record) => (
-                            <div key={record.id}>
-                                <div className="record_student_block">
+                                <div key={record.id} className="record_student_block">
                                     <div className="rec">{record.subjectName}</div>
                                     <div className="rec">{record.summaryHours}</div>
                                     <div className="rec">{record.endMark}</div>
@@ -167,8 +170,7 @@ function RecordBookScreen() {
                                         })}
                                     </div>
                                     <div className="rec">{record.teacher}</div>
-                                </div>
-                            </div>
+                                </div> 
                         ))
                     ) : (
                         <div>{placeHolder}</div>

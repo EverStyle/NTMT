@@ -149,22 +149,17 @@ function TeacherRecordBook() {
         }
     }
 
-    async function updateRecordBook(recId, mark, newdate, userselect, selectsubj, selectsem, newyear) {
+    async function updateRecordBook(recId, mark, userselect) {
         const request = {
             recordId: recId,
             endMark: mark,
-            date: newdate,
-            userId: userselect,
-            subjectId: selectsubj,
-            semestrId: selectsem,
-            year: newyear
         };
         const request2 = {
             userId: userselect
         };
         try {
             console.log(request)
-            const response = await apiRecordBook.updateRecord(request);
+            const response = await apiRecordBook.updateTeacherRecord(request);
             //   handleEditClickExit(subjId);
 
             const response6 = await apiRecordBook.get(request2);
@@ -265,7 +260,9 @@ function TeacherRecordBook() {
         setNewStudents2(studentId);
     };
 
-    console.log(newDateUpd)
+    console.log(newStudentsUpd)
+    console.log(userRecord)
+    console.log(newStudents2)
 
 
     return (
@@ -274,9 +271,6 @@ function TeacherRecordBook() {
                 <div className="title">
                     Зачетная книжка студентов
                 </div>
-                
-
-
                 <div>
                     <select className="select_block" value={newGroups} onChange={handleGroupChange}>
                         <option value="">Выберите группу</option>
@@ -339,15 +333,8 @@ function TeacherRecordBook() {
                                 </div>
                             ) : (
                                 <div>
-                                    <select className="select_block" value={newSubjectIdUpd} onChange={(e) => setNewSubjectIdUpd(e.target.value)}>
-                                        <option value="Some">Выберите предмет</option>
-                                        {subject.map((subj) => (
-                                            <option key={subj.id} value={subj.id}>
-                                                {subj.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    <select className="select_block" value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
+                                    
+                                    {/* <select className="select_block" value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
                                         <option value="Some">Выберите студента</option>
                                         {students.map((student) => (
                                             <option key={student.id} value={student.id}>
@@ -355,31 +342,16 @@ function TeacherRecordBook() {
                                             </option>
                                         ))}
                                     </select>
-                                    {/* Вопрос, тут не обязательно добавлять студентов на редактировании, вполне может вызвать баг или ошибки ЖЕЛАТЕЛЬНО УБРАТЬ */}
+                                    Вопрос, тут не обязательно добавлять студентов на редактировании, вполне может вызвать баг или ошибки ЖЕЛАТЕЛЬНО УБРАТЬ */}
 
-                                    <select className="select_block" value={newSemesterIdUpd} onChange={(e) => setNewSemesterIdUpd(e.target.value)}>
-                                        <option value="Some">Выберите семестр</option>
-                                        {semester.map((sem) => (
-                                            <option key={sem.id} value={sem.id}>
-                                                {sem.value}
-                                            </option>
-                                        ))}
-                                    </select>
+                                   
                                     <input className="select_block"
                                         type="text"
                                         placeholder='Введите результат'
                                         value={newResultUpd}
                                         onChange={(e) => setNewResultUpd(e.target.value)}
                                     />
-                                    <input className="select_block" type="date" onChange={(e) => {
-                                        const selectedDate = new Date(e.target.value);
-                                        const formattedDate = selectedDate.toLocaleDateString('ru-RU');
-                                        setNewDateUpd(formattedDate);
-                                    }} />
-
-                                    <input className="select_block" type="number" placeholder='Введите год' onChange={(e) => setNewYearUpd(e.target.value)} />
-
-                                    <button className="select_block" onClick={() => updateRecordBook(records.id, newResultUpd, newDateUpd, newStudentsUpd, newSubjectIdUpd, newSemesterIdUpd, newYearUpd)}>Сохранить</button>
+                                    <button className="select_block" onClick={() => updateRecordBook(records.id, newResultUpd,newStudents2 )}>Сохранить</button>
                                     <button className="select_block" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
                                 </div>
                             )}

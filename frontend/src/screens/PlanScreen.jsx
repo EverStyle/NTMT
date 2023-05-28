@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import apiAccount from "../api/account";
+import './style/PlanScreen.css';
 
 function PlanScreen() {
   const [subject, setSubject] = useState([]);
@@ -60,12 +61,12 @@ function PlanScreen() {
           Учебный план
         </div>
         <div>
-          <strong> Номер группы : </strong> {userGroupInfo.code}
+          <strong>Номер группы : </strong> {userGroupInfo.code}
         </div>
         <div>
-          <strong> Направление : </strong>  {userGroupInfo.groupName}
+          <strong>Направление : </strong>  {userGroupInfo.groupName}
         </div>
-
+        <div className="plan_screen_container">
         <div className="plan_heading">
           <div className="plan_rec">Дисциплина</div>
           <div className="plan_rec">Количество часов</div>
@@ -90,6 +91,9 @@ function PlanScreen() {
             </div>
           </div>
         ))}
+        </div>
+        
+        
       </div>
 
       <ToastContainer

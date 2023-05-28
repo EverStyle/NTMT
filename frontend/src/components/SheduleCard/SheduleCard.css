@@ -93,3 +93,10 @@
   display: none;
   /* Hide the first vertical line */
 }
+
+@media (max-width: 600px) {
+  .card_container {
+    min-width: fit-content;
+    width: 50rem;
+  }
+}

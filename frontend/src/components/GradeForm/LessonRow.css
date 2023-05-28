@@ -100,6 +100,14 @@
   margin-bottom: 10px; */
 }
 
+.img_file {
+  margin-left: 5px;
+  /* margin-right: 5px; */
+  margin-top: 8px;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
 .button_create:hover {
   background-color: rgb(155, 161, 255);
 }
@@ -125,6 +133,18 @@
   margin-bottom: 10px;
 }
 
+.file_block {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-bottom: 2px solid rgb(0, 0, 0);
+}
+
+.file_block_components {
+  max-width: 260px;
+  word-wrap: break-word;
+}
+
+
 .selected {
   background-color: rgb(67, 58, 190);
   width: 200px;
@@ -145,18 +165,14 @@
   align-items: center;
 }
 
-.file_block {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
 
-  margin-top: 10px;
-  margin-bottom: 10px;
-  border-bottom: 2px solid rgb(0, 0, 0);
-}
-
-.file_block_components {
-  padding-left: 10px;
+.file_two_components {
+  display: grid;
+  grid-template-columns: auto auto;
+  /* Update the grid-template-columns property */
+  gap: 5px;
+  justify-content: start;
+  /* Align the grid items to the start */
 }
 
 .folder_block_component {
@@ -164,9 +180,9 @@
 }
 
 .folder_create_block {
-  display: flex;
-  justify-content: flex-start;
-
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
 }
 
 .createFolderBlock {
@@ -175,15 +191,21 @@
 }
 
 .create_folder_block_component {
-  width: 400px;
+  /* width: 400px; */
 }
 
 .Lexa {
   padding-right: 20px;
+  padding-bottom: 20px;
 }
 
 .create_input {
   width: 100%;
   border: 2px solid #000000;
   border-radius: 5px;
+}
+@media (max-width: 600px) {
+  .folder_create_block {
+    grid-template-columns: 1fr;
+  }
 }

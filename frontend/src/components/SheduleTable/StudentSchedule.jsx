@@ -119,13 +119,14 @@ function StudentSchedule() {
   return (
     <div className='shedule-table'>
 
-      <div className="date_block" >
+      <div className="date_block_student" >
         <div className="date_container">
 
           <div className="subblock_text">
             Выберите дату
+            <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
           </div>
-          <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
+
         </div>
         <div className="date_container">
           {/* <button onClick={() => setStartDate(new Date())}>Reset</button> */}
@@ -141,46 +142,12 @@ function StudentSchedule() {
                   <option key={groups.id} value={groups.code}>{groups.groupName} ({groups.code})</option>
                 ))}
               </select>
-              {/* {selectedGroup && <p>You selected {selectedGroup}</p>} */}
             </div>
           </div>
         </div>
-
-        {/* <div className="lexa">
-          <div
-            style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
-            className="file-link"
-          >
-            <label htmlFor="file2" style={{ position: 'absolute', opacity: '0', width: '100%', height: '100%', cursor: 'pointer' }}></label>
-            <input
-              value={file}
-              type="file"
-              id="file2"
-              //Важно id html и id input изменить и все работает
-              style={{ position: 'absolute', display: 'none', width: '100%', height: '100%' }}
-              onChange={(e) => uploadSchedule(e.target.files)}
-            />
-            <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
-            <p style={{ textAlign: 'center' }}>Загрузить расписание</p>
-          </div>
-        </div> */}
-
       </div>
 
-
-
       <div className='lessons_container'>
-
-
-
-        {/* <div className="sub_text_schedule">
-          <div>
-            Выбранная дата {lessons.date}
-          </div>
-          <div>
-            День недели {lessons.day_of_the_week}
-          </div>
-        </div> */}
         {lessons.length == 0 ? <div className="subblock_text">Не выбранна дата или нет данных </div> : <div className="sub_text_schedule">
           <div className="subblock_text">
             Выбранная дата / {lessons.date}
@@ -190,22 +157,22 @@ function StudentSchedule() {
           </div>
         </div>}
 
-        <div className="all_schedule_block">
+        <div className="heading_shedule-container">
 
           <div className="heading_shedule">
-            <div className="rec_shedule"> Номер группы</div>
-            <div className="rec_shedule"> Номер пары</div>
-            <div className="rec_shedule"> Предмет</div>
-            <div className="rec_shedule"> Аудитория</div>
+            <div className="rec_shedule">Номер группы</div>
+            <div className="rec_shedule">Номер пары</div>
+            <div className="rec_shedule">Предмет</div>
+            <div className="rec_shedule">Аудитория</div>
             <div className="rec_shedule">Преподаватель</div>
           </div>
+
           {
             !switchSchedule ? (
               lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
             ) : lessons.length === 0 ? (
               <div className="subblock_text">Нет данных</div>
             ) : (
-              <div>
                 <div className="certain_schedule">
                   {typeof sertainGroups === 'object' ? (
                     <ul className="custom-ul">
@@ -227,6 +194,7 @@ function StudentSchedule() {
                         </div>
 
                         <div className="all_certain_schedule_subblock">
+                          
                           {sertainGroups?.schedule &&
                             Object.entries(sertainGroups.schedule).map(
                               ([key, value]) => (
@@ -253,7 +221,6 @@ function StudentSchedule() {
                     <div>{sertainGroups}</div>
                   )}
                 </div>
-              </div>
             )
           }
         </div>

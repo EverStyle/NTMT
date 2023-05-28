@@ -23,3 +23,20 @@
     grid-gap: 10px;
     /* Gap between the subblocks */
 }
+
+@media (max-width: 600px) {
+    .two_blocks {
+        grid-template-columns: 1fr;
+        min-width: fit-content;
+        /* width: max-content; */
+        margin-right: 5rem;
+    }
+}
+@media (max-width: 600px) {
+    .file_container {
+        border: 2px solid #000000;
+        border-radius: 20px;
+        margin-top: 3rem;
+        padding-bottom: 3rem;
+    }
+}

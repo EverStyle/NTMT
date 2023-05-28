@@ -62,30 +62,12 @@ function AdminRecordBook() {
             const request = {
                 userId: 0
             };
-            const request2 = {
-                semestrId: 0,
-                year: 0
-            };
-            const request3 = {
-                roleId: 4
-            };
             const request4 = {
                 roleId: 3
             };
-            const request5 = {
-                userId: 3
-            };
-            // const response = await apiRecordBook.get(request);
-            // setUserRecord(response.data.message);
-            // const response4 = await apiRecordBook.getInf(request2);
-            // setYearGrades(response4.data.message);
-            //   const response5 = await apiSubject.get(request);
-            //   setSubject(response.data.message);
+
             const response = await apiSubject.get(request);
             setSubject(response.data.message);
-
-            // const response2 = await apiSubject.getuser(request3);
-            // setStudents(response2.data.message);
 
             const response3 = await apiSubject.getuser(request4);
             setTeachers(response3.data.message);
@@ -96,20 +78,12 @@ function AdminRecordBook() {
             const response5 = await apiRecordBook.getSem(request4);
             setSemester(response5.data.message);
 
-            // const response6 = await apiAccount.info();
-            // setUserInfo(response6.data.message);
-
-            // const response7 = await apiSchedule.groups();
-            // setGroups(response7.data.message);
-
-            // const response6 = await apiRecordBook.get(request5);
-            // setUserRecord(response6.data.message);
             fetchGroups()
 
         } catch (error) {
             console.error(error);
             console.error('ERROR GET LESSONS');
-            toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+            toast.error('Произошла ошибка при получении информации о зачетных книжек. Попробуйте позже или обратитесь в техподдержку');
         }
 
     }, []);
@@ -125,7 +99,6 @@ function AdminRecordBook() {
 
 
     async function createRecordBook(mark, newdate, userselect, selectsubj, selectsem, newyear) {
-        //а это типа создание папки в папке студента типо разные папки 
         const request = {
             endMark: mark,
             date: newdate,
@@ -138,14 +111,14 @@ function AdminRecordBook() {
         try {
             console.log(request)
             const response = await apiRecordBook.createRecord(request);
-            toast.success("Data updated successfully");
+            toast.success("Данные успешно добавленны");
 
             const response6 = await apiRecordBook.get(request2);
             setUserRecord(response6.data.message);
         } catch (error) {
             console.error(error);
             console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+            toast.error('Произошла ошибка при создании зачетной книжки. Попробуйте позже или обратитесь в техподдержку');
         }
     }
 
@@ -169,12 +142,12 @@ function AdminRecordBook() {
 
             const response6 = await apiRecordBook.get(request2);
             setUserRecord(response6.data.message);
-            toast.success("Data updated successfully");
+            toast.success("Данные успешно обновлены");
         } catch (error) {
 
             console.error(error);
             console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+            toast.error('Произошла ошибка при обновлении. Попробуйте позже или обратитесь в техподдержку');
         }
     }
 
@@ -200,22 +173,18 @@ function AdminRecordBook() {
             recordId: id
         };
         const request2 = {};
-        const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
+        const confirmed = window.confirm('Вы точно хотите удалить выбранную зачетную книжку ?');
         if (!confirmed) {
             return;
         }
         try {
             const response = await apiRecordBook.deleteRecord(request);
             const data = response.data;
-
-            // const response6 = await apiRecordBook.get(request);
-            // setUserRecord(response6.data.message);
-
-            toast.success("Data updated successfully");
+            toast.success("Данные успешно удаленны");
         } catch (error) {
             console.error(error);
             console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+            toast.error('Произошла ошибка при удалении. Попробуйте позже или обратитесь в техподдержку');
         }
     }
 

@@ -19,19 +19,16 @@ function AdminNotification({ math }) {
   const [students, setStudents] = useState([]);
 
   useEffect(() => {
-
     const messageBlockHeight = messageBlockRef.current.clientHeight;
     if (messageBlockHeight > 500) {
       messageBlockRef.current.style.height = "500px";
     }
-
     async function getNotifications() {
       try {
         const response = await apiMessages.get(page);
         setNotifications([...response.data.message]);
         const response2 = await apiMessages.newUserInfo();
         setUserInfo([...response2.data.message]);
-
       } catch (error) {
         console.error(error);
         console.error('ERROR GET NOTIFICATIONS');
@@ -58,6 +55,7 @@ function AdminNotification({ math }) {
       const data = response.data;
       const response2 = await apiMessages.get(page);
       setNotifications([...response2.data.message]);
+      toast.success("Уведомление успешно созданно и отправленно");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -65,33 +63,6 @@ function AdminNotification({ math }) {
     }
   }
 
-  async function deleteMessage(id) {
-    const request = {
-      recordId: id
-    };
-    const request2 = {};
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-    if (!confirmed) {
-      return;
-    }
-    try {
-      const response = await apiMessages.deleteMess(request);
-      const data = response.data;
-
-      // const response6 = await apiRecordBook.get(request);
-      // setUserRecord(response6.data.message);
-
-      toast.success("Data updated successfully");
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  const handleUserSelect = (folderId) => {
-    setCurrentUserId(folderId);
-  }
 
   const [selectedUserIds, setSelectedUserIds] = useState([]);
 
@@ -109,12 +80,12 @@ function AdminNotification({ math }) {
     try {
       const response = await apiMessages.deleteMess({ listMessages: [notificationId] });
       const data = response.data;
-      toast.success("Data updated successfully");
+      toast.success("Уведомление успешно удалено");
       setNotifications(notifications.filter(notification => notification.id !== notificationId));
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении уведомления. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -157,16 +128,6 @@ function AdminNotification({ math }) {
     }
   };
 
-  const toggleUserSelection = (userId) => {
-    setSelectedUserIds((prevSelectedUserIds) => {
-      if (prevSelectedUserIds.includes(userId)) {
-        return prevSelectedUserIds.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedUserIds, userId];
-      }
-    });
-  };
-  const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
 
   const handleMultipleGroupChange = async (e) => {
     const selectedOptions = Array.from(e.target.selectedOptions);
@@ -187,14 +148,12 @@ function AdminNotification({ math }) {
             placeholder="Введите название уведомления"
             onChange={(e) => setNewNotificationTitle(e.target.value)}
           />
-
           <textarea
             className="input_block"
             placeholder="Введите текст уведомления"
             onChange={(e) => setNewNotificationText(e.target.value)}
           />
           <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
-          {/* onClick={() => deleteFiles(file.id)} */}
         </div>
         <div>
           <div className="select-container">

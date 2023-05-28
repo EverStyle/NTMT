@@ -14,12 +14,6 @@ import { Button } from '@mui/material';
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
   const [isOpen, setIsOpen] = useState(false);
-
-
-  console.log(files)
-  console.log()
-
-
   const handleClick = (event) => {
     if (event.detail === 1) {
       if (isOpen) {
@@ -43,13 +37,10 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     const request2 = {
       folderId: 1
     };
-
     const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-
     if (!confirmed) {
       return;
     }
-
     try {
       const response = await apiFiles.delete(request);
       const data = response.data;
@@ -85,7 +76,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
   const indentation = depth * 10; // 10 pixels per level
 
   return (
-    <div style={{ marginLeft: `${depth * 4}px` }}>
+    <div style={{ marginLeft: window.innerWidth >= 600 ? `${depth + 10}px` : 0 }}>
       <div className={`folder_container ${folderClass}`} onClick={handleClick}>
         <div className="folder_name">
           <div className='folder_block_component'>
@@ -104,11 +95,20 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
           {files.length > 0 && (
 
             <ul>
-              {files.map((file, index) => (
+              {files?.map((file, index) => (
                 <li key={file.id}>
                   <div className='file_block'>
+                    <div className='file_two_components'>
                     <div className='file_block_components'>
-                      <img src={filelogo} style={{ width: '30px', height: '30px' }} />
+                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                    </div>
+                    <div className='file_block_components'>
+                    {file.id && (
+                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                      )}
+                      <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
+                      
+                    </div>
                     </div>
 
                     {/* <div className='file_block_components'>Номер = {file.id}</div> */}
@@ -116,20 +116,15 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                       {file.fileMeta.fileName}
                     </div>
 
-                    <div className='file_block_components'>
-                      <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
-                      {file.id && (
-                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                      )}
-                    </div>
+                    
                   </div>
                 </li>
               ))}
             </ul>
-
+            
           )}
 
-          {folders.map(folder => (
+          {folders?.map(folder => (
             <Folder
               key={folder.id}
               {...folder}
@@ -138,10 +133,10 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
               onFolderName={onFolderName}
               selectedFolderId={selectedFolderId}
               onDataChanged={onDataChanged}
-              depth={depth + 5}
+              depth={depth}
             />
           ))}
-
+          
         </>
       )}
     </div>
@@ -338,9 +333,7 @@ function LessonRow() {
     const request2 = {
       folderId: 1
     };
-
     const confirmed = window.confirm('Вы точно хотите удалить выбранную папку ? Все находящиеся там файлы будут удалены !!');
-
     if (!confirmed) {
       return;
     }

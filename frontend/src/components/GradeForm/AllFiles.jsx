@@ -83,65 +83,70 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     const indentation = depth * 10; // 10 pixels per level
 
     return (
-        <div style={{ marginLeft: `${depth * 4}px` }}>
-            <div className={`folder_container ${folderClass}`} onClick={handleClick}>
-                <div className="folder_name">
-                    <div className='folder_block_component'>
-                        <img src={logo} style={{ width: '30px', height: '30px' }} />
-                    </div>
-                    <div className='folder_block_component'>
-                        {name}
-                    </div>
-                </div>
-            </div>
-
-            {isOpen && (
-                <>
-                    {files.length === 0 && <div>В папке отсутствуют файлы  </div>}
-
-                    {files.length > 0 && (
-
-                        <ul>
-                            {files.map((file, index) => (
-                                <li key={file.id}>
-                                    <div className='file_block'>
-                                        <div className='file_block_components'>
-                                            <img src={filelogo} style={{ width: '30px', height: '30px' }} />
-                                        </div>
-
-                                        {/* <div className='file_block_components'>Номер = {file.id}</div> */}
-                                        <div className='file_block_components'>
-                                            {file.fileMeta.fileName}
-                                        </div>
-
-                                        <div className='file_block_components'>
-
-                                            {file.id && (
-                                                <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                                            )}
-                                        </div>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-
-                    )}
-
-                    {folders?.map((folder) => (
-                        <Folder
-                            key={folder.id}
-                            {...folder}
-                            path={`${path}/${folder.id}`}
-                            onFolderSelect={onFolderSelect}
-                            onFolderName={onFolderName}
-                            selectedFolderId={selectedFolderId}
-                            onDataChanged={onDataChanged}
-                            depth={depth + 5}
-                        />
-                    ))}
-                </>
-            )}
+        <div style={{ marginLeft: window.innerWidth >= 600 ? `${depth + 10}px` : 0 }}>
+      <div className={`folder_container ${folderClass}`} onClick={handleClick}>
+        <div className="folder_name">
+          <div className='folder_block_component'>
+            <img src={logo} style={{ width: '30px', height: '30px' }} />
+          </div>
+          <div className='folder_block_component'>
+            {name}
+          </div>
         </div>
+      </div>
+
+      {isOpen && (
+        <>
+          {files.length === 0 && <div>В папке отсутствуют файлы  </div>}
+
+          {files.length > 0 && (
+
+            <ul>
+              {files?.map((file, index) => (
+                <li key={file.id}>
+                  <div className='file_block'>
+                    <div className='file_two_components'>
+                    <div className='file_block_components'>
+                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                    </div>
+                    <div className='file_block_components'>
+                    {file.id && (
+                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                      )}
+                     
+                      
+                    </div>
+                    </div>
+
+                    {/* <div className='file_block_components'>Номер = {file.id}</div> */}
+                    <div className='file_block_components'>
+                      {file.fileMeta.fileName}
+                    </div>
+
+                    
+                  </div>
+                </li>
+              ))}
+            </ul>
+            
+          )}
+
+          {folders?.map(folder => (
+            <Folder
+              key={folder.id}
+              {...folder}
+              path={`${path}/${folder.id}`}
+              onFolderSelect={onFolderSelect}
+              onFolderName={onFolderName}
+              selectedFolderId={selectedFolderId}
+              onDataChanged={onDataChanged}
+              depth={depth}
+            />
+          ))}
+          
+        </>
+      )}
+    </div>
     );
     // return (
     //   <div>

@@ -1,16 +1,21 @@
-const handleMultipleGroupChange = async (e) => {
-  const selectedOptions = Array.from(e.target.selectedOptions);
-  const selectedGroups = selectedOptions.map((option) => option.value);
-  setnewMultipleSubjects(selectedGroups);
-};
 
-<div className="dropdown">
-  <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
-    {/* <option value="">Выберите группу</option> */}
-    {students.map((user) => (
-      <option key={user.id} value={user.id}>
-        {user.fio}
-      </option>
-    ))}
-  </select>
+// пометки че нада пофиксить, заебался забывать
+// замени дайт пикер для телфонов на спец
+// переделай учебный план для препода, убери смысловой блок и замни выборку в общий селект
+// обновление зачетки сделай через 3 грид фрейм
+//
+//
+//
+<div className="all_schedule_block">
+
+  <div className="heading_shedule-container">
+    <div className="heading_shedule">
+      <div className="rec_shedule">Номер группы</div>
+      <div className="rec_shedule">Номер пары</div>
+      <div className="rec_shedule">Предмет</div>
+      <div className="rec_shedule">Аудитория</div>
+      <div className="rec_shedule">Преподаватель</div>
+    </div>
+  </div>
 </div>
+

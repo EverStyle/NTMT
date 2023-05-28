@@ -285,24 +285,23 @@ console.log(selectedBlockId)
         <div className={`create_record_block ${selectedBlockId === 'group' ? 'active' : ''}`}
           onClick={() => handleBlockClick('group')}>
           <div className="title">
-            Присвоение дисциплины к группе
+            Учебный план группы
           </div>
-          <div className="subblock_text">
+          {/* <div className="subblock_text">
             Выбор дисциплин
           </div>
           <div className="subblock_text">
             ** Пометка для администратора, для выделения нескольких дисциплин используйте CTRL или SHIFT
-          </div>
-          <div className="dropdown">
+          </div> */}
+          {/* <div className="dropdown">
             <select className="multiple_select" value={newMultipleSubjects} onChange={handleMultipleGroupChange} size={10} multiple>
-              {/* <option value="">Выберите группу</option> */}
               {selectSubject.map((subj) => (
                 <option key={subj.id} value={subj.id}>
                   {subj.name} {subj.teacher}
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
           <div className="record_subblock">
             <div className="subblock_text">
               Выбор группы
@@ -316,18 +315,18 @@ console.log(selectedBlockId)
               ))}
             </select>
           </div>
-          <button type='button' className="button_create" onClick={() => createSubjectForGroup(newGroups, newMultipleSubjects)}>Создать</button>
+          {/* <button type='button' className="button_create" onClick={() => createSubjectForGroup(newGroups, newMultipleSubjects)}>Создать</button> */}
         </div>
 
         <div className={`create_record_block ${selectedBlockId === 'plan' ? 'active' : ''}`}
           onClick={() => handleBlockClick('plan')}>
           <div>
             <div className="title">
-              Создание учебного плана
+              Все дисциплины
             </div>
 
             <div>
-              <div className="record_subblock">
+              {/* <div className="record_subblock">
                 <div className="subblock_text">
                   Выберите преподавателя для новой дисциплины
                 </div>
@@ -339,9 +338,9 @@ console.log(selectedBlockId)
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
 
-              <div className="record_subblock">
+              {/* <div className="record_subblock">
                 <div className="subblock_text">
                   Выберите название дисциплины
                 </div>
@@ -370,9 +369,9 @@ console.log(selectedBlockId)
                     </option>
                   ))}
                 </select>
-              </div>
+              </div> */}
             </div>
-            <button type='button' className="button_create" onClick={() => createSubject(newSubjectTitle, newHours, selectedExamIds, newteachers)}>Создать</button>
+            {/* <button type='button' className="button_create" onClick={() => createSubject(newSubjectTitle, newHours, selectedExamIds, newteachers)}>Создать</button> */}
           </div>
         </div>
       </div>
@@ -389,7 +388,7 @@ console.log(selectedBlockId)
               <div className="plan_rec">Количество часов</div>
               <div className="plan_rec">Отчетность</div>
               <div className="plan_rec">Преподаватель</div>
-              <div className="plan_rec">Действия</div>
+              {/* <div className="plan_rec">Действия</div> */}
             </div>
             {subject?.map(subj => (
               <div key={subj.id}>
@@ -407,13 +406,13 @@ console.log(selectedBlockId)
                       {subj.teacher}
                     </div>
 
-                    <div> <button className="recordbook_buttons" onClick={() => deleteSubjectFromGroup(subj.id,newGroups)}>
+                    {/* <div> <button className="recordbook_buttons" onClick={() => deleteSubjectFromGroup(subj.id,newGroups)}>
                       Удалить
                     </button>
-                      {/* <button onClick={() => handleEditClick(subj.id)}>
+                      <button onClick={() => handleEditClick(subj.id)}>
                         Update
-                      </button> */}
-                      </div>
+                      </button>
+                      </div> */}
                   </div>
                 {!editableSubject[subj.id] ? (
                   <div>
@@ -470,7 +469,7 @@ console.log(selectedBlockId)
               <div className="plan_rec">Количество часов</div>
               <div className="plan_rec">Отчетность</div>
               <div className="plan_rec">Преподаватель</div>
-              <div className="plan_rec">Действия</div>
+              {/* <div className="plan_rec">Действия</div> */}
             </div>
             {subject?.map(subj => (
               <div key={subj.id}>
@@ -488,12 +487,12 @@ console.log(selectedBlockId)
                       {subj.teacher}
                     </div>
 
-                    <div> <button className="recordbook_buttons" onClick={() => deleteSubject(subj.id)}>
+                    {/* <div> <button className="recordbook_buttons" onClick={() => deleteSubject(subj.id)}>
                       Удалить
                     </button>
                       <button className="recordbook_buttons" onClick={() => handleEditClick(subj.id)}>
                         Обновить
-                      </button></div>
+                      </button></div> */}
                   </div>
                 {!editableSubject[subj.id] ? (
                   <div></div>

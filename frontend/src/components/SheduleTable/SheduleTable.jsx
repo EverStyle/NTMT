@@ -56,7 +56,6 @@ function SheduleTable() {
 
   useEffect(async () => {
     try {
-
       const request = {
         date: formattedDate,
         // group: selectedGroup
@@ -88,7 +87,6 @@ function SheduleTable() {
   // console.log(Array.isArray(sertainGroups))
 
   async function uploadSchedule(file) {
-
     const fileTypes = {
       'txt': 1,
       'xlsx': 2,
@@ -100,7 +98,6 @@ function SheduleTable() {
 
     const request2 = {
     };
-
     try {
       const response = await apiSchedule.sendSched(request);
       const data = response.data.message[0];
