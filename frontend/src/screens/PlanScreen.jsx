@@ -54,6 +54,23 @@ function PlanScreen() {
 
   }, []);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    handleResize(); // Check on initial render
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
     <div>
       <div>
@@ -66,34 +83,68 @@ function PlanScreen() {
         <div>
           <strong>Направление : </strong>  {userGroupInfo.groupName}
         </div>
-        <div className="plan_screen_container">
-        <div className="plan_heading">
-          <div className="plan_rec">Дисциплина</div>
-          <div className="plan_rec">Количество часов</div>
-          <div className="plan_rec">Отчетность</div>
-          <div className="plan_rec">Преподаватель</div>
-        </div>
-        {subject?.map(subj => (
-          <div key={subj.id}>
-            <div className="plan_block">
-              <div className="plan_rec">
-                {subj.subjectName}
-              </div>
-              <div className="plan_rec">
-                {subj.summaryHours}
-              </div>
-              <div className="plan_rec" >
-                {subj.type}
-              </div>
-              <div className="plan_rec">
-                {subj.teacher}
-              </div>
+
+        {isMobile ? (
+          // JSX for small screens (width <= 600)
+          <div className="plan_screen_container">
+            <div className="plan_heading">
+            
             </div>
+            {subject?.map(subj => (
+              <div key={subj.id} className="record_mobile_block">
+                <div className="schedule_mobile_data">
+                  <div className="rec_shedule">Дисциплина :</div>
+                  <div className="rec_shedule">{subj.subjectName}</div>
+                </div>
+                <div className="schedule_mobile_data">
+                  <div className="rec_shedule">Количество часов :</div>
+                  <div className="rec_shedule">{subj.summaryHours}</div>
+                </div>
+                <div className="schedule_mobile_data">
+                  <div className="rec_shedule">Отчетность :</div>
+                  <div className="rec_shedule">{subj.type}</div>
+                </div>
+                <div className="schedule_mobile_data">
+                  <div className="rec_shedule">Преподаватель :</div>
+                  <div className="rec_shedule">{subj.teacher}</div>
+                </div>
+                {/* <div className="rec_shedule">Номер группы</div> */}
+              </div>
+            ))}
           </div>
-        ))}
-        </div>
-        
-        
+        ) : (
+          // JSX for large screens (width > 600)
+          <div className="plan_screen_container">
+            <div className="plan_heading">
+              <div className="plan_rec">Дисциплина</div>
+              <div className="plan_rec">Количество часов</div>
+              <div className="plan_rec">Отчетность</div>
+              <div className="plan_rec">Преподаватель</div>
+            </div>
+            {subject?.map(subj => (
+              <div key={subj.id}>
+                <div className="plan_block">
+                  <div className="plan_rec">
+                    {subj.subjectName}
+                  </div>
+                  <div className="plan_rec">
+                    {subj.summaryHours}
+                  </div>
+                  <div className="plan_rec" >
+                    {subj.type}
+                  </div>
+                  <div className="plan_rec">
+                    {subj.teacher}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+
+
+
       </div>
 
       <ToastContainer

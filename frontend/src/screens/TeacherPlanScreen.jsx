@@ -210,11 +210,11 @@ function TeacherPlanScreen() {
       const selectedGroup = groups.find((grp) => grp.id === selectedGroupId);
       setNewGroupCode(selectedGroup.code);
     }
-
     const groupId = parseInt(e.target.value);
     setNewGroups(groupId);
     setShowGroupCurriculum(true);
     // setSubject([])
+
     try {
       const request = {
         groupId: groupId
@@ -282,30 +282,17 @@ console.log(selectedBlockId)
   return (
     <div>
       <div className="all_create_block">
-        <div className={`create_record_block ${selectedBlockId === 'group' ? 'active' : ''}`}
+        <div className={`create_subj_block ${selectedBlockId === 'group' ? 'active' : ''}`}
           onClick={() => handleBlockClick('group')}>
           <div className="title">
             Учебный план группы
           </div>
-          {/* <div className="subblock_text">
-            Выбор дисциплин
-          </div>
-          <div className="subblock_text">
-            ** Пометка для администратора, для выделения нескольких дисциплин используйте CTRL или SHIFT
-          </div> */}
-          {/* <div className="dropdown">
-            <select className="multiple_select" value={newMultipleSubjects} onChange={handleMultipleGroupChange} size={10} multiple>
-              {selectSubject.map((subj) => (
-                <option key={subj.id} value={subj.id}>
-                  {subj.name} {subj.teacher}
-                </option>
-              ))}
-            </select>
-          </div> */}
+
           <div className="record_subblock">
             <div className="subblock_text">
               Выбор группы
             </div>
+            <button type='button' className="button_create" onClick={() => handleBlockClick('plan')}>Все дисциплины</button>
             <select className="select_block" value={newGroups.toString()} onChange={handleGroupChange}>
               <option value="">Выберите группу</option>
               {groups.map((grp) => (
@@ -315,65 +302,17 @@ console.log(selectedBlockId)
               ))}
             </select>
           </div>
-          {/* <button type='button' className="button_create" onClick={() => createSubjectForGroup(newGroups, newMultipleSubjects)}>Создать</button> */}
+          
         </div>
 
-        <div className={`create_record_block ${selectedBlockId === 'plan' ? 'active' : ''}`}
+        {/* <div className={`create_record_block ${selectedBlockId === 'plan' ? 'active' : ''}`}
           onClick={() => handleBlockClick('plan')}>
           <div>
             <div className="title">
               Все дисциплины
             </div>
-
-            <div>
-              {/* <div className="record_subblock">
-                <div className="subblock_text">
-                  Выберите преподавателя для новой дисциплины
-                </div>
-                <select className="select_block" value={newteachers} onChange={handleTeacherChange}>
-                  <option value="">Выберите прeподавателя</option>
-                  {teachers?.map((teach) => (
-                    <option key={teach.id} value={teach.id}>
-                      {teach.fio}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
-
-              {/* <div className="record_subblock">
-                <div className="subblock_text">
-                  Выберите название дисциплины
-                </div>
-                <div>
-                  <input type="text" className="select_block" placeholder='Введите название дисциплины' onChange={(e) => setNewSubjectTitle(e.target.value)} />
-                </div>
-              </div>
-              <div className="record_subblock">
-                <div className="subblock_text">
-                  Введите количество часов
-                </div>
-
-                <div>
-                  <input id="number" className="select_block" type="number" placeholder='Введите количество часов' onChange={(e) => setNewHours(e.target.value)} />
-                </div>
-              </div>
-              <div className="record_subblock">
-                <div className="subblock_text">
-                  Выберите тип сдачи дисциплины
-                </div>
-                <select className="select_block" value={selectedExamIds} onChange={handleExamChange}>
-                  <option value="">Выберите тип</option>
-                  {exams?.map((ex) => (
-                    <option key={ex.id} value={ex.id}>
-                      {ex.type}
-                    </option>
-                  ))}
-                </select>
-              </div> */}
-            </div>
-            {/* <button type='button' className="button_create" onClick={() => createSubject(newSubjectTitle, newHours, selectedExamIds, newteachers)}>Создать</button> */}
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Render curriculum based on selected block */}
@@ -406,54 +345,7 @@ console.log(selectedBlockId)
                       {subj.teacher}
                     </div>
 
-                    {/* <div> <button className="recordbook_buttons" onClick={() => deleteSubjectFromGroup(subj.id,newGroups)}>
-                      Удалить
-                    </button>
-                      <button onClick={() => handleEditClick(subj.id)}>
-                        Update
-                      </button>
-                      </div> */}
                   </div>
-                {!editableSubject[subj.id] ? (
-                  <div>
-
-                  </div>
-                ) : (
-                  <div>
-                    <input
-                    className="select_block"
-                      type="text"
-                      placeholder='Введите'
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                    />
-                    <input
-                    className="select_block"
-                      type="number"
-                      placeholder='Введите'
-                      value={newHoursSubj}
-                      onChange={(e) => setNewHoursSubj(e.target.value)}
-                    />
-                    <select className="select_block" value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
-                      <option value="">Select Exam Type</option>
-                      {exams.map((exam) => (
-                        <option key={exam.id} value={exam.id}>
-                          {exam.type}
-                        </option>
-                      ))}
-                    </select>
-                    <select className="select_block" value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
-                      <option value="">Select Teacher</option>
-                      {teachers.map((teacher) => (
-                        <option key={teacher.id} value={teacher.id}>
-                          {teacher.name}
-                        </option>
-                      ))}
-                    </select>
-                    <button onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Save</button>
-                    <button onClick={() => handleEditClickExit(subj.id)}>Exit</button>
-                  </div>
-                )}
               </div>
             ))}
           </div>
@@ -486,52 +378,7 @@ console.log(selectedBlockId)
                     <div className="plan_rec">
                       {subj.teacher}
                     </div>
-
-                    {/* <div> <button className="recordbook_buttons" onClick={() => deleteSubject(subj.id)}>
-                      Удалить
-                    </button>
-                      <button className="recordbook_buttons" onClick={() => handleEditClick(subj.id)}>
-                        Обновить
-                      </button></div> */}
                   </div>
-                {!editableSubject[subj.id] ? (
-                  <div></div>
-                ) : (
-                  <div>
-                    <input
-                    className="select_block"
-                      type="text"
-                      placeholder='Введите название дициплины'
-                      value={newTitle}
-                      onChange={(e) => setNewTitle(e.target.value)}
-                    />
-                    <input
-                    className="select_block"
-                      type="number"
-                      placeholder='Введите количество часов'
-                      value={newHoursSubj}
-                      onChange={(e) => setNewHoursSubj(e.target.value)}
-                    />
-                    <select className="select_block" value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
-                      <option value="">Выберите тип экзамена</option>
-                      {exams.map((exam) => (
-                        <option key={exam.id} value={exam.id}>
-                          {exam.type}
-                        </option>
-                      ))}
-                    </select>
-                    <select className="select_block" value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
-                      <option value="">Выберите преподавателя</option>
-                      {teachers.map((teacher) => (
-                        <option key={teacher.id} value={teacher.id}>
-                          {teacher.name}
-                        </option>
-                      ))}
-                    </select>
-                    <button className="select_block" onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Сохранить</button>
-                    <button className="select_block" onClick={() => handleEditClickExit(subj.id)}>Отмена</button>
-                  </div>
-                )}
               </div>
             ))}
           </div>

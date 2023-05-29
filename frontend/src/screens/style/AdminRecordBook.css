@@ -110,7 +110,14 @@
     border-radius: 20px;
     margin-left: 10px;
 }
+.record_mobile_block{
+    margin-top: 20px;
+    margin-bottom: 20px;
+    width: 30rem;
+    border: 2px solid black;
+    border-radius: 20px;
 
+  }
 @media (max-width: 600px) {
     .record_container {
         display: flex;

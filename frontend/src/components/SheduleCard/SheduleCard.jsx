@@ -10,51 +10,92 @@ function SheduleCard(props) {
   // console.log(arr)
   // console.log(Array.isArray(arr))
 
-  // useEffect(async () => {
-  //   try {
-  //     const request = {
-  //       files: [{ fileName: 'test2' }]
-  //     };
-  //     const response = await apiSchedule.get(request);
-  //     setLessons(response.data.message[0]);
-  //   } catch (error) {
-  //     console.error(error);
-  //     console.error('ERROR GET LESSONS');
-  //     toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
-  //   }
-  // }, []);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    handleResize(); // Check on initial render
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
+    <div>
 
-    <div className="card_container">
-      <div className="group_number">
-        {props.code}
-      </div>
-      <div className="all_certain_schedule_subblock" >
-        {arr?.map((lesson, index) => (
-          <li className={`custom-li ${!lesson.subject && 'no_lessons'}`} key={index}>
-            {lesson.subject ? (
-              <>
-                <div className="rec_shedule">
-                  {index + 1}
+      {isMobile ? (
+        // JSX for small screens (width <= 600)
+        <div className="all_certain_schedule_subblock" >
+          {arr?.map((lesson, index) => (
+            <li className={`custom-li ${!lesson.subject && 'no_lessons'}`} key={index}>
+              {lesson.subject ? (
+                <div className="schedule_mobile_block">
+                  <div className="schedule_mobile_data">
+                    <div className="rec_shedule">Номер пары :</div>
+                    <div className="rec_shedule">{index + 1}</div>
+                  </div>
+                  <div className="schedule_mobile_data">
+                    <div className="rec_shedule">Предмет :</div>
+                    <div className="rec_shedule">{lesson.subject}</div>
+                  </div>
+                  <div className="schedule_mobile_data">
+                    <div className="rec_shedule">Аудитория :</div>
+                    <div className="rec_shedule">{lesson.fo}</div>
+                  </div>
+                  <div className="schedule_mobile_data">
+                    <div className="rec_shedule">Преподаватель :</div>
+                    <div className="rec_shedule">{lesson.fio}</div>
+                  </div>
+                  {/* <div className="rec_shedule">Номер группы</div> */}
                 </div>
-                <div className="rec_shedule">
-                  {lesson.subject}
-                </div>
-                <div className="rec_shedule">
-                  {lesson.fo}
-                </div>
-                <div className="rec_shedule">
-                  {lesson.fio}
-                </div>
-              </>
-            ) : (
-              <div>Номер пары {index + 1} / Нет занятий</div>
-            )}
-          </li>
-        ))}
-      </div>
+              ) : (
+                <div>Номер пары {index + 1} / Нет занятий</div>
+              )}
+            </li>
+          ))}
+        </div>
+      ) : (
+        // JSX for large screens (width > 600)
+        <div className="card_container">
+          <div className="group_number">
+            {props.code}
+          </div>
+          <div className="all_certain_schedule_subblock" >
+            {arr?.map((lesson, index) => (
+              <li className={`custom-li ${!lesson.subject && 'no_lessons'}`} key={index}>
+                {lesson.subject ? (
+                  <>
+                    <div className="rec_shedule">
+                      {index + 1}
+                    </div>
+                    <div className="rec_shedule">
+                      {lesson.subject}
+                    </div>
+                    <div className="rec_shedule">
+                      {lesson.fo}
+                    </div>
+                    <div className="rec_shedule">
+                      {lesson.fio}
+                    </div>
+                  </>
+                ) : (
+                  <div>Номер пары {index + 1} / Нет занятий</div>
+                )}
+              </li>
+            ))}
+          </div>
+        </div>
+      )}
+
+
     </div>
+
   );
 }
 

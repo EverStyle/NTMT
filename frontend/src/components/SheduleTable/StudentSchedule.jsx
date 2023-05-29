@@ -116,8 +116,36 @@ function StudentSchedule() {
   }
   console.log(sertainGroups.schedule)
   console.log(lessons)
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    handleResize(); // Check on initial render
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
   return (
+
+
     <div className='shedule-table'>
+
+      {isMobile ? (
+        // JSX for small screens (width <= 600)
+        <div>Mobile view</div>
+      ) : (
+        // JSX for large screens (width > 600)
+        <div>Desktop view</div>
+      )}
 
       <div className="date_block_student" >
         <div className="date_container">
@@ -157,7 +185,177 @@ function StudentSchedule() {
           </div>
         </div>}
 
-        <div className="heading_shedule-container">
+        {isMobile ? (
+          // JSX for small screens (width <= 600)
+          <div className="heading_shedule-container">
+
+            {/* <div className="heading_shedule">
+              <div className="rec_shedule">Номер группы</div>
+              <div className="rec_shedule">Номер пары</div>
+              <div className="rec_shedule">Предмет</div>
+              <div className="rec_shedule">Аудитория</div>
+              <div className="rec_shedule">Преподаватель</div>
+            </div> */}
+
+            {
+              !switchSchedule ? (
+                lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
+              ) : lessons.length === 0 ? (
+                <div className="subblock_text">Нет данных</div>
+              ) : (
+                <div className="certain_schedule">
+                  {typeof sertainGroups === 'object' ? (
+                    <ul className="custom-ul">
+
+                      <div className="all_certain_schedule_block">
+                        {/* <div className="group_number">
+                          {sertainGroups && sertainGroups.code}
+                        </div> */}
+
+                        <div className="all_certain_schedule_subblock">
+                          {sertainGroups?.schedule &&
+                            Object.entries(sertainGroups.schedule).map(
+                              ([key, value]) => (
+                                <li className="custom-li" key={key}>
+                                  {value.subject ? (
+                                    <>
+
+                                      <div className="schedule_mobile_block">
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Номер пары :</div>
+                                          <div className="rec_shedule">{key}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Предмет :</div>
+                                          <div className="rec_shedule">{value.subject}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Аудитория :</div>
+                                          <div className="rec_shedule">({value.fo})</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Преподаватель :</div>
+                                          <div className="rec_shedule">{value.fio}</div>
+                                        </div>
+                                        {/* <div className="rec_shedule">Номер группы</div> */}
+                                      </div>
+
+                                      {/* <div className="rec_shedule">{key}</div>
+                                      <div className="rec_shedule">{value.subject}</div>
+                                      <div className="rec_shedule">({value.fo})</div>
+                                      <div className="rec_shedule">{value.fio}</div> */}
+                                    </>
+                                  ) : (
+                                    <div className="no_lessons">
+                                      Номер пары {key} / Нет занятий
+                                    </div>
+                                  )}
+                                </li>
+                              )
+                            )}
+                        </div>
+                      </div>
+                    </ul>
+                  ) : (
+                    <div>{sertainGroups}</div>
+                  )}
+                </div>
+              )
+            }
+          </div>
+        ) : (
+          // JSX for large screens (width > 600)
+          <div className="heading_shedule-container">
+
+            <div className="heading_shedule">
+              <div className="rec_shedule">Номер группы</div>
+              <div className="rec_shedule">Номер пары</div>
+              <div className="rec_shedule">Предмет</div>
+              <div className="rec_shedule">Аудитория</div>
+              <div className="rec_shedule">Преподаватель</div>
+            </div>
+
+            {
+              !switchSchedule ? (
+                lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
+              ) : lessons.length === 0 ? (
+                <div className="subblock_text">Нет данных</div>
+              ) : (
+                <div className="certain_schedule">
+                  {typeof sertainGroups === 'object' ? (
+                    <ul className="custom-ul">
+                      {!sertainGroups ? (
+                        <div className="heading_shedule">
+                          <div className="rec_shedule"> Номер группы</div>
+                          <div className="rec_shedule"> Номер пары</div>
+                          <div className="rec_shedule"> Предмет</div>
+                          <div className="rec_shedule"> Аудитория</div>
+                          <div className="rec_shedule">Преподаватель</div>
+                        </div>
+                      ) : (
+                        <div></div>
+                      )}
+
+                      <div className="all_certain_schedule_block">
+                        <div className="group_number">
+                          {sertainGroups && sertainGroups.code}
+                        </div>
+
+                        <div className="all_certain_schedule_subblock">
+                          {sertainGroups?.schedule &&
+                            Object.entries(sertainGroups.schedule).map(
+                              ([key, value]) => (
+                                <li className="custom-li" key={key}>
+                                  {value.subject ? (
+                                    <>
+                                      <div className="rec_shedule">{key}</div>
+                                      <div className="rec_shedule">{value.subject}</div>
+                                      <div className="rec_shedule">({value.fo})</div>
+                                      <div className="rec_shedule">{value.fio}</div>
+                                    </>
+                                  ) : (
+                                    <div className="no_lessons">
+                                      Номер пары {key} / Нет занятий
+                                    </div>
+                                  )}
+                                </li>
+                              )
+                            )}
+                        </div>
+                      </div>
+                    </ul>
+                  ) : (
+                    <div>{sertainGroups}</div>
+                  )}
+                </div>
+              )
+            }
+          </div>
+        )}
+
+      </div>
+
+      <ToastContainer
+        position="bottom-left"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        style={{ width: '500px' }}
+      />
+    </div>
+  );
+}
+
+export default StudentSchedule;
+
+
+{/* <div className="heading_shedule-container">
 
           <div className="heading_shedule">
             <div className="rec_shedule">Номер группы</div>
@@ -194,7 +392,6 @@ function StudentSchedule() {
                         </div>
 
                         <div className="all_certain_schedule_subblock">
-                          
                           {sertainGroups?.schedule &&
                             Object.entries(sertainGroups.schedule).map(
                               ([key, value]) => (
@@ -223,24 +420,4 @@ function StudentSchedule() {
                 </div>
             )
           }
-        </div>
-      </div>
-
-      <ToastContainer
-        position="bottom-left"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="colored"
-        style={{ width: '500px' }}
-      />
-    </div>
-  );
-}
-
-export default StudentSchedule;
+        </div> */}

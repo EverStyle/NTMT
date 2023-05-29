@@ -101,6 +101,23 @@ function RecordBookScreen() {
     });
 
     console.log(formattedDate); // Output: 03.05.2023
+
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 600);
+        };
+
+        handleResize(); // Check on initial render
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
     return (
         <div>
             <div>
@@ -137,27 +154,71 @@ function RecordBookScreen() {
 
                     <div className="short_user_info_subblock">
                         <strong>Срок обучения:</strong> {
-                        userGroupInfo.type === 'Очная' ? '3 года' : 
-                        userGroupInfo.type === 'Заочная' ? '4 года' : 
-                        userGroupInfo.type === 'Очно-заочная' ? '5 лет' : ''}
+                            userGroupInfo.type === 'Очная' ? '3 года' :
+                                userGroupInfo.type === 'Заочная' ? '4 года' :
+                                    userGroupInfo.type === 'Очно-заочная' ? '5 лет' : ''}
                     </div>
 
 
                 </div>
 
-                <div className="record_container">
+                {isMobile ? (
+                    // JSX for small screens (width <= 600)
+                    <div className="record_container">
 
-                    <div className="heading">
-                        <div className="rec">Дисциплина</div>
-                        <div className="rec">Количество часов</div>
-                        <div className="rec">Итоговая оценка</div>
-                        <div className="rec">Дата сдачи</div>
-                        <div className="rec">Преподаватель</div>
-                        {/* <div className="">Действия</div> */}
+                        <div className="heading">
+                           
 
+                        </div>
+                        {userRecord.length > 0 ? (
+                            userRecord.map((record) => (
+                                <div key={record.id} className="record_mobile_block">
+                                    <div className="schedule_mobile_data">
+                                        <div className="rec_shedule">Дисциплина :</div>
+                                        <div className="rec_shedule">{record.subjectName}</div>
+                                    </div>
+                                    <div className="schedule_mobile_data">
+                                        <div className="rec_shedule">Количество часов :</div>
+                                        <div className="rec_shedule">{record.summaryHours}</div>
+                                    </div>
+                                    <div className="schedule_mobile_data">
+                                        <div className="rec_shedule">Итоговая оценка :</div>
+                                        <div className="rec_shedule">{record.endMark}</div>
+                                    </div>
+                                    <div className="schedule_mobile_data">
+                                        <div className="rec_shedule">Дата сдачи :</div>
+                                        <div className="rec_shedule">{new Date(record.date).toLocaleDateString('en-US', {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                        })}</div>
+                                    </div>
+                                    <div className="schedule_mobile_data">
+                                        <div className="rec_shedule">Преподаватель :</div>
+                                        <div className="rec_shedule">{record.teacher}</div>
+                                    </div>
+                                    {/* <div className="rec_shedule">Номер группы</div> */}
+                                </div>
+                            ))
+                        ) : (
+                            <div>{placeHolder}</div>
+                        )}
                     </div>
-                    {userRecord.length > 0 ? (
-                        userRecord.map((record) => (
+                ) : (
+                    // JSX for large screens (width > 600)
+                    <div className="record_container">
+
+                        <div className="heading">
+                            <div className="rec">Дисциплина</div>
+                            <div className="rec">Количество часов</div>
+                            <div className="rec">Итоговая оценка</div>
+                            <div className="rec">Дата сдачи</div>
+                            <div className="rec">Преподаватель</div>
+                            {/* <div className="">Действия</div> */}
+
+                        </div>
+                        {userRecord.length > 0 ? (
+                            userRecord.map((record) => (
                                 <div key={record.id} className="record_student_block">
                                     <div className="rec">{record.subjectName}</div>
                                     <div className="rec">{record.summaryHours}</div>
@@ -170,12 +231,15 @@ function RecordBookScreen() {
                                         })}
                                     </div>
                                     <div className="rec">{record.teacher}</div>
-                                </div> 
-                        ))
-                    ) : (
-                        <div>{placeHolder}</div>
-                    )}
-                </div>
+                                </div>
+                            ))
+                        ) : (
+                            <div>{placeHolder}</div>
+                        )}
+                    </div>
+                )}
+
+
 
             </div>
 
