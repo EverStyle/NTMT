@@ -81,9 +81,9 @@
 
 
 
-.subblock_text {
+/* .subblock_text {
   max-width: 350px;
-}
+} */
 
 .select_block {
   border: 1px solid black;
@@ -203,7 +203,7 @@
 @media (max-width: 600px) {
   .rec_shedule {
     width: 100%;
-    padding-left: 1rem;
+    /* padding-left: 1rem; */
     padding-right: 1rem;
   }
 }
@@ -222,7 +222,6 @@
     /* Enable snapping to scroll positions */
   }
 }
-
 @media (max-width: 600px) {
   .certain_schedule {
     min-width: fit-content;

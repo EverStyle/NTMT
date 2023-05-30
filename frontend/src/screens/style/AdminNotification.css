@@ -17,9 +17,7 @@
     background-color: rgb(190, 188, 255);
   }
   .stud_select{
-
     background-color: rgb(255, 255, 255);
-    
   }
 
   .stud_select:hover {
@@ -41,7 +39,7 @@
     flex-direction: column;
   }
   .select-container {
-    width: 200px; /* Set a specific width for the select container */
+    width: 100%; /* Set a specific width for the select container */
     position: relative;
   }
   

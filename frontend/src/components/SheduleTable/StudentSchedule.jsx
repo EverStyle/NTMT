@@ -8,35 +8,51 @@ import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ru from 'date-fns/locale/ru';
 import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
+import Select from 'react-select';
 
 function StudentSchedule() {
   const [lessons, setLessons] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   registerLocale('ru', ru)
   const [allGroups, setallGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState('ТО - 12901');
+  const [selectedGroup, setSelectedGroup] = useState('ТО-12901');
 
   const [sertainGroups, setsertainGroups] = useState({});
 
-  const [switchSchedule, setswitchSchedule] = useState(false);
+  const [switchSchedule, setSwitchSchedule] = useState(false);
   const [file, setFile] = useState('');
 
-  const handleChange = (event) => {
-    const selectedGroup = event.target.value;
-    if (selectedGroup == "retShedule") {
-      setswitchSchedule(false)
-      setSelectedGroup(event.target.value);
+
+  const handleChange = (selectedOption) => {
+    const selectedGroup = selectedOption.value;
+    console.log("WORK");
+    console.log(selectedGroup);
+
+    if (selectedGroup === "retShedule") {
+      setSwitchSchedule(false);
+      setSelectedGroup(selectedGroup);
     } else {
-      setswitchSchedule(true)
-      setSelectedGroup(event.target.value);
+      setSwitchSchedule(true);
+      setSelectedGroup(selectedGroup);
     }
-
   };
+  // const handleChange = (event) => {
+  //   const selectedGroup = event.target.value;
+  //   console.log("WORK")
+  //   console.log(selectedGroup)
+  //   if (selectedGroup == "retShedule") {
+  //     setswitchSchedule(false)
+  //     setSelectedGroup(event.target.value);
+  //   } else {
+  //     setswitchSchedule(true)
+  //     setSelectedGroup(event.target.value);
+  //   }
+  // };
 
-  const handlscheduleChange = (event) => {
-    setswitchSchedule(!switchSchedule)
-    setSelectedGroup(event.target.value);
-  };
+  // const handlscheduleChange = (event) => {
+  //   setswitchSchedule(!switchSchedule)
+  //   setSelectedGroup(event.target.value);
+  // };
   const formattedDate = startDate.toLocaleDateString('ru', {
     day: '2-digit',
     month: '2-digit',
@@ -56,7 +72,6 @@ function StudentSchedule() {
 
   useEffect(async () => {
     try {
-
       const request = {
         date: formattedDate,
         // group: selectedGroup
@@ -83,9 +98,7 @@ function StudentSchedule() {
 
   }, [startDate, selectedGroup, switchSchedule, file]);
 
-  // console.log(sertainGroups)
-  // console.log(typeof sertainGroups)
-  // console.log(Array.isArray(sertainGroups))
+
 
   async function uploadSchedule(file) {
 
@@ -97,14 +110,11 @@ function StudentSchedule() {
     const request = new FormData();
     request.append('files', file[0])
     request.append('fileType', fileTypes[file[0].name.split('.').pop()])
-
     const request2 = {
     };
-
     try {
       const response = await apiSchedule.sendSched(request);
       const data = response.data.message[0];
-
       const response2 = await apiSchedule.get(request2);
       console.log(data)
       toast.success("Загрузка успешна, обновите дату");
@@ -114,8 +124,9 @@ function StudentSchedule() {
       toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  console.log(sertainGroups.schedule)
-  console.log(lessons)
+
+  console.log(selectedGroup)
+
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -123,15 +134,13 @@ function StudentSchedule() {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 600);
     };
-
     handleResize(); // Check on initial render
-
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
 
 
   return (
@@ -163,13 +172,27 @@ function StudentSchedule() {
             <div className="subblock_text">
               Выберите группу
             </div>
-            <div >
-              <select className="select_block" value={selectedGroup} onChange={handleChange}>
+            <div>
+
+              {/* <select className="select_block" value={selectedGroup} onChange={handleChange}>
                 <option value="retShedule">Рассписание всех групп</option>
-                {allGroups?.map(groups => (
-                  <option key={groups.id} value={groups.code}>{groups.groupName} ({groups.code})</option>
+                {allGroups?.map((group) => (
+                  <option key={group.id} value={group.code}>
+                    {group.groupName} ({group.code})
+                  </option>
                 ))}
-              </select>
+              </select> */}
+              <Select
+                onChange={handleChange}
+                options={[
+                  { value: "retShedule", label: "Рассписание всех групп" },
+                  ...allGroups?.map(group => ({
+                    value: group.code,
+                    label: `${group.groupName} (${group.code})`,
+                  }))
+                ]}
+                placeholder="Enter a group"
+              />
             </div>
           </div>
         </div>
@@ -219,7 +242,6 @@ function StudentSchedule() {
                                 <li className="custom-li" key={key}>
                                   {value.subject ? (
                                     <>
-
                                       <div className="schedule_mobile_block">
                                         <div className="schedule_mobile_data">
                                           <div className="rec_shedule">Номер пары :</div>
@@ -237,13 +259,8 @@ function StudentSchedule() {
                                           <div className="rec_shedule">Преподаватель :</div>
                                           <div className="rec_shedule">{value.fio}</div>
                                         </div>
-                                        {/* <div className="rec_shedule">Номер группы</div> */}
                                       </div>
 
-                                      {/* <div className="rec_shedule">{key}</div>
-                                      <div className="rec_shedule">{value.subject}</div>
-                                      <div className="rec_shedule">({value.fo})</div>
-                                      <div className="rec_shedule">{value.fio}</div> */}
                                     </>
                                   ) : (
                                     <div className="no_lessons">

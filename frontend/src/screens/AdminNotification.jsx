@@ -4,6 +4,7 @@ import apiMessages from "../api/messages";
 import './style/AdminNotification.css';
 import { toast, ToastContainer } from "react-toastify";
 import apiSchedule from "../api/schedule";
+import Select from 'react-select';
 
 function AdminNotification({ math }) {
   const [page, setPage] = useState(1);
@@ -117,12 +118,10 @@ function AdminNotification({ math }) {
   };
 
   const handleGroupChange = (e) => {
-    const groupId = e.target.value;
+    const groupId = e.value;
     setNewGroups(groupId);
-
     if (groupId === "") {
       setStudents([]); // Clear the students array when the default value is selected
-
     } else {
       fetchStudents(groupId);
     }
@@ -157,14 +156,27 @@ function AdminNotification({ math }) {
         </div>
         <div>
           <div className="select-container">
-            <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
+          <h2 className="subblock_text">Выберите группу</h2>
+            <Select
+              // Заманался забывать меняй функцию приема инфы в handleGroupChange убери там таргет имхо в новом он не пашет
+              onChange={handleGroupChange}
+              options={[
+                { value: "", label: "Выберите группу" },
+                ...groups.map((grp) => ({
+                  value: grp.id,
+                  label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                })),
+              ]}
+              placeholder="Enter a group"
+            />
+            {/* <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
               <option value="">Выберите группу</option>
               {groups.map((grp) => (
                 <option key={grp.id} value={grp.id}>
                   {grp.code} {grp.groupName} {grp.type}
                 </option>
               ))}
-            </select>
+            </select> */}
           </div>
 
           {/* там 70 групп сделай скролл на селектор!!!!! */}
@@ -177,14 +189,23 @@ function AdminNotification({ math }) {
 
         ))} */}
           <div className="dropdown">
-            <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
-              {/* <option value="">Выберите группу</option> */}
+            {/* <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
               {students.map((user) => (
                 <option className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} value={user.id}>
                   {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
                 </option>
               ))}
-            </select>
+            </select> */}
+            <Select
+              onChange={handleMultipleGroupChange}
+              options={students.map((user) => ({
+                value: user.id,
+                label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+              }))}
+              isMulti
+              className="multiple_select"
+              classNamePrefix="select"
+            />
           </div>
         </div>
 

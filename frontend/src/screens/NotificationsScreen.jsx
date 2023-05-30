@@ -23,6 +23,19 @@ function NotificationsScreen({ math }) {
     getNotifications();
   }, [page])
 
+  const handleDeleteNotification = async (notificationId) => {
+    try {
+      const response = await apiMessages.deleteMess({ listMessages: [notificationId] });
+      const data = response.data;
+      toast.success("Уведомление успешно удалено");
+      setNotifications(notifications.filter(notification => notification.id !== notificationId));
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR DOWNLOAD FILE');
+      toast.error('Произошла ошибка при удалении уведомления. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }
+
   return (
     <div>
       <div className="title">Уведомления</div>
@@ -33,7 +46,7 @@ function NotificationsScreen({ math }) {
             Показать: <span>Последние уведомления</span>
           </div>
           {notifications.map((notification, index) => {
-            return <RowNotification key={index} notification={notification} />
+            return <RowNotification key={index} notification={notification} onDeleteNotification={handleDeleteNotification} />
           })}
         </div>
 

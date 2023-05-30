@@ -1,13 +1,13 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import $api from "../../api/index";
 import Select from '@mui/material/Select'
-import {Button, Card, CardContent, IconButton, InputAdornment, MenuItem, TextField,} from "@mui/material";
+import { Button, Card, CardContent, IconButton, InputAdornment, MenuItem, TextField, } from "@mui/material";
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import {ToastContainer, toast} from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-function Login({setToken, setUser}) {
+function Login({ setToken, setUser }) {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [role, setRole] = useState('2');
@@ -40,30 +40,36 @@ function Login({setToken, setUser}) {
     async function logIn() {
         const valid = await validate();
         if (valid) {
-          try {
-            const request = {
-              login: login,
-              password: password,
-              type: role,
-            };
-            const response = await $api.login(request);
-            
-            if (response.status === 200) {
-              setUser(response.data.message);
-              setToken(response.data.message.token);
-            } else {
-              console.error('ERROR LOG IN');
-              toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
+            try {
+                const request = {
+                    login: login,
+                    password: password,
+                    type: role,
+                };
+                const response = await $api.login(request);
+
+                console.log(response.status)
+                console.log(response.statusCode)
+
+                // Крч бред какойто КОДЕ Выводит Undefined, статус 200 , все должно работать !!!!!!!!!!!!!!!!!!!!
+                // if (response.statusCode === 200) { !!!!!!!ПРОВЕРИТЬ НЕ РАБОТАЕТ НА АДМИНКЕ!!!!!!!!!!!!!!
+
+                if (response.status === 200) {
+                    setUser(response.data.message);
+                    setToken(response.data.message.token);
+                } else {
+                    console.error('ERROR LOG IN');
+                    toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
+                }
+            } catch (error) {
+                console.error(error);
+                console.error('ERROR LOG IN');
+                toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
             }
-          } catch (error) {
-            console.error(error);
-            console.error('ERROR LOG IN');
-            toast.error('Произошла ошибка при входе в личный кабинет. Попробуйте позже или обратитесь в техподдержку');
-          }
         } else {
-          toast.error('Пожалуйста, заполните выделенные поля');
+            toast.error('Пожалуйста, заполните выделенные поля');
         }
-      }
+    }
     // async function logIn() {
     //     const valid = await validate();
     //     if (valid) {
@@ -89,7 +95,7 @@ function Login({setToken, setUser}) {
     return (
         <div className="loginPage">
             <div className="login-wrapper">
-                <Card sx={{padding: 5}}>
+                <Card sx={{ padding: 5 }}>
                     <CardContent>
                         <div className="flex flex-col items-center">
                             <div className="login-wrapper__title">
@@ -100,7 +106,7 @@ function Login({setToken, setUser}) {
                                     <div className='mb-4'>
                                         <TextField
                                             size="small"
-                                            style={{minWidth: '100%'}}
+                                            style={{ minWidth: '100%' }}
                                             label="Введите логин"
                                             error={errors.login}
                                             required={true}
@@ -112,7 +118,7 @@ function Login({setToken, setUser}) {
                                     <div className='mb-4'>
                                         <TextField
                                             size="small"
-                                            style={{minWidth: '100%'}}
+                                            style={{ minWidth: '100%' }}
                                             value={password}
                                             label="Введите пароль"
                                             type={showPassword ? 'text' : 'password'}
@@ -120,20 +126,22 @@ function Login({setToken, setUser}) {
                                             required={true}
                                             onKeyUp={e => handleEnterClick(e)}
                                             onChange={e => setPassword(e.target.value)}
-                                            props = {
-                                                {endAdornment:
-                                                <InputAdornment position="end">
-                                                <IconButton
-                                                    onClick={handleClickShowPassword}
-                                                    onMouseDown={handleMouseDownPassword}
-                                                    edge="end"
-                                                >
-                                                    {showPassword ? <VisibilityOff/> : <Visibility/>}
-                                                </IconButton>
-                                            </InputAdornment>}
+                                            props={
+                                                {
+                                                    endAdornment:
+                                                        <InputAdornment position="end">
+                                                            <IconButton
+                                                                onClick={handleClickShowPassword}
+                                                                onMouseDown={handleMouseDownPassword}
+                                                                edge="end"
+                                                            >
+                                                                {showPassword ? <VisibilityOff /> : <Visibility />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                }
                                             }
 
-                                        
+
                                         />
                                     </div>
                                     {/* <div className="mb-5">
@@ -149,7 +157,7 @@ function Login({setToken, setUser}) {
                                     </div> */}
                                     <div>
                                         <Button
-                                            style={{minWidth: '100%'}}
+                                            style={{ minWidth: '100%' }}
                                             variant="contained"
                                             color="primary"
                                             onClick={() => logIn()}
@@ -175,7 +183,7 @@ function Login({setToken, setUser}) {
                 draggable
                 pauseOnHover
                 theme="colored"
-                style={{width: '500px'}}
+                style={{ width: '500px' }}
             />
         </div>
     );

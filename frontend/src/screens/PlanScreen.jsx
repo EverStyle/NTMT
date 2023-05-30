@@ -15,30 +15,24 @@ function PlanScreen() {
 
   function findMatchingGroupId(apiResponse1, apiResponse2) {
     const groupCode = apiResponse1.code;
-
     for (let i = 0; i < apiResponse2.length; i++) {
       if (apiResponse2[i].code === groupCode) {
         return apiResponse2[i].id;
       }
     }
-
     return null; // Return null if no matching group is found
   }
 
   useEffect(async (newGroupId) => {
     try {
-
       const response = await apiAccount.info();
       console.log(response.data.message);
       setUserGroupInfo(response.data.message)
-
       const response2 = await apiSchedule.groups();
       console.log(response2.data.message);
       setGroups(response2.data.message);
-
       const matchingGroupId = findMatchingGroupId(response.data.message, response2.data.message);
       console.log(matchingGroupId);
-
       const request2 = {
         groupId: matchingGroupId
       };

@@ -57,15 +57,20 @@
 
 .create_record_block {
     max-width: 800px;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
     border: 2px solid rgb(0, 0, 0);
     border-radius: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
     padding-top: 20px;
     padding-bottom: 20px;
-}
+  }
+  
+  /* .create_record_block > * {
+    justify-self: center;
+  } */
 
 .select_block {
     width: 200px;
@@ -77,9 +82,10 @@
 }
 
 .record_subblock {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     margin-top: 10px;
-    /* margin-left: 5rem; */
+    margin-left: 5rem;
     align-items: center;
 }
 
@@ -116,7 +122,12 @@
     width: 30rem;
     border: 2px solid black;
     border-radius: 20px;
+  }
 
+  .two_group_selector{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    max-width: 700px;
   }
 @media (max-width: 600px) {
     .record_container {

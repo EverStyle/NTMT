@@ -7,6 +7,7 @@ import apiRecordBook from "../api/recordBook";
 import apiSubject from "../api/subjects";
 import apiAccount from "../api/account";
 import apiSchedule from "../api/schedule";
+import Select from 'react-select';
 
 function AdminRecordBook() {
 
@@ -159,9 +160,7 @@ function AdminRecordBook() {
             console.log(request)
             const response6 = await apiRecordBook.get(request);
             setUserRecord(response6.data.message);
-
         } catch (error) {
-
             console.error(error);
             console.error('ERROR DOWNLOAD FILE');
             toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
@@ -204,7 +203,6 @@ function AdminRecordBook() {
     const fetchStudents = async (groupId) => {
         try {
             const response = await apiSchedule.certainGroups(groupId);
-            console.log(response.data.message)
             setStudents(response.data.message);
         } catch (error) {
             console.error(error);
@@ -216,26 +214,38 @@ function AdminRecordBook() {
     };
 
     const handleGroupChange = (e) => {
-        const groupId = e.target.value;
+        const groupId = e.value;
         setNewGroups(groupId);
-
+        console.log(groupId);
         if (groupId === "") {
+            console.log("Stud CLEAR")
             setUserRecord([]);
             setStudents([]); // Clear the students array when the default value is selected
+            setNewStudents([]); // Clear the students array when the default value 
 
         } else {
             fetchStudents(groupId);
             setUserRecord([]); // Send an empty array when the group changes
+
         }
+        setNewStudents("Some"); // Reset the selected student to the default value
     };
 
     const handleStudentChange = (e) => {
-        const studentId = e.target.value;
+        const studentId = e.value;
         setNewStudents2(studentId);
     };
 
-    console.log(newDateUpd)
 
+
+    // const options = [
+    //     { value: "Some", label: "СБРОС" },
+    //     ...students.map((student) => ({
+    //         value: student.id,
+    //         label: student.fio,
+    //     })),
+    // ]
+    // console.log(options[0])
 
     return (
         <div>
@@ -273,14 +283,18 @@ function AdminRecordBook() {
                         </div>
 
                         <div className="lock_input">
-                            <select className="select_block" value={newGroups} onChange={handleGroupChange}>
-                                <option value="">Выберите группу</option>
-                                {groups.map((grp) => (
-                                    <option key={grp.id} value={grp.id}>
-                                        {grp.code} {grp.groupName} {grp.type}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select
+                                className="new_select_subblock"
+                                onChange={handleGroupChange}
+                                options={[
+                                    { value: "", label: "Выберите группу" },
+                                    ...groups.map((grp) => ({
+                                        value: grp.id,
+                                        label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                                    })),
+                                ]}
+                                placeholder="Выберите группу"
+                            />
                         </div>
                     </div>
                     <div className="record_subblock">
@@ -289,14 +303,18 @@ function AdminRecordBook() {
                         </div>
 
                         <div className="lock_input">
-                            <select className="select_block" value={newStudents} onChange={(e) => setNewStudents(e.target.value)}>
-                                <option value="Some">Выберите студента</option>
-                                {students.map((student) => (
-                                    <option key={student.id} value={student.id}>
-                                        {student.fio}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select
+                                className="new_select_subblock"
+                                onChange={(selectedOption) => setNewStudents(selectedOption.value)}
+                                options={[
+                                    { value: "Some", label: "Выберите студента" },
+                                    ...students.map((student) => ({
+                                        value: student.id,
+                                        label: student.fio,
+                                    })),
+                                ]}
+                                placeholder="Выберите студента"
+                            />
                         </div>
                     </div>
                     <div className="record_subblock">
@@ -305,14 +323,18 @@ function AdminRecordBook() {
                         </div>
 
                         <div className="lock_input">
-                            <select className="select_block" value={newSubjectId} onChange={(e) => setNewSubjectId(e.target.value)}>
-                                <option value="Some">Выберите предмет</option>
-                                {subject.map((subj) => (
-                                    <option key={subj.id} value={subj.id}>
-                                        {subj.name}
-                                    </option>
-                                ))}
-                            </select>
+                            <Select
+                                className="new_select_subblock"
+                                // value={newSubjectId}
+                                onChange={(selectedOption) => setNewSubjectId(selectedOption.value)}
+                                options={[
+                                    { value: "Some", label: "Выберите предмет" },
+                                    ...subject.map((subj) => ({
+                                        value: subj.id,
+                                        label: subj.name,
+                                    })),
+                                ]}
+                            />
                         </div>
                     </div>
                     <div className="record_subblock">
@@ -346,17 +368,29 @@ function AdminRecordBook() {
                 </div>
 
 
-                <div>
-                    <select className="select_block" value={newGroups} onChange={handleGroupChange}>
+                <div className="two_group_selector">
+                    {/* <select className="select_block" value={newGroups} onChange={handleGroupChange}>
                         <option value="">Выберите группу</option>
                         {groups.map((grp) => (
                             <option key={grp.id} value={grp.id}>
                                 {grp.code} {grp.groupName} {grp.type}
                             </option>
                         ))}
-                    </select>
+                    </select> */}
+                    <Select
+                        className="new_select_subblock"
+                        onChange={handleGroupChange}
+                        options={[
+                            { value: "", label: "Выберите группу" },
+                            ...groups.map((grp) => ({
+                                value: grp.id,
+                                label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                            })),
+                        ]}
+                        placeholder="Выберите группу"
+                    />
 
-                    <select className="select_block" value={newStudents2} onChange={(e) => {
+                    {/* <select className="select_block" value={newStudents2} onChange={(e) => {
                         setNewStudents2(e.target.value);
                         uploadStudents(e.target.value);
                         handleStudentChange(e); // Call the function here
@@ -367,7 +401,24 @@ function AdminRecordBook() {
                                 {std.fio}
                             </option>
                         ))}
-                    </select>
+                    </select> */}
+                    <Select
+                        className="new_select_subblock"
+                        onChange={(selectedOption) => {
+                            setNewStudents(selectedOption.value);
+                            uploadStudents(selectedOption.value);
+                            handleStudentChange(selectedOption);
+                        }}
+                        options={[
+                            { value: 0, label: "Выберите студента" },
+                            ...students.map((student) => ({
+                                value: student.id,
+                                label: student.fio,
+                            })),
+                        ]}
+                        placeholder="Выберите студента"
+                    />
+
                 </div>
                 <div className="record_container">
                     <div className="heading">

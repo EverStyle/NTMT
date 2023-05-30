@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
 import MyFileBlock from './MyFileBlock';
 import { Button } from '@mui/material';
+import Select from 'react-select';
 
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
@@ -84,69 +85,69 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
 
     return (
         <div style={{ marginLeft: window.innerWidth >= 600 ? `${depth + 10}px` : 0 }}>
-      <div className={`folder_container ${folderClass}`} onClick={handleClick}>
-        <div className="folder_name">
-          <div className='folder_block_component'>
-            <img src={logo} style={{ width: '30px', height: '30px' }} />
-          </div>
-          <div className='folder_block_component'>
-            {name}
-          </div>
+            <div className={`folder_container ${folderClass}`} onClick={handleClick}>
+                <div className="folder_name">
+                    <div className='folder_block_component'>
+                        <img src={logo} style={{ width: '30px', height: '30px' }} />
+                    </div>
+                    <div className='folder_block_component'>
+                        {name}
+                    </div>
+                </div>
+            </div>
+
+            {isOpen && (
+                <>
+                    {files.length === 0 && <div>В папке отсутствуют файлы  </div>}
+
+                    {files.length > 0 && (
+
+                        <ul>
+                            {files?.map((file, index) => (
+                                <li key={file.id}>
+                                    <div className='file_block'>
+                                        <div className='file_two_components'>
+                                            <div className='file_block_components'>
+                                                <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                                            </div>
+                                            <div className='file_block_components'>
+                                                {file.id && (
+                                                    <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                                                )}
+
+
+                                            </div>
+                                        </div>
+
+                                        {/* <div className='file_block_components'>Номер = {file.id}</div> */}
+                                        <div className='file_block_components'>
+                                            {file.fileMeta.fileName}
+                                        </div>
+
+
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+
+                    )}
+
+                    {folders?.map(folder => (
+                        <Folder
+                            key={folder.id}
+                            {...folder}
+                            path={`${path}/${folder.id}`}
+                            onFolderSelect={onFolderSelect}
+                            onFolderName={onFolderName}
+                            selectedFolderId={selectedFolderId}
+                            onDataChanged={onDataChanged}
+                            depth={depth}
+                        />
+                    ))}
+
+                </>
+            )}
         </div>
-      </div>
-
-      {isOpen && (
-        <>
-          {files.length === 0 && <div>В папке отсутствуют файлы  </div>}
-
-          {files.length > 0 && (
-
-            <ul>
-              {files?.map((file, index) => (
-                <li key={file.id}>
-                  <div className='file_block'>
-                    <div className='file_two_components'>
-                    <div className='file_block_components'>
-                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
-                    </div>
-                    <div className='file_block_components'>
-                    {file.id && (
-                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                      )}
-                     
-                      
-                    </div>
-                    </div>
-
-                    {/* <div className='file_block_components'>Номер = {file.id}</div> */}
-                    <div className='file_block_components'>
-                      {file.fileMeta.fileName}
-                    </div>
-
-                    
-                  </div>
-                </li>
-              ))}
-            </ul>
-            
-          )}
-
-          {folders?.map(folder => (
-            <Folder
-              key={folder.id}
-              {...folder}
-              path={`${path}/${folder.id}`}
-              onFolderSelect={onFolderSelect}
-              onFolderName={onFolderName}
-              selectedFolderId={selectedFolderId}
-              onDataChanged={onDataChanged}
-              depth={depth}
-            />
-          ))}
-          
-        </>
-      )}
-    </div>
     );
     // return (
     //   <div>
@@ -310,7 +311,7 @@ function AllRow() {
     };
 
     const handleGroupChange = (e) => {
-        const groupId = e.target.value;
+        const groupId = e.value;
         setNewGroups(groupId);
 
         if (groupId === "") {
@@ -324,7 +325,7 @@ function AllRow() {
     };
 
     const handleStudentChange = (e) => {
-        const studentId = e.target.value;
+        const studentId = e.value;
         setNewStudents2(studentId);
         filesFilter(studentId)
     };
@@ -349,9 +350,10 @@ function AllRow() {
     };
 
     const validateFolderName = (folderName) => {
-        const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|'];
+        const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '-', '+', '=', '`', '~', '[', ']', '{', '}', ';', "'", ',', '.', '<', '>', '/', '?', '|', ' '];
         const isForbidden = forbiddenCharacters.some(char => folderName.includes(char));
         const isTooLong = folderName.length > 50;
+        const isEmpty = folderName.trim().length === 0;
 
         if (isForbidden) {
             throw new Error('Folder name contains forbidden characters');
@@ -360,7 +362,11 @@ function AllRow() {
         if (isTooLong) {
             throw new Error('Folder name is too long');
         }
-    }
+
+        if (isEmpty) {
+            throw new Error('Folder name cannot be empty');
+        }
+    };
 
     async function createFolderLessons(newFolderNameLesson, nextFolderid) {
         //типа создание папки в папке задание 
@@ -544,18 +550,42 @@ function AllRow() {
             {/* <div>Текущий номер папки: {currentFolderId}</div> */}
             <div>Название текущей папки: {currentFolderName}</div>
 
-            <div>
-                <select className="select_block" value={newGroups} onChange={handleGroupChange}>
+            <div className="new_select_block">
+                {/* <select className="select_block" value={newGroups} onChange={handleGroupChange}>
                     <option value="">Выберите группу</option>
                     {groups.map((grp) => (
                         <option key={grp.id} value={grp.id}>
                             {grp.code} {grp.groupName} {grp.type}
                         </option>
                     ))}
-                </select>
+                </select> */}
+                <Select
+                    className="new_select_subblock"
+                    onChange={handleGroupChange}
+                    options={[
+                        { value: "", label: "Выберите группу" },
+                        ...groups.map((grp) => ({
+                            value: grp.id,
+                            label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                        })),
+                    ]}
+                    placeholder="Выберите группу"
+                />
+                <Select
+                className="new_select_subblock"
+                    onChange={(selectedOption) => {
+                        setNewStudents2(selectedOption.value);
+                        handleStudentChange(selectedOption); // Call the function here
+                    }}
+                    options={[
+                        { value: 0, label: "Выберите студента" },
+                        ...students.map((std) => ({ value: std.id, label: std.fio })),
+                    ]}
+                    placeholder="Выберите студента"
+                />
 
-                <select className="select_block" value={newStudents2} onChange={(e) => {
-                    setNewStudents2(e.target.value);
+                {/* <select className="select_block" value={newStudents2} onChange={(e) => {
+                    setNewStudents2(e.value);
                     handleStudentChange(e); // Call the function here
                 }}>
                     <option value={0}>Выберите студента</option>
@@ -564,7 +594,7 @@ function AllRow() {
                             {std.fio}
                         </option>
                     ))}
-                </select>
+                </select> */}
             </div>
 
             {/* <div className="folder_row">

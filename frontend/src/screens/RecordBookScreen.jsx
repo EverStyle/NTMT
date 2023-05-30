@@ -23,13 +23,6 @@ function RecordBookScreen() {
             const request = {
                 userId: 0
             };
-            const request2 = {
-                semestrId: 0,
-                year: 0
-            };
-            const request3 = {
-                roleId: 4
-            };
             const request4 = {
                 roleId: 3
             };
@@ -37,12 +30,10 @@ function RecordBookScreen() {
                 semestrId: newSemesterId,
                 year: newYear
             };
-
             const response = await apiSubject.get(request);
             setSubject(response.data.message);
 
             const response2 = await apiAccount.info();
-
             setUserGroupInfo(response2.data.message)
 
             const response4 = await apiSubject.exams(request4);
@@ -52,7 +43,6 @@ function RecordBookScreen() {
             setSemester(response5.data.message);
 
             const response6 = await apiRecordBook.getInf(request5);
-
 
             if (response6.data.message.length === 0) {
                 setUserRecord([]);

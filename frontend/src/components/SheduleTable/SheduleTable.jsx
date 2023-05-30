@@ -8,6 +8,7 @@ import { registerLocale, setDefaultLocale } from "react-datepicker";
 import ru from 'date-fns/locale/ru';
 import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
+import Select from 'react-select';
 
 function SheduleTable() {
   const [lessons, setLessons] = useState([]);
@@ -18,25 +19,23 @@ function SheduleTable() {
 
   const [sertainGroups, setsertainGroups] = useState({});
 
-  const [switchSchedule, setswitchSchedule] = useState(false);
+  const [switchSchedule, setSwitchSchedule] = useState(false);
   const [file, setFile] = useState('');
 
-  const handleChange = (event) => {
-    const selectedGroup = event.target.value;
-    if (selectedGroup == "retShedule") {
-      setswitchSchedule(false)
-      setSelectedGroup(event.target.value);
+  const handleChange = (selectedOption) => {
+    const selectedGroup = selectedOption.value;
+    console.log("WORK");
+    console.log(selectedGroup);
+
+    if (selectedGroup === "retShedule") {
+      setSwitchSchedule(false);
+      setSelectedGroup(selectedGroup);
     } else {
-      setswitchSchedule(true)
-      setSelectedGroup(event.target.value);
+      setSwitchSchedule(true);
+      setSelectedGroup(selectedGroup);
     }
-
   };
 
-  const handlscheduleChange = (event) => {
-    setswitchSchedule(!switchSchedule)
-    setSelectedGroup(event.target.value);
-  };
   const formattedDate = startDate.toLocaleDateString('ru', {
     day: '2-digit',
     month: '2-digit',
@@ -131,15 +130,17 @@ function SheduleTable() {
             <div className="subblock_text">
               Выберите группу
             </div>
-            <div >
-              <select className="select_block" value={selectedGroup} onChange={handleChange}>
-                <option value="retShedule">Рассписание всех групп</option>
-                {allGroups?.map(groups => (
-                  <option key={groups.id} value={groups.code}>{groups.groupName} ({groups.code})</option>
-                ))}
-              </select>
-              {/* {selectedGroup && <p>You selected {selectedGroup}</p>} */}
-            </div>
+            <Select
+                onChange={handleChange}
+                options={[
+                  { value: "retShedule", label: "Рассписание всех групп" },
+                  ...allGroups?.map(group => ({
+                    value: group.code,
+                    label: `${group.groupName} (${group.code})`,
+                  }))
+                ]}
+                placeholder="Enter a group"
+              />
           </div>
         </div>
 

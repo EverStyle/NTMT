@@ -28,7 +28,6 @@ function SheduleCard(props) {
 
   return (
     <div>
-
       {isMobile ? (
         // JSX for small screens (width <= 600)
         <div className="all_certain_schedule_subblock" >
@@ -92,10 +91,7 @@ function SheduleCard(props) {
           </div>
         </div>
       )}
-
-
     </div>
-
   );
 }
 
