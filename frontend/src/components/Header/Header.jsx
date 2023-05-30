@@ -45,10 +45,10 @@ function logOut() {
               alt='images/userProfile.svg'
             />
             <p className='bio'>
-              <span className='user-fio'>{ user.fio ? `${user.fio} /` : ''} </span>
+              <span className='user-fio'>{ user.fio ? `${user.fio} ` : ''} </span>
               
               {/* <span className='user-group'>{user.groupName ? user.groupName : userRoles[user.roleId]}</span> */}
-              <span className='user-group'>{user.code}</span>
+              <span className='user-group'>{user.roleId == 4 ? `/ ${user.code}` : ""}</span>
             </p>
           </div>
           <div

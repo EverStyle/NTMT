@@ -128,12 +128,12 @@ function AdminNotification({ math }) {
   };
 
 
-  const handleMultipleGroupChange = async (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions);
-    const selectedGroups = selectedOptions.map((option) => option.value);
-    setSelectedUserIds(selectedGroups);
-    // setShowGroupCurriculum(true);
-  };
+  // const handleMultipleGroupChange = async (e) => {
+  //   const selectedOptions = Array.from(e.selectedOptions);
+  //   const selectedGroups = selectedOptions.map((option) => option.value);
+  //   setSelectedUserIds(selectedGroups);
+  //   // setShowGroupCurriculum(true);
+  // };
 
   console.log(selectedUserIds)
 
@@ -156,7 +156,7 @@ function AdminNotification({ math }) {
         </div>
         <div>
           <div className="select-container">
-          <h2 className="subblock_text">Выберите группу</h2>
+            <h2 className="subblock_text">Выберите группу</h2>
             <Select
               // Заманался забывать меняй функцию приема инфы в handleGroupChange убери там таргет имхо в новом он не пашет
               onChange={handleGroupChange}
@@ -197,7 +197,10 @@ function AdminNotification({ math }) {
               ))}
             </select> */}
             <Select
-              onChange={handleMultipleGroupChange}
+              onChange={(selectedOptions) => {
+                const selectedUserIds = selectedOptions.map((option) => option.value);
+                setSelectedUserIds(selectedUserIds);
+              }}
               options={students.map((user) => ({
                 value: user.id,
                 label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,

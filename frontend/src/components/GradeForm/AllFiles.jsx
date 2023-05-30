@@ -368,40 +368,40 @@ function AllRow() {
         }
     };
 
-    async function createFolderLessons(newFolderNameLesson, nextFolderid) {
-        //типа создание папки в папке задание 
-        const request = {
-            name: newFolderNameLesson,
-            folderId: nextFolderid
-        };
-        const request2 = {
-            folderId: 1
-        };
+    // async function createFolderLessons(newFolderNameLesson, nextFolderid) {
+    //     //типа создание папки в папке задание 
+    //     const request = {
+    //         name: newFolderNameLesson,
+    //         folderId: nextFolderid
+    //     };
+    //     const request2 = {
+    //         folderId: 1
+    //     };
 
-        try {
-            validateFolderName(newFolderNameLesson);
-            const response = await apiFiles.newFolderLesson(request);
-            const data = response.data.message[0];
+    //     try {
+    //         validateFolderName(newFolderNameLesson);
+    //         const response = await apiFiles.newFolderLesson(request);
+    //         const data = response.data.message[0];
 
-            const response2 = await apiFiles.getList(request2);
-            setFiles(response2.data.message)
-            // console.log(data)
-            // setFiles(prevFiles => {
-            //   const newFolder = {
-            //     id: data.id,
-            //     name: data.name,
-            //     files: [],
-            //     folders: []
-            //   };
-            //   return { ...prevFiles, folders: [...prevFiles.folders, newFolder] };
-            // });
+    //         const response2 = await apiFiles.getList(request2);
+    //         setFiles(response2.data.message)
+    //         // console.log(data)
+    //         // setFiles(prevFiles => {
+    //         //   const newFolder = {
+    //         //     id: data.id,
+    //         //     name: data.name,
+    //         //     files: [],
+    //         //     folders: []
+    //         //   };
+    //         //   return { ...prevFiles, folders: [...prevFiles.folders, newFolder] };
+    //         // });
 
-        } catch (error) {
-            console.error(error);
-            console.error('ERROR DOWNLOAD FILE');
-            toast.error('Ошибка при создании папки. Проверьте правильность названия и попробуйте еще раз');
-        }
-    }
+    //     } catch (error) {
+    //         console.error(error);
+    //         console.error('ERROR DOWNLOAD FILE');
+    //         toast.error('Ошибка при создании папки. Проверьте правильность названия и попробуйте еще раз');
+    //     }
+    // }
 
     // async function deleteFolderLessons(folderId) {
     //   const request = {
@@ -432,71 +432,71 @@ function AllRow() {
     //   }
     // }
 
-    async function deleteFolderLessons(newfolderId) {
-        const request = {
-            folderId: newfolderId
-        };
-        const request2 = {
-            folderId: 1
-        };
+    // async function deleteFolderLessons(newfolderId) {
+    //     const request = {
+    //         folderId: newfolderId
+    //     };
+    //     const request2 = {
+    //         folderId: 1
+    //     };
 
-        const confirmed = window.confirm('Вы точно хотите удалить выбранную папку ? Все находящиеся там файлы будут удалены !!');
+    //     const confirmed = window.confirm('Вы точно хотите удалить выбранную папку ? Все находящиеся там файлы будут удалены !!');
 
-        if (!confirmed) {
-            return;
-        }
-        try {
-            const response = await apiFiles.deleteFolderLessonApi(request);
-            const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
+    //     if (!confirmed) {
+    //         return;
+    //     }
+    //     try {
+    //         const response = await apiFiles.deleteFolderLessonApi(request);
+    //         const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
 
-            // create a new object with the modified state
-            // const updatedFiles = {...files, folders: files.folders.filter(folder => folder.id !== request)};
+    //         // create a new object with the modified state
+    //         // const updatedFiles = {...files, folders: files.folders.filter(folder => folder.id !== request)};
 
-            // update the state using the setter function
-            // setFiles(updatedFiles);
+    //         // update the state using the setter function
+    //         // setFiles(updatedFiles);
 
-            const response2 = await apiFiles.getList(request2);
-            setFiles(response2.data.message)
+    //         const response2 = await apiFiles.getList(request2);
+    //         setFiles(response2.data.message)
 
-            // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
+    //         // КОСТЫЛЬ ПОТОМ ЗАМАЖ ИЛИ ПОМЕНЯЙ ЕСЛИ СМОЖЕШЬ НО РАБОТАЕТ
 
-        } catch (error) {
-            console.error(error);
-            console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-        }
-    }
+    //     } catch (error) {
+    //         console.error(error);
+    //         console.error('ERROR DOWNLOAD FILE');
+    //         toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+    //     }
+    // }
 
-    async function uploadFilesLesson(file, newfolderId) {
-        const requestFolder = newfolderId;
-        const fileTypes = {
-            'txt': 1,
-            'xlsx': 2,
-            'docx': 3,
-        };
-        const request2 = {
-            folderId: 1
-        };
-        const request = new FormData();
-        request.append('folderId', requestFolder)
-        request.append('files', file[0])
-        request.append('fileType', fileTypes[file[0].name.split('.').pop()])
-        try {
+    // async function uploadFilesLesson(file, newfolderId) {
+    //     const requestFolder = newfolderId;
+    //     const fileTypes = {
+    //         'txt': 1,
+    //         'xlsx': 2,
+    //         'docx': 3,
+    //     };
+    //     const request2 = {
+    //         folderId: 1
+    //     };
+    //     const request = new FormData();
+    //     request.append('folderId', requestFolder)
+    //     request.append('files', file[0])
+    //     request.append('fileType', fileTypes[file[0].name.split('.').pop()])
+    //     try {
 
-            const response = await apiFiles.upload(request);
-            const data = response.data.message[0];
-            const response2 = await apiFiles.getList(request2);
-            setFiles(response2.data.message)
-            //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
-            // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
-            //ВАЖНО ЗАПОМНИ
-            console.log(data)
-        } catch (error) {
-            console.error(error);
-            console.error('ERROR UPLOAD FILES');
-            toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
-        }
-    }
+    //         const response = await apiFiles.upload(request);
+    //         const data = response.data.message[0];
+    //         const response2 = await apiFiles.getList(request2);
+    //         setFiles(response2.data.message)
+    //         //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.
+    //         // setFiles(prevFiles => ({ ...prevFiles, files: [...prevFiles.files, data] }));
+    //         //ВАЖНО ЗАПОМНИ
+    //         console.log(data)
+    //     } catch (error) {
+    //         console.error(error);
+    //         console.error('ERROR UPLOAD FILES');
+    //         toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
+    //     }
+    // }
 
     const handleDataChange = (newData) => {
         setFiles(newData);
@@ -509,7 +509,7 @@ function AllRow() {
             <div className='folder_create_block'>
                 <div>
 
-                    <div className='createFolderBlock'>
+                    {/* <div className='createFolderBlock'>
                         <div className='create_folder_block_component'>
                             <input type="text" placeholder='Введите название папки' className='create_input' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
                         </div>
@@ -522,9 +522,9 @@ function AllRow() {
                             }}>Удалить</button>
                         </div>
 
-                    </div>
+                    </div> */}
                 </div>
-                <div className='Lexa'>
+                {/* <div className='Lexa'>
                     <div
                         style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
                         className="file-link"
@@ -541,7 +541,7 @@ function AllRow() {
                         <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
                         <p style={{ textAlign: 'center' }}>Загрузить файлы</p>
                     </div>
-                </div>
+                </div> */}
             </div>
 
 
