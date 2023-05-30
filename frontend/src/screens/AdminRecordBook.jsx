@@ -458,23 +458,47 @@ function AdminRecordBook() {
 
                                 </div>
                             ) : (
-                                <div>
-                                    <select className="select_block" value={newSubjectIdUpd} onChange={(e) => setNewSubjectIdUpd(e.target.value)}>
+                                <div className="update_record_block">
+                                    {/* <select className="select_block" value={newSubjectIdUpd} onChange={(e) => setNewSubjectIdUpd(e.target.value)}>
                                         <option value="Some">Выберите предмет</option>
                                         {subject.map((subj) => (
                                             <option key={subj.id} value={subj.id}>
                                                 {subj.name}
                                             </option>
                                         ))}
-                                    </select>
-                                    <select className="select_block" value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
+                                    </select> */}
+                                    <Select
+                                        className="new_select_subblock"
+                                        value={newSubjectIdUpd}
+                                        onChange={(selectedOption) => setNewSubjectIdUpd(selectedOption.value)}
+                                        options={[
+                                            { value: "Some", label: "Выберите предмет" },
+                                            ...subject.map((subj) => ({
+                                                value: subj.id,
+                                                label: subj.name,
+                                            })),
+                                        ]}
+                                    />
+                                    {/* <select className="select_block" value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
                                         <option value="Some">Выберите студента</option>
                                         {students.map((student) => (
                                             <option key={student.id} value={student.id}>
                                                 {student.fio}
                                             </option>
                                         ))}
-                                    </select>
+                                    </select> */}
+                                    <Select
+                                        className="new_select_subblock"
+                                        value={newStudentsUpd}
+                                        onChange={(selectedOption) => setNewStudentsUpd(selectedOption.value)}
+                                        options={[
+                                            { value: "Some", label: "Выберите студента" },
+                                            ...students.map((student) => ({
+                                                value: student.id,
+                                                label: student.fio,
+                                            })),
+                                        ]}
+                                    />
                                     {/* Вопрос, тут не обязательно добавлять студентов на редактировании, вполне может вызвать баг или ошибки ЖЕЛАТЕЛЬНО УБРАТЬ */}
 
                                     <select className="select_block" value={newSemesterIdUpd} onChange={(e) => setNewSemesterIdUpd(e.target.value)}>
