@@ -135,25 +135,42 @@ function AdminNotification({ math }) {
   //   // setShowGroupCurriculum(true);
   // };
 
+
+  const handleUserSelection = (selectedOptions) => {
+    console.log(selectedOptions)
+    const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
+    if (containsSelectAll) {
+      console.log('Select All option selected');
+      // Perform your logic for selecting all students
+      setSelectedUserIds(students.map((student) => student.id));
+    } else {
+      console.log('Individual student(s) selected');
+      // Perform your logic for handling individual student selection
+      const selectedIds = selectedOptions.map((option) => option.value);
+      setSelectedUserIds(selectedIds);
+    }
+  };
+
+  const selectAllOption = {
+    value: 'all',
+    label: 'Выбрать всех студентов',
+  };
+
+  const options = [
+    { ...selectAllOption},
+    ...students.map((user) => ({
+      value: user.id,
+      label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+    })),
+  ];
+
   console.log(selectedUserIds)
 
   return (
     <div>
       <div className="title">Уведомления</div>
       <div className="create_notifiaction_block">
-        <div className='createNotifBlock'>
-          <textarea
-            className="input_block"
-            placeholder="Введите название уведомления"
-            onChange={(e) => setNewNotificationTitle(e.target.value)}
-          />
-          <textarea
-            className="input_block"
-            placeholder="Введите текст уведомления"
-            onChange={(e) => setNewNotificationText(e.target.value)}
-          />
-          <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
-        </div>
+
         <div>
           <div className="select-container">
             <h2 className="subblock_text">Выберите группу</h2>
@@ -169,33 +186,11 @@ function AdminNotification({ math }) {
               ]}
               placeholder="Enter a group"
             />
-            {/* <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
-              <option value="">Выберите группу</option>
-              {groups.map((grp) => (
-                <option key={grp.id} value={grp.id}>
-                  {grp.code} {grp.groupName} {grp.type}
-                </option>
-              ))}
-            </select> */}
           </div>
-
-          {/* там 70 групп сделай скролл на селектор!!!!! */}
 
           <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
-          {/* {students.map(user => (
-          <div className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} onClick={() => toggleUserSelection(user.id)}>
-            {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
-          </div>
-
-        ))} */}
           <div className="dropdown">
-            {/* <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
-              {students.map((user) => (
-                <option className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} value={user.id}>
-                  {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
-                </option>
-              ))}
-            </select> */}
+            {/* 
             <Select
               onChange={(selectedOptions) => {
                 const selectedUserIds = selectedOptions.map((option) => option.value);
@@ -208,10 +203,36 @@ function AdminNotification({ math }) {
               isMulti
               className="multiple_select"
               classNamePrefix="select"
-            />
+            /> */}
+
+            <div>
+              {/* <button onClick={handleSelectAll}>
+                {selectAll ? 'Deselect All' : 'Select All'}
+              </button> */}
+              <Select
+                onChange={handleUserSelection}
+                options={options}
+                isMulti
+                className="multiple_select"
+                classNamePrefix="select"
+              />
+            </div>
+
           </div>
         </div>
-
+        <div className='createNotifBlock'>
+          <textarea
+            className="input_block"
+            placeholder="Введите название уведомления"
+            onChange={(e) => setNewNotificationTitle(e.target.value)}
+          />
+          <textarea
+            className="input_block"
+            placeholder="Введите текст уведомления"
+            onChange={(e) => setNewNotificationText(e.target.value)}
+          />
+          <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
+        </div>
       </div>
       <div className="all_notification">
 

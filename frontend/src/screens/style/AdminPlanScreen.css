@@ -1,6 +1,6 @@
 .all_create_block{
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
 }
 
 .create_subj_block {
@@ -18,17 +18,13 @@
   padding-left: 20px;
 }
 
-/* .create_record_block.active{
+.create_subj_block.active{
     background-color: rgb(230, 230, 230);
 }
-.create_record_block:hover{
+.create_subj_block:hover{
   background-color: rgb(230, 230, 230);
-} */
-.dropdown {
-  width: 600px;
-  max-height: 200px;
-  /* overflow-y: auto; */
 }
+
 .plan_heading{
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -54,7 +50,19 @@
 .multiple_select{
   width: 100%;
 }
-
+.subblock_text_subject{
+  font-weight: bold;
+}
+.subj_subblock {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin-top: 10px;
+  align-items: center;
+}
+.edit_sibj_block{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
 @media (max-width: 600px) {
   .plan_screen_container {
       display: flex;

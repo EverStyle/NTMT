@@ -350,23 +350,27 @@ function AllRow() {
     };
 
     const validateFolderName = (folderName) => {
-        const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '-', '+', '=', '`', '~', '[', ']', '{', '}', ';', "'", ',', '.', '<', '>', '/', '?', '|', ' '];
-        const isForbidden = forbiddenCharacters.some(char => folderName.includes(char));
-        const isTooLong = folderName.length > 50;
+        const forbiddenCharactersRegex = /[^a-zA-Z0-9а-яА-Я]/;
+        const isForbidden = forbiddenCharactersRegex.test(folderName);
+        const isTooLong = folderName.length > 30;
         const isEmpty = folderName.trim().length === 0;
-
+      
         if (isForbidden) {
-            throw new Error('Folder name contains forbidden characters');
+          toast.error('Содержит недопустимые символы');
+          throw new Error('Folder name contains forbidden characters');
+          
         }
-
+      
         if (isTooLong) {
-            throw new Error('Folder name is too long');
+          toast.error('Название слишком длинное');
+          throw new Error('Folder name is too long');
         }
-
+      
         if (isEmpty) {
-            throw new Error('Folder name cannot be empty');
+          toast.error('Пустые названия недопустимы');
+          throw new Error('Folder name cannot be empty');
         }
-    };
+      };
 
     // async function createFolderLessons(newFolderNameLesson, nextFolderid) {
     //     //типа создание папки в папке задание 

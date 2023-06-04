@@ -7,51 +7,54 @@
 //
 //
 
-const [groups, setGroups] = useState([]);
-const [students, setStudents] = useState([]);
-const [newStudents, setNewStudents] = useState(0);
-const [newGroups, setNewGroups] = useState([]);
-
-const handleGroupChange = (e) => {
-  const groupId = e.value;
-  setNewGroups(groupId);
-  console.log(groupId);
-  if (groupId === "") {
-      console.log("Stud CLEAR")
-      setUserRecord([]);
-      setStudents([]); // Clear the students array when the default value is selected
-
-  } else {
-      fetchStudents(groupId);
-      setUserRecord([]); // Send an empty array when the group changes
+const [token, setToken] = useState('');
+useEffect(() => {
+  setToken(localStorage.getItem('token') || '');
+  if (token) {
+    localStorage.setItem('token', token || '');
   }
-};
-
-<div>
-  <Select
-    className="new_select_subblock"
-    onChange={handleGroupChange}
-    options={[
-      { value: "", label: "Выберите группу" },
-      ...groups.map((grp) => ({
-        value: grp.id,
-        label: `${grp.code} ${grp.groupName} ${grp.type}`,
-      })),
-    ]}
-    placeholder="Выберите группу"
-  />
-  <Select
-    className="new_select_subblock"
-    onChange={(selectedOption) => setNewStudents(selectedOption.value)}
-    options={[
-      { value: "Some", label: "Выберите студента" },
-      ...students.map((student) => ({
-        value: student.id,
-        label: student.fio,
-      })),
-    ]}
-  />
-</div>
+}, [token]);
 
 
+
+{/* <Router>
+      {token ? (
+        <>
+          {(() => {
+            let json43 = parseJwt(token);
+            console.log(json43)
+            switch (parseInt(json43.roleId)) {
+              case 1:
+                return <>
+                  <main className='container'>
+                    <Headers
+                      setToken={setToken}
+                      user={user}
+                      setUser={setUser}
+                    />
+                    <div className='content'>
+                      <PersonalArea role = {json43.roleId} />
+                      <div className='routers'>
+                        <Route path='/adminyvedomlenia' component={AdminNotification} />
+                      </div>
+                    </div>
+                  </main>
+                  <Footer />
+                </>
+              default:
+                return <div>Default Screen</div>
+            }
+          })()}
+        </>
+      ) : (
+        <main className='container'>
+          <Route path="/">
+            <Login
+              setToken={setToken}
+              setUser={setUser}
+            />
+          </Route>
+        </main>
+      )}
+    </Router> */}
 

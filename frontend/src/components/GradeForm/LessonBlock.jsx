@@ -261,20 +261,24 @@ function LessonRow() {
   // console.log(files)
 
   const validateFolderName = (folderName) => {
-    const forbiddenCharacters = ['\\', '/', ':', '*', '?', '"', '<', '>', '|', '!', '@', '#', '$', '%', '^', '&', '(', ')', '_', '-', '+', '=', '`', '~', '[', ']', '{', '}', ';', "'", ',', '.', '<', '>', '/', '?', '|', ' '];
-    const isForbidden = forbiddenCharacters.some(char => folderName.includes(char));
-    const isTooLong = folderName.length > 50;
+    const forbiddenCharactersRegex = /[^a-zA-Z0-9а-яА-Я]/;
+    const isForbidden = forbiddenCharactersRegex.test(folderName);
+    const isTooLong = folderName.length > 30;
     const isEmpty = folderName.trim().length === 0;
   
     if (isForbidden) {
+      toast.error('Содержит недопустимые символы');
       throw new Error('Folder name contains forbidden characters');
+      
     }
   
     if (isTooLong) {
+      toast.error('Название слишком длинное');
       throw new Error('Folder name is too long');
     }
   
     if (isEmpty) {
+      toast.error('Пустые названия недопустимы');
       throw new Error('Folder name cannot be empty');
     }
   };

@@ -1,13 +1,10 @@
 import React from "react";
-import Headers from "../components/Header/Header";
-import SheduleTable from "../components/SheduleTable/SheduleTable";
+import TeacherScheduleTable from "../components/SheduleTable/TeacherScheduleTable";
 function TeacherSchedule() {
-
-
     return (
         <div>
             <div className='shedule__table-wrapper'>
-                <SheduleTable />
+                <TeacherScheduleTable />
             </div>
         </div>
     )

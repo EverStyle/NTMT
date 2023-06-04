@@ -10,17 +10,18 @@ import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
 import Select from 'react-select';
 
-function SheduleTable() {
+function TeacherScheduleTable() {
   const [lessons, setLessons] = useState([]);
   const [startDate, setStartDate] = useState(new Date());
   registerLocale('ru', ru)
   const [allGroups, setallGroups] = useState([]);
-  const [selectedGroup, setSelectedGroup] = useState('ТО - 12901');
+  const [selectedGroup, setSelectedGroup] = useState('ТО-12901');
 
   const [sertainGroups, setsertainGroups] = useState({});
 
   const [switchSchedule, setSwitchSchedule] = useState(false);
   const [file, setFile] = useState('');
+
 
   const handleChange = (selectedOption) => {
     const selectedGroup = selectedOption.value;
@@ -35,7 +36,23 @@ function SheduleTable() {
       setSelectedGroup(selectedGroup);
     }
   };
+  // const handleChange = (event) => {
+  //   const selectedGroup = event.target.value;
+  //   console.log("WORK")
+  //   console.log(selectedGroup)
+  //   if (selectedGroup == "retShedule") {
+  //     setswitchSchedule(false)
+  //     setSelectedGroup(event.target.value);
+  //   } else {
+  //     setswitchSchedule(true)
+  //     setSelectedGroup(event.target.value);
+  //   }
+  // };
 
+  // const handlscheduleChange = (event) => {
+  //   setswitchSchedule(!switchSchedule)
+  //   setSelectedGroup(event.target.value);
+  // };
   const formattedDate = startDate.toLocaleDateString('ru', {
     day: '2-digit',
     month: '2-digit',
@@ -53,7 +70,6 @@ function SheduleTable() {
   // console.log(selectedGroup)
 
 
-  
   useEffect(async () => {
     try {
       const request = {
@@ -82,11 +98,10 @@ function SheduleTable() {
 
   }, [startDate, selectedGroup, switchSchedule, file]);
 
-  // console.log(sertainGroups)
-  // console.log(typeof sertainGroups)
-  // console.log(Array.isArray(sertainGroups))
+
 
   async function uploadSchedule(file) {
+
     const fileTypes = {
       'txt': 1,
       'xlsx': 2,
@@ -95,13 +110,11 @@ function SheduleTable() {
     const request = new FormData();
     request.append('files', file[0])
     request.append('fileType', fileTypes[file[0].name.split('.').pop()])
-
     const request2 = {
     };
     try {
       const response = await apiSchedule.sendSched(request);
       const data = response.data.message[0];
-
       const response2 = await apiSchedule.get(request2);
       console.log(data)
       toast.success("Загрузка успешна, обновите дату");
@@ -111,18 +124,46 @@ function SheduleTable() {
       toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  console.log(sertainGroups.schedule)
-  console.log(lessons)
+
+  console.log(selectedGroup)
+
+
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+    handleResize(); // Check on initial render
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+
+
   return (
+
+
     <div className='shedule-table'>
 
-      <div className="date_block" >
+      {isMobile ? (
+        // JSX for small screens (width <= 600)
+        <div>Mobile view</div>
+      ) : (
+        // JSX for large screens (width > 600)
+        <div>Desktop view</div>
+      )}
+
+      <div className="date_block_student" >
         <div className="date_container">
 
           <div className="subblock_text">
             Выберите дату
+            <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
           </div>
-          <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
+
         </div>
         <div className="date_container">
           {/* <button onClick={() => setStartDate(new Date())}>Reset</button> */}
@@ -131,7 +172,17 @@ function SheduleTable() {
             <div className="subblock_text">
               Выберите группу
             </div>
-            <Select
+            <div>
+
+              {/* <select className="select_block" value={selectedGroup} onChange={handleChange}>
+                <option value="retShedule">Рассписание всех групп</option>
+                {allGroups?.map((group) => (
+                  <option key={group.id} value={group.code}>
+                    {group.groupName} ({group.code})
+                  </option>
+                ))}
+              </select> */}
+              <Select
                 onChange={handleChange}
                 options={[
                   { value: "retShedule", label: "Рассписание всех групп" },
@@ -142,44 +193,12 @@ function SheduleTable() {
                 ]}
                 placeholder="Enter a group"
               />
+            </div>
           </div>
         </div>
-
-        <div className="lexa">
-          <div
-            style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
-            className="file-link"
-          >
-            <label htmlFor="file2" style={{ position: 'absolute', opacity: '0', width: '100%', height: '100%', cursor: 'pointer' }}></label>
-            <input
-              value={file}
-              type="file"
-              id="file2"
-              //Важно id html и id input изменить и все работает
-              style={{ position: 'absolute', display: 'none', width: '100%', height: '100%' }}
-              onChange={(e) => uploadSchedule(e.target.files)}
-            />
-            <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
-            <p style={{ textAlign: 'center' }}>Загрузить расписание</p>
-          </div>
-        </div>
-
       </div>
 
-
-
       <div className='lessons_container'>
-
-
-
-        {/* <div className="sub_text_schedule">
-          <div>
-            Выбранная дата {lessons.date}
-          </div>
-          <div>
-            День недели {lessons.day_of_the_week}
-          </div>
-        </div> */}
         {lessons.length == 0 ? <div className="subblock_text">Не выбранна дата или нет данных </div> : <div className="sub_text_schedule">
           <div className="subblock_text">
             Выбранная дата / {lessons.date}
@@ -189,24 +208,96 @@ function SheduleTable() {
           </div>
         </div>}
 
+        {isMobile ? (
+          // JSX for small screens (width <= 600)
+          <div className="heading_shedule-container">
 
+            {/* <div className="heading_shedule">
+              <div className="rec_shedule">Номер группы</div>
+              <div className="rec_shedule">Номер пары</div>
+              <div className="rec_shedule">Предмет</div>
+              <div className="rec_shedule">Аудитория</div>
+              <div className="rec_shedule">Преподаватель</div>
+            </div> */}
 
-        <div className="all_schedule_block">
+            {
+              !switchSchedule ? (
+                lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
+              ) : lessons.length === 0 ? (
+                <div className="subblock_text">Нет данных</div>
+              ) : (
+                <div className="certain_schedule">
+                  {typeof sertainGroups === 'object' ? (
+                    <ul className="custom-ul">
 
-          <div className="heading_shedule">
-            <div className="rec_shedule"> Номер группы</div>
-            <div className="rec_shedule"> Номер пары</div>
-            <div className="rec_shedule"> Предмет</div>
-            <div className="rec_shedule"> Аудитория</div>
-            <div className="rec_shedule">Преподаватель</div>
+                      <div className="all_certain_schedule_block">
+                        {/* <div className="group_number">
+                          {sertainGroups && sertainGroups.code}
+                        </div> */}
+
+                        <div className="all_certain_schedule_subblock">
+                          {sertainGroups?.schedule &&
+                            Object.entries(sertainGroups.schedule).map(
+                              ([key, value]) => (
+                                <li className="custom-li" key={key}>
+                                  {value.subject ? (
+                                    <>
+                                      <div className="schedule_mobile_block">
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Номер пары :</div>
+                                          <div className="rec_shedule">{key}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Предмет :</div>
+                                          <div className="rec_shedule">{value.subject}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Аудитория :</div>
+                                          <div className="rec_shedule">({value.fo})</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                          <div className="rec_shedule">Преподаватель :</div>
+                                          <div className="rec_shedule">{value.fio}</div>
+                                        </div>
+                                      </div>
+
+                                    </>
+                                  ) : (
+                                    <div className="no_lessons">
+                                      Номер пары {key} / Нет занятий
+                                    </div>
+                                  )}
+                                </li>
+                              )
+                            )}
+                        </div>
+                      </div>
+                    </ul>
+                  ) : (
+                    <div>{sertainGroups}</div>
+                  )}
+                </div>
+              )
+            }
           </div>
-          {
-            !switchSchedule ? (
-              lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
-            ) : lessons.length === 0 ? (
-              <div className="subblock_text">Нет данных</div>
-            ) : (
-              <div>
+        ) : (
+          // JSX for large screens (width > 600)
+          <div className="heading_shedule-container">
+
+            <div className="heading_shedule">
+              <div className="rec_shedule">Номер группы</div>
+              <div className="rec_shedule">Номер пары</div>
+              <div className="rec_shedule">Предмет</div>
+              <div className="rec_shedule">Аудитория</div>
+              <div className="rec_shedule">Преподаватель</div>
+            </div>
+
+            {
+              !switchSchedule ? (
+                lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
+              ) : lessons.length === 0 ? (
+                <div className="subblock_text">Нет данных</div>
+              ) : (
                 <div className="certain_schedule">
                   {typeof sertainGroups === 'object' ? (
                     <ul className="custom-ul">
@@ -254,10 +345,11 @@ function SheduleTable() {
                     <div>{sertainGroups}</div>
                   )}
                 </div>
-              </div>
-            )
-          }
-        </div>
+              )
+            }
+          </div>
+        )}
+
       </div>
 
       <ToastContainer
@@ -277,4 +369,5 @@ function SheduleTable() {
   );
 }
 
-export default SheduleTable;
+export default TeacherScheduleTable;
+

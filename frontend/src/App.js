@@ -23,13 +23,31 @@ import Login from "./screens/Login/Login";
 function App() {
   const [user, setUser] = useState({});
   const [token, setToken] = useState('');
-  
+  const [tokenExpiration, setTokenExpiration] = useState(null);
+
+  // useEffect(() => {
+  //   setToken(localStorage.getItem('token') || '');
+  //   if (token) {
+  //     localStorage.setItem('token', token || '');
+  //   }
+  // }, [token]);
   useEffect(() => {
-    setToken(localStorage.getItem('token') || '');
-    if (token) {
-      localStorage.setItem('token', token || '');
+    const storedToken = localStorage.getItem('token') || '';
+    setToken(storedToken);
+    if (storedToken) {
+      localStorage.setItem('token', storedToken);
+      const decodedToken = parseJwt(storedToken);
+      const expirationTime = decodedToken.exp * 1000; // Convert expiration time to milliseconds
+      if (expirationTime < Date.now()) {
+        // Token has expired, clear token and set expiration to null
+        setToken('');
+        setTokenExpiration(null);
+        localStorage.removeItem('token');
+      } else {
+        setTokenExpiration(expirationTime);
+      }
     }
-  }, [token]);
+  }, []);
 
   function parseJwt(token) {
     var base64Url = token.split('.')[1];
@@ -41,11 +59,12 @@ function App() {
     return JSON.parse(jsonPayload);
   }
 
-// console.log(parseJwt(token))
+  // console.log(parseJwt(token))
 
   return (
     <Router>
-      {token ? (
+      {token && tokenExpiration && tokenExpiration > Date.now() ? (
+        // token
         <>
           {(() => {
             let json43 = parseJwt(token);
@@ -62,7 +81,7 @@ function App() {
                       setUser={setUser}
                     />
                     <div className='content'>
-                      <PersonalArea role = {json43.roleId} />
+                      <PersonalArea role={json43.roleId} />
                       <div className='routers'>
                         <Route path='/adminyvedomlenia' component={AdminNotification} />
                         <Route path='/adminras' component={AdminSchedule} />
@@ -79,69 +98,69 @@ function App() {
               case 2:
                 //родитель
                 return <>
-                <main className='container'>
-                  <Headers
-                    setToken={setToken}
-                    user={user}
-                    setUser={setUser}
-                  />
-                  <div className='content'>
-                    <PersonalArea role = {json43.roleId}/>
-                    <div className='routers'>
-                      <Route path='/yvedomlenia' component={NotificationsScreen} />
-                      <Route path='/ras' component={ScheduleScreen} />
-                      <Route path='/fail' component={FileScreen} />
-                      <Route path='/zachetka' component={RecordBookScreen} />
-                      <Route path='/plan' component={PlanScreen} />
+                  <main className='container'>
+                    <Headers
+                      setToken={setToken}
+                      user={user}
+                      setUser={setUser}
+                    />
+                    <div className='content'>
+                      <PersonalArea role={json43.roleId} />
+                      <div className='routers'>
+                        <Route path='/yvedomlenia' component={NotificationsScreen} />
+                        <Route path='/ras' component={ScheduleScreen} />
+                        <Route path='/fail' component={FileScreen} />
+                        <Route path='/zachetka' component={RecordBookScreen} />
+                        <Route path='/plan' component={PlanScreen} />
+                      </div>
                     </div>
-                  </div>
-                </main>
-                <Footer />
-              </>
+                  </main>
+                  <Footer />
+                </>
               case 3:
                 //препод
                 return <>
-                <main className='container'>
-                  <Headers
-                    setToken={setToken}
-                    user={user}
-                    setUser={setUser}
-                  />
-                  <div className='content'>
-                    <PersonalArea role = {json43.roleId}/>
-                    <div className='routers'>
-                      <Route path='/teacheryvedomlenia' component={TeacherNotification} />
-                      <Route path='/teacherras' component={TeacherSchedule} />
-                      <Route path='/teacherfail' component={TeacherFileScreen} />
-                      <Route path='/teacherzachetka' component={TeacherRecordBook} />
-                      <Route path='/teacherplan' component={TeacherPlanScreen} />
+                  <main className='container'>
+                    <Headers
+                      setToken={setToken}
+                      user={user}
+                      setUser={setUser}
+                    />
+                    <div className='content'>
+                      <PersonalArea role={json43.roleId} />
+                      <div className='routers'>
+                        <Route path='/teacheryvedomlenia' component={TeacherNotification} />
+                        <Route path='/teacherras' component={TeacherSchedule} />
+                        <Route path='/teacherfail' component={TeacherFileScreen} />
+                        <Route path='/teacherzachetka' component={TeacherRecordBook} />
+                        <Route path='/teacherplan' component={TeacherPlanScreen} />
+                      </div>
                     </div>
-                  </div>
-                </main>
-                <Footer />
-              </>
+                  </main>
+                  <Footer />
+                </>
               case 4:
                 //студент
                 return <>
-                <main className='container'>
-                  <Headers
-                    setToken={setToken}
-                    user={user}
-                    setUser={setUser}
-                  />
-                  <div className='content'>
-                    <PersonalArea role = {json43.roleId}/>
-                    <div className='routers'>
-                      <Route path='/yvedomlenia' component={NotificationsScreen} />
-                      <Route path='/ras' component={ScheduleScreen} />
-                      <Route path='/fail' component={FileScreen} />
-                      <Route path='/zachetka' component={RecordBookScreen} />
-                      <Route path='/plan' component={PlanScreen} />
+                  <main className='container'>
+                    <Headers
+                      setToken={setToken}
+                      user={user}
+                      setUser={setUser}
+                    />
+                    <div className='content'>
+                      <PersonalArea role={json43.roleId} />
+                      <div className='routers'>
+                        <Route path='/yvedomlenia' component={NotificationsScreen} />
+                        <Route path='/ras' component={ScheduleScreen} />
+                        <Route path='/fail' component={FileScreen} />
+                        <Route path='/zachetka' component={RecordBookScreen} />
+                        <Route path='/plan' component={PlanScreen} />
+                      </div>
                     </div>
-                  </div>
-                </main>
-                <Footer />
-              </>
+                  </main>
+                  <Footer />
+                </>
               default:
                 return <div>Default Screen</div>
             }
@@ -152,7 +171,13 @@ function App() {
         <main className='container'>
           <Route path="/">
             <Login
-              setToken={setToken}
+              setToken={(newToken) => {
+                setToken(newToken);
+                const decodedToken = parseJwt(newToken);
+                const expirationTime = decodedToken.exp * 1000; // Convert expiration time to milliseconds
+                setTokenExpiration(expirationTime);
+                localStorage.setItem('token', newToken);
+              }}
               setUser={setUser}
             />
           </Route>

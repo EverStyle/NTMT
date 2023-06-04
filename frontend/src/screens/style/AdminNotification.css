@@ -27,8 +27,9 @@
     background-color: rgb(109, 143, 253);
   }
   .create_notifiaction_block{
-    display: flex;
-    justify-content: space-around;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
     border: 2px solid #000000;
     border-radius: 20px;
     padding: 20px;
@@ -39,8 +40,9 @@
     flex-direction: column;
   }
   .select-container {
-    width: 100%; /* Set a specific width for the select container */
+    width: 600px; /* Set a specific width for the select container */
     position: relative;
+    margin-bottom: 1rem;
   }
   
   .custom-select {
@@ -51,7 +53,11 @@
     border-radius: 4px;
     padding: 5px;
   }
-  
+  .dropdown {
+    width: 600px;
+    max-height: 200px;
+    /* overflow-y: auto; */
+  }
   /* Optional styling for the dropdown arrow */
   .custom-select:after {
     content: "\25BC";
@@ -60,3 +66,33 @@
     right: 10px;
     transform: translateY(-50%);
   }
+  /* .createNotifBlock_select{
+    display: grid;
+    grid-template-columns: 1fr;
+  } */
+  @media (max-width: 600px) {
+    .create_notifiaction_block{
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      border: 2px solid #000000;
+      border-radius: 20px;
+      padding: 20px;
+      
+    }
+}
+@media (max-width: 600px) {
+  .select-container {
+    width: 300px; /* Set a specific width for the select container */
+    position: relative;
+  }
+}
+@media (max-width: 600px) {
+  .dropdown {
+    width: 300px;
+    max-height: 200px;
+    /* overflow-y: auto; */
+  }
+}
+
+ 

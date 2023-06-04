@@ -148,17 +148,11 @@ function RecordBookScreen() {
                                 userGroupInfo.type === 'Заочная' ? '4 года' :
                                     userGroupInfo.type === 'Очно-заочная' ? '5 лет' : ''}
                     </div>
-
-
                 </div>
-
                 {isMobile ? (
                     // JSX for small screens (width <= 600)
                     <div className="record_container">
-
                         <div className="heading">
-                           
-
                         </div>
                         {userRecord.length > 0 ? (
                             userRecord.map((record) => (
@@ -228,9 +222,6 @@ function RecordBookScreen() {
                         )}
                     </div>
                 )}
-
-
-
             </div>
 
 

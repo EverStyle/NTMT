@@ -54,7 +54,7 @@ function Login({ setToken, setUser }) {
                 // Крч бред какойто КОДЕ Выводит Undefined, статус 200 , все должно работать !!!!!!!!!!!!!!!!!!!!
                 // if (response.statusCode === 200) { !!!!!!!ПРОВЕРИТЬ НЕ РАБОТАЕТ НА АДМИНКЕ!!!!!!!!!!!!!!
 
-                if (response.data.statusCode === 200) {
+                if (response.status === 200) {
                     setUser(response.data.message);
                     setToken(response.data.message.token);
                 } else {

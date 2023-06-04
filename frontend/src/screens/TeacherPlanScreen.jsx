@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import './style/AdminPlanScreen.css';
+import Select from 'react-select';
 
 function TeacherPlanScreen() {
   const { subjects } = plan[0];
@@ -174,7 +175,7 @@ function TeacherPlanScreen() {
       toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  async function deleteSubjectFromGroup(id,newGroupId) {
+  async function deleteSubjectFromGroup(id, newGroupId) {
     const request = {
       subjectGroupId: id
     };
@@ -202,7 +203,7 @@ function TeacherPlanScreen() {
   const [newGroupCode, setNewGroupCode] = useState("");
 
   const handleGroupChange = async (e) => {
-    const selectedGroupId = e.target.value;
+    const selectedGroupId = e.value;
     console.log(selectedGroupId)
     if (selectedGroupId === '') {
       setNewGroupCode(''); // Set empty group code
@@ -210,7 +211,7 @@ function TeacherPlanScreen() {
       const selectedGroup = groups.find((grp) => grp.id === selectedGroupId);
       setNewGroupCode(selectedGroup.code);
     }
-    const groupId = parseInt(e.target.value);
+    const groupId = parseInt(e.value);
     setNewGroups(groupId);
     setShowGroupCurriculum(true);
     // setSubject([])
@@ -273,117 +274,216 @@ function TeacherPlanScreen() {
     }
   };
 
-  console.log(newGroups)
-  console.log(groups)
-console.log(selectedBlockId)
+  console.log(subject)
 
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 600);
+    };
+
+    handleResize(); // Check on initial render
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
     <div>
-      <div className="all_create_block">
-        <div className={`create_subj_block ${selectedBlockId === 'group' ? 'active' : ''}`}
-          onClick={() => handleBlockClick('group')}>
-          <div className="title">
-            Учебный план группы
-          </div>
 
-          <div className="record_subblock">
-            <div className="subblock_text">
-              Выбор группы
-            </div>
-            <button type='button' className="button_create" onClick={() => handleBlockClick('plan')}>Все дисциплины</button>
-            <select className="select_block" value={newGroups.toString()} onChange={handleGroupChange}>
+
+      <div className="title">
+        Учебный план группы
+      </div>
+
+      <div className="record_subblock_teacher">
+
+        <button type='button' className="button_create" onClick={() => handleBlockClick('plan')}>Все дисциплины</button>
+        <div className="subblock_text">
+          Выбор группы
+        </div>
+        <Select
+          className="new_select_subblock"
+          onChange={(selectedOption) => {
+            handleBlockClick('group');
+            handleGroupChange(selectedOption);
+          }}
+          options={[
+            { value: "", label: "Выберите группу" },
+            ...groups.map((grp) => ({
+              value: grp.id,
+              label: `${grp.code} ${grp.groupName} ${grp.type}`,
+            })),
+          ]}
+          placeholder="Выберите группу"
+        />
+        {/* <select className="select_block" value={newGroups.toString()} onChange={handleGroupChange}>
               <option value="">Выберите группу</option>
               {groups.map((grp) => (
                 <option key={grp.id} value={grp.id}>
                   {grp.code} {grp.groupName} {grp.type}
                 </option>
               ))}
-            </select>
-          </div>
-          
-        </div>
-
-        {/* <div className={`create_record_block ${selectedBlockId === 'plan' ? 'active' : ''}`}
-          onClick={() => handleBlockClick('plan')}>
-          <div>
-            <div className="title">
-              Все дисциплины
-            </div>
-          </div>
-        </div> */}
+            </select> */}
       </div>
 
-      {/* Render curriculum based on selected block */}
-      {selectedBlockId === 'group' ? (
-        // Render curriculum for selected group
-        <div>
-          {/* Render curriculum for selected group here */}
-          <div>
-            {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>}
-            <div className="plan_heading">
-              <div className="plan_rec">Дисциплина</div>
-              <div className="plan_rec">Количество часов</div>
-              <div className="plan_rec">Отчетность</div>
-              <div className="plan_rec">Преподаватель</div>
-              {/* <div className="plan_rec">Действия</div> */}
-            </div>
-            {subject?.map(subj => (
-              <div key={subj.id}>
-                <div className="plan_block">
-                    <div className="plan_rec">
-                      {subj.subjectName}
+      {isMobile ? (
+        // JSX for small screens (width <= 600)
+        <div className="plan_screen_container">
+          {/* Render curriculum based on selected block */}
+          {selectedBlockId === 'group' ? (
+            // Render curriculum for selected group
+            <div>
+              {/* Render curriculum for selected group here */}
+              <div>
+                {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>}
+                {/* <div className="plan_heading">
+                  <div className="plan_rec">Дисциплина</div>
+                  <div className="plan_rec">Количество часов</div>
+                  <div className="plan_rec">Отчетность</div>
+                  <div className="plan_rec">Преподаватель</div>
+                </div> */}
+                {subject?.map(subj => (
+                  <div key={subj.id} className="record_mobile_block">
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Дисциплина :</div>
+                      <div className="rec_shedule">{subj.subjectName}</div>
                     </div>
-                    <div className="plan_rec">
-                      {subj.summaryHours}
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Количество часов :</div>
+                      <div className="rec_shedule">{subj.summaryHours}</div>
                     </div>
-                    <div className="plan_rec" >
-                      {subj.type}
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Отчетность :</div>
+                      <div className="rec_shedule">{subj.type}</div>
                     </div>
-                    <div className="plan_rec">
-                      {subj.teacher}
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Преподаватель :</div>
+                      <div className="rec_shedule">{subj.teacher}</div>
                     </div>
-
+                    {/* <div className="rec_shedule">Номер группы</div> */}
                   </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            // Render entire curriculum
+            <div>
+              Все дисциплины
+              {/* Render entire curriculum here */}
+              <div>
+                {/* <div className="plan_heading">
+                  <div className="plan_rec">Дисциплина</div>
+                  <div className="plan_rec">Количество часов</div>
+                  <div className="plan_rec">Отчетность</div>
+                  <div className="plan_rec">Преподаватель</div>
+                </div> */}
+                {subject?.map(subj => (
+                  <div key={subj.id} className="record_mobile_block">
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Дисциплина :</div>
+                      <div className="rec_shedule">{subj.name}</div>
+                    </div>
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Количество часов :</div>
+                      <div className="rec_shedule">{subj.summaryHours}</div>
+                    </div>
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Отчетность :</div>
+                      <div className="rec_shedule">{subj.examType}</div>
+                    </div>
+                    <div className="schedule_mobile_data">
+                      <div className="rec_shedule">Преподаватель :</div>
+                      <div className="rec_shedule">{subj.teacher}</div>
+                    </div>
+                    {/* <div className="rec_shedule">Номер группы</div> */}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       ) : (
-        // Render entire curriculum
-        <div>
-          Все дисциплины
-          {/* Render entire curriculum here */}
-          <div>
-            <div className="plan_heading">
-              <div className="plan_rec">Дисциплина</div>
-              <div className="plan_rec">Количество часов</div>
-              <div className="plan_rec">Отчетность</div>
-              <div className="plan_rec">Преподаватель</div>
-              {/* <div className="plan_rec">Действия</div> */}
-            </div>
-            {subject?.map(subj => (
-              <div key={subj.id}>
-                <div className="plan_block">
-                    <div className="plan_rec">
-                      {subj.name}
-                    </div>
-                    <div className="plan_rec">
-                      {subj.summaryHours}
-                    </div>
-                    <div className="plan_rec" >
-                      {subj.examType}
-                    </div>
-                    <div className="plan_rec">
-                      {subj.teacher}
+        // JSX for large screens (width > 600)
+        <div className="plan_screen_container">
+          {/* Render curriculum based on selected block */}
+          {selectedBlockId === 'group' ? (
+            // Render curriculum for selected group
+            <div>
+              {/* Render curriculum for selected group here */}
+              <div>
+                {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>}
+                <div className="plan_heading">
+                  <div className="plan_rec">Дисциплина</div>
+                  <div className="plan_rec">Количество часов</div>
+                  <div className="plan_rec">Отчетность</div>
+                  <div className="plan_rec">Преподаватель</div>
+                  {/* <div className="plan_rec">Действия</div> */}
+                </div>
+                {subject?.map(subj => (
+                  <div key={subj.id}>
+                    <div className="plan_block">
+                      <div className="plan_rec">
+                        {subj.name}
+                      </div>
+                      <div className="plan_rec">
+                        {subj.summaryHours}
+                      </div>
+                      <div className="plan_rec" >
+                        {subj.examType}
+                      </div>
+                      <div className="plan_rec">
+                        {subj.teacher}
+                      </div>
+
                     </div>
                   </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          ) : (
+            // Render entire curriculum
+            <div>
+              Все дисциплины
+              {/* Render entire curriculum here */}
+              <div>
+                <div className="plan_heading">
+                  <div className="plan_rec">Дисциплина</div>
+                  <div className="plan_rec">Количество часов</div>
+                  <div className="plan_rec">Отчетность</div>
+                  <div className="plan_rec">Преподаватель</div>
+                  {/* <div className="plan_rec">Действия</div> */}
+                </div>
+                {subject?.map(subj => (
+                  <div key={subj.id}>
+                    <div className="plan_block">
+                      <div className="plan_rec">
+                        {subj.name}
+                      </div>
+                      <div className="plan_rec">
+                        {subj.summaryHours}
+                      </div>
+                      <div className="plan_rec" >
+                        {subj.examType}
+                      </div>
+                      <div className="plan_rec">
+                        {subj.teacher}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       )}
+
+
 
 
       <ToastContainer

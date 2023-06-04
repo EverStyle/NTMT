@@ -7,6 +7,7 @@ import apiRecordBook from "../api/recordBook";
 import apiSubject from "../api/subjects";
 import apiAccount from "../api/account";
 import apiSchedule from "../api/schedule";
+import Select from 'react-select';
 
 function TeacherRecordBook() {
 
@@ -42,6 +43,8 @@ function TeacherRecordBook() {
     const [newGroups, setNewGroups] = useState([]);
     const [newGroups2, setNewGroups2] = useState([]);
     const [userInfo, setUserInfo] = useState({});
+
+    const [placeHolder, setplaceHolder] = useState("Нет информации о зачетной книжке");
 
     const handleEditClick = (subjId) => {
         setEditableSubject({
@@ -115,7 +118,7 @@ function TeacherRecordBook() {
     }, []);
 
 
-    // console.log(userInfo)
+    console.log(userRecord)
     // console.log(subject)
     // console.log(teachers)
     // console.log(students)
@@ -159,6 +162,7 @@ function TeacherRecordBook() {
         };
         try {
             console.log(request)
+            console.log(request2)
             const response = await apiRecordBook.updateTeacherRecord(request);
             //   handleEditClickExit(subjId);
 
@@ -242,7 +246,7 @@ function TeacherRecordBook() {
     };
 
     const handleGroupChange = (e) => {
-        const groupId = e.target.value;
+        const groupId = e.value;
         setNewGroups(groupId);
 
         if (groupId === "") {
@@ -256,13 +260,25 @@ function TeacherRecordBook() {
     };
 
     const handleStudentChange = (e) => {
-        const studentId = e.target.value;
+        const studentId = e.value;
         setNewStudents2(studentId);
     };
 
-    console.log(newStudentsUpd)
-    console.log(userRecord)
-    console.log(newStudents2)
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 600);
+        };
+
+        handleResize(); // Check on initial render
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
 
     return (
@@ -271,93 +287,151 @@ function TeacherRecordBook() {
                 <div className="title">
                     Зачетная книжка студентов
                 </div>
-                <div>
-                    <select className="select_block" value={newGroups} onChange={handleGroupChange}>
-                        <option value="">Выберите группу</option>
-                        {groups.map((grp) => (
-                            <option key={grp.id} value={grp.id}>
-                                {grp.code} {grp.groupName} {grp.type}
-                            </option>
-                        ))}
-                    </select>
-
-                    <select className="select_block" value={newStudents2} onChange={(e) => {
-                        setNewStudents2(e.target.value);
-                        uploadStudents(e.target.value);
-                        handleStudentChange(e); // Call the function here
-                    }}>
-                        <option value={0}>Выберите студента</option>
-                        {students.map((std) => (
-                            <option key={std.id} value={std.id}>
-                                {std.fio}
-                            </option>
-                        ))}
-                    </select>
+                <div className="two_group_selector">
+                    <Select
+                        className="new_select_subblock"
+                        onChange={handleGroupChange}
+                        options={[
+                            { value: "", label: "Выберите группу" },
+                            ...groups.map((grp) => ({
+                                value: grp.id,
+                                label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                            })),
+                        ]}
+                        placeholder="Выберите группу"
+                    />
+                    <Select
+                        className="new_select_subblock"
+                        onChange={(selectedOption) => {
+                            setNewStudents(selectedOption.value);
+                            uploadStudents(selectedOption.value);
+                            handleStudentChange(selectedOption);
+                        }}
+                        options={[
+                            { value: 0, label: "Выберите студента" },
+                            ...students.map((student) => ({
+                                value: student.id,
+                                label: student.fio,
+                            })),
+                        ]}
+                        placeholder="Выберите студента"
+                    />
                 </div>
-                <div className="record_container">
-                    <div className="heading">
-                        <div className="rec">Дисциплина</div>
-                        <div className="rec">Количество часов</div>
-                        <div className="rec">Итоговая оценка</div>
-                        <div className="rec">Дата сдачи</div>
-                        <div className="rec">Преподаватель</div>
-                        <div className="">Действия</div>
-                    </div>
-                    {userRecord.map((records) => (
-                        <div key={records.id}>
-                            <div className="record_student_block">
-                                <div className="rec">{records.subjectName}</div>
-                                <div className="rec">{records.summaryHours}</div>
-                                <div className="rec">{records.endMark}</div>
-                                <div className="rec">{records.date}</div>
-                                <div className="rec">{records.teacher}</div>
-                                {/* Тут скажи тохе шоб добавил тип экзамена  */}
-                                <div>
-                                    <button className="recordbook_buttons" onClick={() => deleteRecordBook(records.id)}>
-                                        Удалить
-                                    </button>
-                                    <button className="recordbook_buttons" onClick={() => handleEditClick(records.id)}>
-                                        Обновить
-                                    </button>
-                                </div>
-                            </div>
-                            {/* <button className="button_delete" onClick={() => deleteRecordBook(records.id)}>
-                                Delete
-                            </button>
-                            <button className="button_delete" onClick={() => handleEditClick(records.id)}>
-                                Update
-                            </button> */}
-                            {!editableSubject[records.id] ? (
-                                <div className="record_buttons">
 
-                                </div>
-                            ) : (
-                                <div>
-                                    
-                                    {/* <select className="select_block" value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
-                                        <option value="Some">Выберите студента</option>
-                                        {students.map((student) => (
-                                            <option key={student.id} value={student.id}>
-                                                {student.fio}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    Вопрос, тут не обязательно добавлять студентов на редактировании, вполне может вызвать баг или ошибки ЖЕЛАТЕЛЬНО УБРАТЬ */}
-
-                                   
-                                    <input className="select_block"
-                                        type="text"
-                                        placeholder='Введите результат'
-                                        value={newResultUpd}
-                                        onChange={(e) => setNewResultUpd(e.target.value)}
-                                    />
-                                    <button className="select_block" onClick={() => updateRecordBook(records.id, newResultUpd,newStudents2 )}>Сохранить</button>
-                                    <button className="select_block" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
-                                </div>
-                            )}
+                {isMobile ? (
+                    // JSX for small screens (width <= 600)
+                    <div className="record_container">
+                        <div className="heading">
                         </div>
-                    ))}
-                </div>
+                        {userRecord.length > 0 ? (
+                            userRecord.map((record) => (
+                                <div>
+                                    <div key={record.id} className="record_mobile_block">
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Дисциплина :</div>
+                                            <div className="rec_shedule">{record.subjectName}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Количество часов :</div>
+                                            <div className="rec_shedule">{record.summaryHours}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Итоговая оценка :</div>
+                                            <div className="rec_shedule">{record.endMark}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Дата сдачи :</div>
+                                            <div className="rec_shedule">{record.date}</div>
+                                            {/* <div className="rec_shedule">{new Date(record.date).toLocaleDateString('en-US', {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                            })}</div> */}
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Преподаватель :</div>
+                                            <div className="rec_shedule">{record.teacher}</div>
+                                        </div>
+                                        <div className="schedule_mobile_data">
+                                            <div className="rec_shedule">Действия :</div>
+                                            <button style={{ textAlign: 'left' }} className="recordbook_buttons" onClick={() => handleEditClick(record.id)}>
+                                            <span>Сменить оценку</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {!editableSubject[record.id] ? (
+                                        <div className="record_buttons">
+
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <input className="select_block_record"
+                                                type="text"
+                                                placeholder='Введите результат'
+                                                value={newResultUpd}
+                                                onChange={(e) => setNewResultUpd(e.target.value)}
+                                            />
+                                            <button className="select_block_button_record" onClick={() => updateRecordBook(record.id, newResultUpd, newStudents2)}>Сохранить</button>
+                                            <button className="select_block_button_record_delete" onClick={() => handleEditClickExit(record.id)}>Отмена</button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div>{placeHolder}</div>
+                        )}
+                    </div>
+                ) : (
+                    // JSX for large screens (width > 600)
+                    <div className="record_container">
+
+                        <div className="heading">
+                            <div className="rec">Дисциплина</div>
+                            <div className="rec">Количество часов</div>
+                            <div className="rec">Итоговая оценка</div>
+                            <div className="rec">Дата сдачи</div>
+                            <div className="rec">Преподаватель</div>
+                            {/* <div className="">Действия</div> */}
+
+                        </div>
+                        {userRecord.length > 0 ? (
+                            userRecord.map((record) => (
+                                <div>
+                                    <div key={record.id} className="record_student_block">
+                                        <div className="rec">{record.subjectName}</div>
+                                        <div className="rec">{record.summaryHours}</div>
+                                        <div className="rec">{record.endMark}</div>
+                                        <div className="rec">{record.date}</div>
+                                        <div className="rec">{record.teacher}</div>
+                                        <div>
+                                            <button className="recordbook_buttons" onClick={() => handleEditClick(record.id)}>
+                                            Сменить оценку
+                                            </button>
+                                        </div>
+                                    </div>
+                                    {!editableSubject[record.id] ? (
+                                        <div className="record_buttons">
+
+                                        </div>
+                                    ) : (
+                                        <div>
+                                            <input className="select_block_record"
+                                                type="text"
+                                                placeholder='Введите результат'
+                                                value={newResultUpd}
+                                                onChange={(e) => setNewResultUpd(e.target.value)}
+                                            />
+                                            <button className="select_block_button_record" onClick={() => updateRecordBook(record.id, newResultUpd, newStudents2)}>Сохранить</button>
+                                            <button className="select_block_button_record_delete" onClick={() => handleEditClickExit(record.id)}>Отмена</button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))
+                        ) : (
+                            <div>{placeHolder}</div>
+                        )}
+                    </div>
+                )}
             </div>
 
             <ToastContainer
@@ -374,157 +448,53 @@ function TeacherRecordBook() {
                 style={{ width: '500px' }}
             />
 
-            <div>
 
-
-                {/* const [newYearUpd, setNewYearUpd] = useState([]);
-    const [newDateUpd, setNewDateUpd] = useState([]);
-    const [newSubjectIdUpd, setNewSubjectIdUpd] = useState([]);
-    const [newSemesterIdUpd, setNewSemesterIdUpd] = useState([]);
-    const [newResultUpd, setNewResultUpd] = useState([]); */}
-                {/* const [newStudentsUpd, setNewStudentsUpd] = useState(0); */}
-
-                {/* {userRecord.map((records) => (
-                    <div key={records.id}>{records.groupName}{records.endMark}{records.secondName}
-                        {!editableSubject[records.id] ? (
-                            <div>
-                                <button className="button_delete" onClick={() => deleteSubject(records.id)}>
-                                    Delete
-                                </button>
-                                <button className="button_delete" onClick={() => handleEditClick(records.id)}>
-                                    Update
-                                </button>
-                            </div>
-                        ) : (
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder='Введите результат'
-                                    value={newResultUpd}
-                                    onChange={(e) => setNewResultUpd(e.target.value)}
-                                />
-                                <input type="date" onChange={(e) => {
-                                    const selectedDate = new Date(e.target.value);
-                                    const formattedDate = selectedDate.toLocaleDateString('ru-RU');
-                                    setNewDateUpd(formattedDate);
-                                }} />
-                                <select value={newStudentsUpd} onChange={(e) => setNewStudentsUpd(e.target.value)}>
-                                    <option value="Some">Выберите студента</option>
-                                    {students.map((student) => (
-                                        <option key={student.id} value={student.id}>
-                                            {student.fio}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select value={newSubjectIdUpd} onChange={(e) => setNewSubjectIdUpd(e.target.value)}>
-                                    <option value="Some">Выберите предмет</option>
-                                    {subject.map((subj) => (
-                                        <option key={subj.id} value={subj.id}>
-                                            {subj.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select value={newSemesterIdUpd} onChange={(e) => setNewSemesterIdUpd(e.target.value)}>
-                                    <option value="Some">Выберите семестр</option>
-                                    {semester.map((sem) => (
-                                        <option key={sem.id} value={sem.id}>
-                                            {sem.value}
-                                        </option>
-                                    ))}
-                                </select>
-                                <input type="number" placeholder='Введите год' onChange={(e) => setNewYearUpd(e.target.value)} />
-
-                                <button onClick={() => updateRecordBook(records.id,newResultUpd,newDateUpd,newStudentsUpd,newSubjectIdUpd,newSemesterIdUpd,newYearUpd)}>Save</button>
-                                <button onClick={() => handleEditClickExit(records.id)}>Exit</button>
-                            </div>
-                        )}
-                    </div>
-                ))} */}
-
-
-                {/* {subject?.map(subj => (
-                    <div key={subj.id}>
-                        {!editableSubject[subj.id] ? (
-                            <div>
-                                <button className="button_delete" onClick={() => deleteSubject(subj.id)}>
-                                    Delete
-                                </button>
-                                <button className="button_delete" onClick={() => handleEditClick(subj.id)}>
-                                    Update
-                                </button>
-                            </div>
-                        ) : (
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder='Введите'
-                                    value={newTitle}
-                                    onChange={(e) => setNewTitle(e.target.value)}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder='Введите'
-                                    value={newHoursSubj}
-                                    onChange={(e) => setNewHoursSubj(e.target.value)}
-                                />
-                                <select value={newExamType} onChange={(e) => setNewExamType(e.target.value)}>
-                                    <option value="">Select Exam Type</option>
-                                    {exams.map((exam) => (
-                                        <option key={exam.id} value={exam.id}>
-                                            {exam.type}
-                                        </option>
-                                    ))}
-                                </select>
-                                <select value={newTeacherId} onChange={(e) => setNewTeacherId(e.target.value)}>
-                                    <option value="">Select Teacher</option>
-                                    {teachers.map((teacher) => (
-                                        <option key={teacher.id} value={teacher.id}>
-                                            {teacher.name}
-                                        </option>
-                                    ))}
-                                </select>
-                                <button onClick={() => updateSubject(subj.id, newTitle, newTeacherId, newExamType, newHoursSubj)}>Save</button>
-                                <button onClick={() => handleEditClickExit(subj.id)}>Exit</button>
-                            </div>
-                        )}
-                    </div>
-                ))} */}
-
-
-            </div>
-
-
-
-            {/* {grades.length > 0 ? <div>
-                <div>
-                    <tbody>
-                        {grades.map((data, index) => (
-                            <tr key={index}>
-                                <td className="zach-detail2">
-                                    <div className="edit_label">
-                                        {data.disciplina}
-                                    </div>
-                                </td>
-                                <td className="zach-detail2">{data.hours}</td>
-                                <td className="zach-detail2">{data.itog}</td>
-                                <td className="zach-detail2">{data.date}</td>
-                                <td className="zach-detail2">{data.control}</td>
-                                <td className="zach-detail2">{data.teacher}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </div>
-                <GradeTest></GradeTest>
-                <GradeUpdate></GradeUpdate>
-                <h1>Редактирование зачетной книжки</h1>
-
-                <GradeBook></GradeBook>
-
-            </div> : <div>Зачетная книжка отсутствует</div>}
- */}
 
         </div>
     )
 }
 
 export default TeacherRecordBook;
+
+{/* <div className="record_container">
+    <div className="heading">
+        <div className="rec">Дисциплина</div>
+        <div className="rec">Количество часов</div>
+        <div className="rec">Итоговая оценка</div>
+        <div className="rec">Дата сдачи</div>
+        <div className="rec">Преподаватель</div>
+        <div className="">Действия</div>
+    </div>
+    {userRecord.map((records) => (
+        <div key={records.id}>
+            <div className="record_student_block">
+                <div className="rec">{records.subjectName}</div>
+                <div className="rec">{records.summaryHours}</div>
+                <div className="rec">{records.endMark}</div>
+                <div className="rec">{records.date}</div>
+                <div className="rec">{records.teacher}</div>
+                <div>
+                    <button className="recordbook_buttons" onClick={() => handleEditClick(records.id)}>
+                        Обновить
+                    </button>
+                </div>
+            </div>
+            {!editableSubject[records.id] ? (
+                <div className="record_buttons">
+
+                </div>
+            ) : (
+                <div>
+                    <input className="select_block_record"
+                        type="text"
+                        placeholder='Введите результат'
+                        value={newResultUpd}
+                        onChange={(e) => setNewResultUpd(e.target.value)}
+                    />
+                    <button className="select_block_button_record" onClick={() => updateRecordBook(records.id, newResultUpd, newStudents2)}>Сохранить</button>
+                    <button className="select_block_button_record_delete" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
+                </div>
+            )}
+        </div>
+    ))}
+</div>  */}

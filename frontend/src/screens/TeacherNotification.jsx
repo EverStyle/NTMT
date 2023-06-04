@@ -4,6 +4,7 @@ import apiMessages from "../api/messages";
 import './style/AdminNotification.css';
 import { toast, ToastContainer } from "react-toastify";
 import apiSchedule from "../api/schedule";
+import Select from 'react-select';
 
 function TeacherNotification({ math }) {
   const [page, setPage] = useState(1);
@@ -58,6 +59,7 @@ function TeacherNotification({ math }) {
       const data = response.data;
       const response2 = await apiMessages.get(page);
       setNotifications([...response2.data.message]);
+      toast.success("Уведомление успешно созданно и отправленно");
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
@@ -65,64 +67,18 @@ function TeacherNotification({ math }) {
     }
   }
 
-  async function deleteMessage(id) {
-    const request = {
-      recordId: id
-    };
-    const request2 = {};
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-    if (!confirmed) {
-      return;
-    }
-    try {
-      const response = await apiMessages.deleteMess(request);
-      const data = response.data;
-
-      // const response6 = await apiRecordBook.get(request);
-      // setUserRecord(response6.data.message);
-
-      toast.success("Data updated successfully");
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  const handleUserSelect = (folderId) => {
-    setCurrentUserId(folderId);
-  }
-
   const [selectedUserIds, setSelectedUserIds] = useState([]);
-
-  // const toggleUserSelection = (userId) => {
-  //   if (selectedUserIds.includes(userId)) {
-  //     setSelectedUserIds(selectedUserIds.filter(id => id !== userId));
-  //   } else {
-  //     setSelectedUserIds([...selectedUserIds, userId]);
-  //   }
-  // };
-  const toggleUserSelection = (userId) => {
-    setSelectedUserIds((prevSelectedUserIds) => {
-      if (prevSelectedUserIds.includes(userId)) {
-        return prevSelectedUserIds.filter((id) => id !== userId);
-      } else {
-        return [...prevSelectedUserIds, userId];
-      }
-    });
-  };
-
 
   const handleDeleteNotification = async (notificationId) => {
     try {
       const response = await apiMessages.deleteMess({ listMessages: [notificationId] });
       const data = response.data;
-      toast.success("Data updated successfully");
+      toast.success("Уведомление успешно удалено");
       setNotifications(notifications.filter(notification => notification.id !== notificationId));
     } catch (error) {
       console.error(error);
       console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+      toast.error('Произошла ошибка при удалении уведомления. Попробуйте позже или обратитесь в техподдержку');
     }
   }
 
@@ -154,7 +110,7 @@ function TeacherNotification({ math }) {
   };
 
   const handleGroupChange = (e) => {
-    const groupId = e.target.value;
+    const groupId = e.value;
     setNewGroups(groupId);
 
     if (groupId === "") {
@@ -176,6 +132,43 @@ function TeacherNotification({ math }) {
     <div>
       <div className="title">Уведомления</div>
       <div className="create_notifiaction_block">
+        
+        <div className='createNotifBlock_select'>
+          <div className="select-container">
+            <h2 className="subblock_text">Выберите группу</h2>
+            <Select
+              // Заманался забывать меняй функцию приема инфы в handleGroupChange убери там таргет имхо в новом он не пашет
+              onChange={handleGroupChange}
+              options={[
+                { value: "", label: "Выберите группу" },
+                ...groups.map((grp) => ({
+                  value: grp.id,
+                  label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                })),
+              ]}
+              placeholder="Enter a group"
+            />
+          </div>
+          
+          <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
+          <div className="dropdown">
+
+            <Select
+              onChange={(selectedOptions) => {
+                const selectedUserIds = selectedOptions.map((option) => option.value);
+                setSelectedUserIds(selectedUserIds);
+              }}
+              options={students.map((user) => ({
+                value: user.id,
+                label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+              }))}
+              isMulti
+              className="multiple_select"
+              classNamePrefix="select"
+            />
+          </div>
+        </div>
+
         <div className='createNotifBlock'>
           <textarea
             className="input_block"
@@ -189,39 +182,6 @@ function TeacherNotification({ math }) {
           />
           <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
         </div>
-        <div>
-          <div className="select-container">
-            <select className="custom-select" value={newGroups} onChange={handleGroupChange}>
-              <option value="">Выберите группу</option>
-              {groups.map((grp) => (
-                <option key={grp.id} value={grp.id}>
-                  {grp.code} {grp.groupName} {grp.type}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* там 70 групп сделай скролл на селектор!!!!! */}
-
-          <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
-          {/* {students.map(user => (
-          <div className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} onClick={() => toggleUserSelection(user.id)}>
-            {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
-          </div>
-
-        ))} */}
-          <div className="dropdown">
-            <select className="multiple_select" value={selectedUserIds} onChange={handleMultipleGroupChange} size={10} multiple>
-              {/* <option value="">Выберите группу</option> */}
-              {students.map((user) => (
-                <option className={`stud_select ${selectedUserIds.includes(user.id) ? 'active' : ''}`} key={user.id} value={user.id}>
-                  {user.fio} {selectedUserIds.includes(user.id) && '(выбран)'}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-
       </div>
       <div className="all_notification">
 

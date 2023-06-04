@@ -99,7 +99,7 @@ function AdminRecordBook() {
 
 
 
-    async function createRecordBook(mark, newdate, userselect, selectsubj, selectsem, newyear) {
+    async function createRecordBook(mark, newdate, userselect, selectsubj, selectsem) {
         const request = {
             endMark: mark,
             date: newdate,
@@ -123,7 +123,7 @@ function AdminRecordBook() {
         }
     }
 
-    async function updateRecordBook(recId, mark, newdate, userselect, selectsubj, selectsem, newyear) {
+    async function updateRecordBook(recId, mark, newdate, userselect, selectsubj, selectsem) {
         const request = {
             recordId: recId,
             endMark: mark,
@@ -131,7 +131,7 @@ function AdminRecordBook() {
             userId: userselect,
             subjectId: selectsubj,
             semestrId: selectsem,
-            year: newyear
+            year: newdate.split('.')[2]
         };
         const request2 = {
             userId: userselect
@@ -259,7 +259,7 @@ function AdminRecordBook() {
                             Введите оценку студенту
                         </div>
                         <div className="lock_input">
-                            <input className="select_block" type="text" placeholder='Введите оценку' onChange={(e) => setNewResult(e.target.value)} />
+                            <input className="select_block_record" type="text" placeholder='Введите оценку' onChange={(e) => setNewResult(e.target.value)} />
                         </div>
                     </div>
                     <div className="record_subblock">
@@ -268,7 +268,7 @@ function AdminRecordBook() {
                         </div>
 
                         <div className="lock_input">
-                            <input className="select_block" type="date" onChange={(e) => {
+                            <input className="select_block_record" type="date" onChange={(e) => {
                                 const selectedDate = new Date(e.target.value);
                                 const formattedDate = selectedDate.toLocaleDateString('ru-RU');
                                 { console.log(formattedDate) }
@@ -342,7 +342,7 @@ function AdminRecordBook() {
                             Выберите семестр
                         </div>
                         <div className="lock_input">
-                            <select className="select_block" value={newSemesterId} onChange={(e) => setNewSemesterId(e.target.value)}>
+                            <select className="select_block_record" value={newSemesterId} onChange={(e) => setNewSemesterId(e.target.value)}>
                                 <option value="Some">Выберите семестр</option>
                                 {semester.map((sem) => (
                                     <option key={sem.id} value={sem.id}>
@@ -362,7 +362,7 @@ function AdminRecordBook() {
                         </div>
                     </div> */}
                     <div className="select_block_button">
-                        <button className="select_block" type='button' onClick={() => createRecordBook(newResult, newDate, newStudents, newSubjectId, newSemesterId, newYear)}>Создать</button>
+                        <button className="select_block_button_record" type='button' onClick={() => createRecordBook(newResult, newDate, newStudents, newSubjectId, newSemesterId, newYear)}>Создать</button>
                     </div>
 
                 </div>
@@ -469,8 +469,8 @@ function AdminRecordBook() {
                                     </select> */}
                                     <Select
                                         className="new_select_subblock"
-                                        value={newSubjectIdUpd}
                                         onChange={(selectedOption) => setNewSubjectIdUpd(selectedOption.value)}
+                                        placeholder="Выберите предмет"
                                         options={[
                                             { value: "Some", label: "Выберите предмет" },
                                             ...subject.map((subj) => ({
@@ -489,7 +489,7 @@ function AdminRecordBook() {
                                     </select> */}
                                     <Select
                                         className="new_select_subblock"
-                                        value={newStudentsUpd}
+                                        placeholder="Выберите студента"
                                         onChange={(selectedOption) => setNewStudentsUpd(selectedOption.value)}
                                         options={[
                                             { value: "Some", label: "Выберите студента" },
@@ -501,7 +501,7 @@ function AdminRecordBook() {
                                     />
                                     {/* Вопрос, тут не обязательно добавлять студентов на редактировании, вполне может вызвать баг или ошибки ЖЕЛАТЕЛЬНО УБРАТЬ */}
 
-                                    <select className="select_block" value={newSemesterIdUpd} onChange={(e) => setNewSemesterIdUpd(e.target.value)}>
+                                    <select className="select_block_record" value={newSemesterIdUpd} onChange={(e) => setNewSemesterIdUpd(e.target.value)}>
                                         <option value="Some">Выберите семестр</option>
                                         {semester.map((sem) => (
                                             <option key={sem.id} value={sem.id}>
@@ -509,22 +509,20 @@ function AdminRecordBook() {
                                             </option>
                                         ))}
                                     </select>
-                                    <input className="select_block"
+                                    <input className="select_block_record"
                                         type="text"
                                         placeholder='Введите результат'
                                         value={newResultUpd}
                                         onChange={(e) => setNewResultUpd(e.target.value)}
                                     />
-                                    <input className="select_block" type="date" onChange={(e) => {
+                                    <input className="select_block_record" type="date" onChange={(e) => {
                                         const selectedDate = new Date(e.target.value);
                                         const formattedDate = selectedDate.toLocaleDateString('ru-RU');
                                         setNewDateUpd(formattedDate);
                                     }} />
 
-                                    <input className="select_block" type="number" placeholder='Введите год' onChange={(e) => setNewYearUpd(e.target.value)} />
-
-                                    <button className="select_block" onClick={() => updateRecordBook(records.id, newResultUpd, newDateUpd, newStudentsUpd, newSubjectIdUpd, newSemesterIdUpd, newYearUpd)}>Сохранить</button>
-                                    <button className="select_block" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
+                                    <button className="select_block_button_record" onClick={() => updateRecordBook(records.id, newResultUpd, newDateUpd, newStudentsUpd, newSubjectIdUpd, newSemesterIdUpd, newYearUpd)}>Сохранить</button>
+                                    <button className="select_block_button_record_delete" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
                                 </div>
                             )}
                         </div>
