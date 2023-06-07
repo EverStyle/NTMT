@@ -122,8 +122,8 @@
 .folder_container {
   background-color: rgb(54, 52, 52);
   color: white;
-  width: 200px;
-  padding-right: 10px;
+  /* width: 200px; */
+  padding-right: 30px;
   padding-left: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -143,11 +143,10 @@
   word-wrap: break-word;
 }
 
-
 .selected {
   background-color: rgb(67, 58, 190);
-  width: 200px;
-  padding-right: 10px;
+  /* width: 200px; */
+  padding-right: 30px;
   padding-left: 10px;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -175,7 +174,9 @@
 }
 
 .folder_block_component {
+  max-width: 150px;
   padding-left: 10px;
+  word-wrap: break-word;
 }
 
 .folder_create_block {

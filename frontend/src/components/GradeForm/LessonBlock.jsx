@@ -80,7 +80,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       <div className={`folder_container ${folderClass}`} onClick={handleClick}>
         <div className="folder_name">
           <div className='folder_block_component'>
-            <img src={logo} style={{ width: '30px', height: '30px' }} />
+            <img src={logo} style={{ width: '40px', height: '40px' }} />
           </div>
           <div className='folder_block_component'>
             {name}
@@ -100,7 +100,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                   <div className='file_block'>
                     <div className='file_two_components'>
                     <div className='file_block_components'>
-                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                      <img className='img_file' src={filelogo} style={{ width: '33px', height: '33px' }} />
                     </div>
                     <div className='file_block_components'>
                     {file.id && (
@@ -261,22 +261,19 @@ function LessonRow() {
   // console.log(files)
 
   const validateFolderName = (folderName) => {
-    const forbiddenCharactersRegex = /[^a-zA-Z0-9а-яА-Я]/;
+    // const forbiddenCharactersRegex = /[^a-zA-Z0-9а-яА-Я]/;
+    const forbiddenCharactersRegex = /[^\wа-яА-Я0-9\s]/;
     const isForbidden = forbiddenCharactersRegex.test(folderName);
     const isTooLong = folderName.length > 30;
     const isEmpty = folderName.trim().length === 0;
-  
     if (isForbidden) {
       toast.error('Содержит недопустимые символы');
       throw new Error('Folder name contains forbidden characters');
-      
     }
-  
     if (isTooLong) {
       toast.error('Название слишком длинное');
       throw new Error('Folder name is too long');
     }
-  
     if (isEmpty) {
       toast.error('Пустые названия недопустимы');
       throw new Error('Folder name cannot be empty');
