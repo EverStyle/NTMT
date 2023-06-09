@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-// import zach from "../json/zachetka";
-
 
 
 function GradeTest({ addGradeBook }) {

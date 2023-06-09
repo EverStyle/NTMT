@@ -30,8 +30,8 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    border: 2px solid #000000;
-    border-radius: 20px;
+    border:1px solid rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
     padding: 20px;
     
   }
@@ -94,5 +94,12 @@
     /* overflow-y: auto; */
   }
 }
+.subblock_mount-enter {
+  opacity: 0;
+}
 
+.subblock_mount-enter-active {
+ opacity: 1;
+transition: opacity 1.0s ease;
+}
  

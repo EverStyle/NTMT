@@ -10,7 +10,7 @@ function RowNotification({ notification, onDeleteNotification }) {
 
 
   const handleDelete = () => {
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
+    const confirmed = window.confirm('Вы точно хотите удалить сообщение ?');
     if (confirmed) {
       onDeleteNotification(notification.id);
     }
@@ -35,8 +35,6 @@ function RowNotification({ notification, onDeleteNotification }) {
   //     toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
   //   }
   // }
-
-
   return (
     <div className='row row-n'>
       <div className='row-icon'>

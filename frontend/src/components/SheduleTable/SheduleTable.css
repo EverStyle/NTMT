@@ -56,9 +56,9 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 20px;
-  border: 1px solid black;
+  border:1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
   padding-bottom: 20px;
-  border-radius: 20px;
   align-items: center;
   margin-bottom: 20px;
 }
@@ -189,6 +189,16 @@
   padding-top: 10px;
   padding-left: 10px;
   padding-bottom: 5px;
+}
+
+
+.subblock_mount-enter {
+  opacity: 0;
+}
+
+.subblock_mount-enter-active {
+ opacity: 1;
+transition: opacity 1.0s ease;
 }
 
 

@@ -1,60 +1,41 @@
 
 // пометки че нада пофиксить, заебался забывать
-// замени дайт пикер для телфонов на спец !!!!!!!!НЕВОЗМОЖНО!!!!!!!!!!!1
-// переделай учебный план для препода, убери смысловой блок и замни выборку в общий селект
+// 
+// 
 // обновление зачетки сделай через 3 грид фрейм
-//
-//
-//
+// короче сделай файлы как в винде без границ белым цветом чтобы при наводе подсвечивались серым и
+// и еще сделай везде квадратный полупрозрачный стиль блоков как в селекторах
+// так как антон убрал админов и преподов из групп сделай их в 2 отдельных селектора
 
-const [token, setToken] = useState('');
-useEffect(() => {
-  setToken(localStorage.getItem('token') || '');
-  if (token) {
-    localStorage.setItem('token', token || '');
+const handleChange = (selectedOption) => {
+  const selectedGroup = selectedOption.value;
+  console.log("WORK");
+  console.log(selectedGroup);
+
+  if (selectedGroup === "retShedule") {
+    setSwitchSchedule(false);
+    setSelectedGroup(selectedGroup);
+  } else {
+    showSubblockMount2(true)
+    setSwitchSchedule(true);
+    setSelectedGroup(selectedGroup);
   }
-}, [token]);
+};
 
-
-
-{/* <Router>
-      {token ? (
-        <>
-          {(() => {
-            let json43 = parseJwt(token);
-            console.log(json43)
-            switch (parseInt(json43.roleId)) {
-              case 1:
-                return <>
-                  <main className='container'>
-                    <Headers
-                      setToken={setToken}
-                      user={user}
-                      setUser={setUser}
-                    />
-                    <div className='content'>
-                      <PersonalArea role = {json43.roleId} />
-                      <div className='routers'>
-                        <Route path='/adminyvedomlenia' component={AdminNotification} />
-                      </div>
-                    </div>
-                  </main>
-                  <Footer />
-                </>
-              default:
-                return <div>Default Screen</div>
-            }
-          })()}
-        </>
-      ) : (
-        <main className='container'>
-          <Route path="/">
-            <Login
-              setToken={setToken}
-              setUser={setUser}
-            />
-          </Route>
-        </main>
-      )}
-    </Router> */}
+<div>
+  <div className="subblock_text">
+    Выберите группу
+  </div>
+  <Select
+    onChange={handleChange}
+    options={[
+      { value: "retShedule", label: "Рассписание всех групп" },
+      ...allGroups?.map(group => ({
+        value: group.code,
+        label: `${group.groupName} (${group.code})`,
+      }))
+    ]}
+    placeholder="Enter a group"
+  />
+</div>
 

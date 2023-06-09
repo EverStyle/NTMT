@@ -43,13 +43,14 @@
   color: #000000;
 }
 .button_delete_notif{
-  width: 100px;
-  border: 1px solid black;
-  border-radius: 30px;
-  outline: none;
-  margin: 3px;
-  height: 30px;
-  transition: all 0.4s ease-in;
+  width:100px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-right: 5px;
+    margin-top: 2px;
+    padding-bottom: 2px;
+    padding-top: 2px;
+   
 }
 .button_delete_notif:hover {
   background-color: rgb(255, 137, 137);

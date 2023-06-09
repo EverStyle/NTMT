@@ -9,6 +9,7 @@ import LessonBlock from "../components/GradeForm/LessonBlock";
 import './style/FileScreen.css';
 import MyFileBlock from "../components/GradeForm/MyFileBlock";
 import AllFiles from "../components/GradeForm/AllFiles";
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 function AdminFileScreen() {
     // const [file, setFile] = useState('');
@@ -58,17 +59,13 @@ function AdminFileScreen() {
     //         toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
     //     }
     // }
-
-    // useEffect(async () => {
-    //     try {
-    //         const response = await apiFiles.getList();
-    //         setFiles(response.data.message);
-    //     } catch(error) {
-    //         console.error(error);
-    //         console.error('ERROR GET FILES');
-    //         toast.error('Произошла ошибка при получении файлов. Попробуйте позже или обратитесь в техподдержку');
-    //     }
-    // }, []);
+    const [subblockMount, showSubblockMount] = useState(false);
+    useEffect(() => {
+        // Delay the rendering of the block to allow for the transition effect
+        setTimeout(() => {
+            showSubblockMount(true);
+        }, 100);
+    }, []);
 
     return (
         <div>
@@ -96,18 +93,31 @@ function AdminFileScreen() {
           </div>
       </div> */}
 
-            <div className="two_blocks">
-                <div className="file_container">
-                    <div className='title'>Задания</div>
-                    <LessonBlock></LessonBlock>
-                </div>
+            <CSSTransition
+                in={subblockMount}
+                timeout={300}
+                classNames="subblock_mount"
+                mountOnEnter
+                unmountOnExit
+            >
+                <div>
+                    <div className="title">Файловая система</div>
+                    <div className="two_blocks">
+                        <div className="file_container">
+                            <div className='title'>Задания</div>
+                            <LessonBlock></LessonBlock>
+                        </div>
 
 
-                <div className="file_container">
-                    <div className='title'>Все файлы</div>
-                    <AllFiles></AllFiles>
+                        <div className="file_container">
+                            <div className='title'>Все файлы</div>
+                            <AllFiles></AllFiles>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+            </CSSTransition>
+
 
 
             <ToastContainer

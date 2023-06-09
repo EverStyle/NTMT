@@ -17,6 +17,7 @@ import TeacherNotification from "./screens/TeacherNotification";
 import TeacherPlanScreen from "./screens/TeacherPlanScreen";
 import TeacherSchedule from "./screens/TeacherShedule";
 import TeacherRecordBook from "./screens/TeacherRecordBook";
+// import FirstInfoBlock from "./components/FirstInfoBlock";
 import { useState, useEffect } from "react";
 import Login from "./screens/Login/Login";
 
@@ -60,6 +61,11 @@ function App() {
   }
 
   // console.log(parseJwt(token))
+  const [showBriefInfo, setShowBriefInfo] = useState(true);
+
+  const handleBlockClick = () => {
+    setShowBriefInfo(false);
+  };
 
   return (
     <Router>
@@ -81,17 +87,20 @@ function App() {
                       setUser={setUser}
                     />
                     <div className='content'>
-                      <PersonalArea role={json43.roleId} />
+                      <PersonalArea role={json43.roleId} onClick={handleBlockClick} />
                       <div className='routers'>
                         <Route path='/adminyvedomlenia' component={AdminNotification} />
                         <Route path='/adminras' component={AdminSchedule} />
                         <Route path='/adminfail' component={AdminFileScreen} />
                         <Route path='/adminzachetka' component={AdminRecordBook} />
                         <Route path='/adminplan' component={AdminPlanScreen} />
-                        <Route path='/adminShedule' component={AdminSchedule} />
-                        <Route path='/adminRecordBook' component={AdminRecordBook} />
                       </div>
                     </div>
+                    {/* {showBriefInfo && (
+                      <div className='brief-info'>
+                      <FirstInfoBlock></FirstInfoBlock>
+                      </div>
+                    )} */}
                   </main>
                   <Footer />
                 </>

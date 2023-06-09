@@ -1,6 +1,6 @@
 .file_container {
-    border: 2px solid #000000;
-    border-radius: 20px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
     margin-top: 3rem;
     padding-bottom: 3rem;
 }
@@ -23,6 +23,15 @@
     grid-gap: 10px;
     /* Gap between the subblocks */
 }
+
+.subblock_mount-enter {
+    opacity: 0;
+  }
+  
+  .subblock_mount-enter-active {
+   opacity: 1;
+  transition: opacity 1.0s ease;
+  }
 
 @media (max-width: 600px) {
     .two_blocks {

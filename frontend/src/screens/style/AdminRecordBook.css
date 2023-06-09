@@ -51,16 +51,38 @@
     text-align: center;
 }
 
-.recordbook_buttons {
-    margin-left: 10px;
+.recordbook_buttons_create {
+    width: 90px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-right: 5px;
+    /* margin-top: 8px; */
+    /* padding-bottom: 6px;
+    padding-top: 6px; */
+    transition: all 0.4s ease-in;
 }
-
+.recordbook_buttons_create:hover {
+   background-color: rgb(128, 194, 255);
+}
+.recordbook_buttons_delete {
+    width: 90px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    margin-right: 5px;
+    /* margin-top: 8px; */
+    /* padding-bottom: 6px;
+    padding-top: 6px; */
+    transition: all 0.4s ease-in;
+}
+.recordbook_buttons_delete:hover {
+    background-color: rgb(255, 132, 123);
+ }
 .create_record_block {
     display: grid;
     grid-template-columns: 1fr;
     gap: 20px;
-    border: 2px solid rgb(0, 0, 0);
-    border-radius: 20px;
+    border:1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
     margin-top: 20px;
     margin-bottom: 20px;
     padding-top: 20px;

@@ -1,35 +1,53 @@
 import React, { useEffect, useState, useRef } from "react";
 import RowNotification from "../components/RowNotification/RowNotification";
 import apiMessages from "../api/messages";
+import apiSubject from "../api/subjects";
 import './style/AdminNotification.css';
 import { toast, ToastContainer } from "react-toastify";
 import apiSchedule from "../api/schedule";
 import Select from 'react-select';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-function AdminNotification({ math }) {
+function AdminNotification() {
   const [page, setPage] = useState(1);
   const [notifications, setNotifications] = useState([]);
   const [userInfo, setUserInfo] = useState([])
   const [newNotificationTitle, setNewNotificationTitle] = useState('')
   const [newNotificationText, setNewNotificationText] = useState('')
   const messageBlockRef = useRef(null);
-  const [currentUserId, setCurrentUserId] = useState(1);
+
 
   const [groups, setGroups] = useState([]);
   const [newGroups, setNewGroups] = useState([]);
   const [students, setStudents] = useState([]);
+  const [teachers, setTeachers] = useState([]);
+  const [admins, setAdmins] = useState([]);
+  const [subblockMount, showSubblockMount] = useState(false);
 
   useEffect(() => {
-    const messageBlockHeight = messageBlockRef.current.clientHeight;
+    const messageBlockHeight = messageBlockRef.current?.clientHeight;
     if (messageBlockHeight > 500) {
       messageBlockRef.current.style.height = "500px";
     }
     async function getNotifications() {
       try {
+        const request = {
+          roleId: 3
+        };
+        const request2 = {
+          roleId: 1
+        };
+        const response3 = await apiSubject.getuser(request);
+        setTeachers(response3.data.message);
+        const response4 = await apiSubject.getuser(request2);
+        setAdmins(response4.data.message);
         const response = await apiMessages.get(page);
         setNotifications([...response.data.message]);
         const response2 = await apiMessages.newUserInfo();
         setUserInfo([...response2.data.message]);
+        setTimeout(() => {
+          showSubblockMount(true);
+        }, 50)
       } catch (error) {
         console.error(error);
         console.error('ERROR GET NOTIFICATIONS');
@@ -40,16 +58,26 @@ function AdminNotification({ math }) {
     getNotifications();
   }, [page])
 
-  console.log(userInfo)
+console.log(notifications)
 
   async function createNotifiaction(newname, newtext, seluser) {
+    const invalidCharsRegex = /[^A-Za-zА-Яа-я0-9\s!?.(),[\]]/;
+
+    // Check if the newtext contains any invalid character
+    if (invalidCharsRegex.test(newname)) {
+      toast.error('Содержит недопустимые символы');
+      throw new Error('Содержит недопустимые символы');
+    }
+    if (invalidCharsRegex.test(newtext)) {
+      toast.error('Содержит недопустимые символы');
+      throw new Error('Содержит недопустимые символы');
+    }
 
     const request = {
       userid: seluser,
       title: newname,
       text: newtext
     };
-
     try {
       console.log(request)
       const response = await apiMessages.newNotf(request);
@@ -128,14 +156,6 @@ function AdminNotification({ math }) {
   };
 
 
-  // const handleMultipleGroupChange = async (e) => {
-  //   const selectedOptions = Array.from(e.selectedOptions);
-  //   const selectedGroups = selectedOptions.map((option) => option.value);
-  //   setSelectedUserIds(selectedGroups);
-  //   // setShowGroupCurriculum(true);
-  // };
-
-
   const handleUserSelection = (selectedOptions) => {
     console.log(selectedOptions)
     const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
@@ -151,104 +171,173 @@ function AdminNotification({ math }) {
     }
   };
 
+  const [selectedUserIds2, setSelectedUserIds2] = useState([]);
+  const [selectedUserIds3, setSelectedUserIds3] = useState([]);
+
+  const handleUserSelection2 = (selectedOptions) => {
+    console.log(selectedOptions)
+    const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
+    if (containsSelectAll) {
+      console.log('Select All option selected');
+      // Perform your logic for selecting all students
+      setSelectedUserIds2(teachers.map((teacher) => teacher.id));
+    } else {
+      console.log('Individual student(s) selected');
+      // Perform your logic for handling individual student selection
+      const selectedIds = selectedOptions.map((option) => option.value);
+      setSelectedUserIds2(selectedIds);
+    }
+  };
+  const handleUserSelection3 = (selectedOptions) => {
+    console.log(selectedOptions)
+    const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
+    if (containsSelectAll) {
+      console.log('Select All option selected');
+      // Perform your logic for selecting all students
+      setSelectedUserIds3(admins.map((admin) => admin.id));
+    } else {
+      console.log('Individual student(s) selected');
+      // Perform your logic for handling individual student selection
+      const selectedIds = selectedOptions.map((option) => option.value);
+      setSelectedUserIds3(selectedIds);
+    }
+  };
+
+  const mergedSelectedUserIds = [...selectedUserIds, ...selectedUserIds2, ...selectedUserIds3];
+  const uniqueSelectedUserIds = Array.from(new Set(mergedSelectedUserIds));
+
+
   const selectAllOption = {
     value: 'all',
-    label: 'Выбрать всех студентов',
+    label: 'Выбрать всех',
   };
 
   const options = [
-    { ...selectAllOption},
+    { ...selectAllOption },
     ...students.map((user) => ({
       value: user.id,
-      label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+      label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+    })),
+  ];
+  const options2 = [
+    { ...selectAllOption },
+    ...teachers.map((user) => ({
+      value: user.id,
+      label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+    })),
+  ];
+  const options3 = [
+    { ...selectAllOption },
+    ...admins.map((user) => ({
+      value: user.id,
+      label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
     })),
   ];
 
   console.log(selectedUserIds)
+  console.log(selectedUserIds2)
+  console.log(selectedUserIds3)
+  console.log(uniqueSelectedUserIds)
+
+  // console.log(admins)
 
   return (
     <div>
-      <div className="title">Уведомления</div>
-      <div className="create_notifiaction_block">
-
+      <CSSTransition
+        in={subblockMount}
+        timeout={300}
+        classNames="subblock_mount"
+        mountOnEnter
+        unmountOnExit
+      >
         <div>
-          <div className="select-container">
-            <h2 className="subblock_text">Выберите группу</h2>
-            <Select
-              // Заманался забывать меняй функцию приема инфы в handleGroupChange убери там таргет имхо в новом он не пашет
-              onChange={handleGroupChange}
-              options={[
-                { value: "", label: "Выберите группу" },
-                ...groups.map((grp) => ({
-                  value: grp.id,
-                  label: `${grp.code} ${grp.groupName} ${grp.type}`,
-                })),
-              ]}
-              placeholder="Enter a group"
-            />
-          </div>
-
-          <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
-          <div className="dropdown">
-            {/* 
-            <Select
-              onChange={(selectedOptions) => {
-                const selectedUserIds = selectedOptions.map((option) => option.value);
-                setSelectedUserIds(selectedUserIds);
-              }}
-              options={students.map((user) => ({
-                value: user.id,
-                label: `${user.fio} ${selectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
-              }))}
-              isMulti
-              className="multiple_select"
-              classNamePrefix="select"
-            /> */}
-
+          <div className="title">Уведомления</div>
+          <div className="create_notifiaction_block">
             <div>
-              {/* <button onClick={handleSelectAll}>
-                {selectAll ? 'Deselect All' : 'Select All'}
-              </button> */}
-              <Select
-                onChange={handleUserSelection}
-                options={options}
-                isMulti
-                className="multiple_select"
-                classNamePrefix="select"
-              />
+              <div className="select-container">
+                <h2 className="subblock_text">Выберите группу</h2>
+                <Select
+                  onChange={handleGroupChange}
+                  options={[
+                    ...groups.map((grp) => ({
+                      value: grp.id,
+                      label: `${grp.code} ${grp.groupName} ${grp.type}`,
+                    })),
+                  ]}
+                  placeholder="Выберите группу"
+                />
+              </div>
+              <div className="select-container">
+                <h2 className="subblock_text">Выберите пользователя для отправки сообщения</h2>
+                <div className="dropdown">
+                  <div>
+                    <Select
+                      onChange={handleUserSelection}
+                      options={options}
+                      isMulti
+                      className="multiple_select"
+                      classNamePrefix="select"
+                      placeholder="Выберите пользователя"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="select-container">
+                <h2 className="subblock_text">Выберите преподавателя </h2>
+                <div className="dropdown">
+                  <div>
+                    <Select
+                      onChange={handleUserSelection2}
+                      options={options2}
+                      isMulti
+                      className="multiple_select"
+                      classNamePrefix="select"
+                      placeholder="Выберите преподавателя"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="select-container">
+                <h2 className="subblock_text">Выберите администратора </h2>
+                <div className="dropdown">
+                  <div>
+                    <Select
+                      onChange={handleUserSelection3}
+                      options={options3}
+                      isMulti
+                      className="multiple_select"
+                      classNamePrefix="select"
+                      placeholder="Выберите администратора"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-
+            <div className='createNotifBlock'>
+              <textarea
+                className="input_block"
+                placeholder="Введите название уведомления"
+                onChange={(e) => setNewNotificationTitle(e.target.value)}
+              />
+              <textarea
+                className="input_block"
+                placeholder="Введите текст уведомления"
+                onChange={(e) => setNewNotificationText(e.target.value)}
+              />
+              <button type='button' className="select_block_button_record" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, uniqueSelectedUserIds)}>Отправить</button>
+            </div>
+          </div>
+          <div className="all_notification">
+            <div className="center-content" ref={messageBlockRef}>
+              {notifications.map((notification, index) => {
+                return <div>
+                  <RowNotification key={index} notification={notification} onDeleteNotification={handleDeleteNotification} />
+                </div>
+              })}
+            </div>
           </div>
         </div>
-        <div className='createNotifBlock'>
-          <textarea
-            className="input_block"
-            placeholder="Введите название уведомления"
-            onChange={(e) => setNewNotificationTitle(e.target.value)}
-          />
-          <textarea
-            className="input_block"
-            placeholder="Введите текст уведомления"
-            onChange={(e) => setNewNotificationText(e.target.value)}
-          />
-          <button type='button' className="button_create" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, selectedUserIds)}>Отправить</button>
-        </div>
-      </div>
-      <div className="all_notification">
-
-        <div className="center-content" ref={messageBlockRef}>
-          {/* <div className="all_view">
-            Показать: <span>Последние уведомления</span>
-          </div> */}
-          {notifications.map((notification, index) => {
-
-            return <div>
-              <RowNotification key={index} notification={notification} onDeleteNotification={handleDeleteNotification} />
-            </div>
-
-          })}
-        </div>
-      </div>
+      </CSSTransition>
 
       <ToastContainer
         position="bottom-left"

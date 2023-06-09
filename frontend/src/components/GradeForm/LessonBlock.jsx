@@ -1,6 +1,7 @@
 
 import React, { useState } from 'react';
-import logo from '../../img/icon_nb.png';
+import folderOpen from '../../img/icon_nb.png';
+import folderClosed from '../../img/folderClose.png';
 import filelogo from '../../img/file.png';
 import './LessonRow.css';
 import file_downloader from '../../scripts/file_downloader';
@@ -9,7 +10,7 @@ import apiFiles from "../../api/files";
 import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
 import MyFileBlock from './MyFileBlock';
-import { Button } from '@mui/material';
+
 
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
@@ -74,13 +75,15 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     }
   }
   const indentation = depth * 10; // 10 pixels per level
+  const folderImageSrc = isOpen ? folderOpen : folderClosed;
+  const folderImageStyle = isOpen ? { width: '40px', height: '40px' } : { width: '30px', height: '30px' };
 
   return (
     <div style={{ marginLeft: window.innerWidth >= 600 ? `${depth + 10}px` : 0 }}>
       <div className={`folder_container ${folderClass}`} onClick={handleClick}>
         <div className="folder_name">
           <div className='folder_block_component'>
-            <img src={logo} style={{ width: '40px', height: '40px' }} />
+            <img src={folderImageSrc} style={folderImageStyle} alt={isOpen ? 'Open Folder' : 'Closed Folder'} />
           </div>
           <div className='folder_block_component'>
             {name}
@@ -99,16 +102,16 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                 <li key={file.id}>
                   <div className='file_block'>
                     <div className='file_two_components'>
-                    <div className='file_block_components'>
-                      <img className='img_file' src={filelogo} style={{ width: '33px', height: '33px' }} />
-                    </div>
-                    <div className='file_block_components'>
-                    {file.id && (
-                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                      )}
-                      <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
-                      
-                    </div>
+                      <div className='file_block_components'>
+                        <img className='img_file' src={filelogo} style={{ width: '33px', height: '33px' }} />
+                      </div>
+                      <div className='file_block_components'>
+                        {file.id && (
+                          <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                        )}
+                        <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
+
+                      </div>
                     </div>
 
                     {/* <div className='file_block_components'>Номер = {file.id}</div> */}
@@ -116,14 +119,12 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                       {file.fileMeta.fileName}
                     </div>
 
-                    
+
                   </div>
                 </li>
               ))}
             </ul>
-            
           )}
-
           {folders?.map(folder => (
             <Folder
               key={folder.id}
@@ -136,58 +137,11 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
               depth={depth}
             />
           ))}
-          
+
         </>
       )}
     </div>
   );
-  // return (
-  //   <div>
-  //     <div className={folderClass} onClick={handleClick}>
-  //     <img src={logo} style={{ width: '30px', height: '30px' }} />
-  //       {name}
-  //     </div>
-
-  //     {isOpen && (
-  //       <>
-  //         {folders.map(folder => (
-  //           <Folder
-  //             key={folder.id}
-  //             {...folder}
-  //             path={`${path}/${folder.id}`}
-  //             onFolderSelect={onFolderSelect}
-  //             selectedFolderId={selectedFolderId}
-  //             onDataChanged={onDataChanged}
-  //           />
-  //         ))}
-  //       </>
-  //     )}
-
-  //     {isOpen && (
-
-  //       <ul>
-  //         {files.map(file => (
-  //             <li>
-  //               <div key={file.id}>
-  //               <img src={filelogo}></img>
-  //               <div>Номер = {file.id}</div>
-  //               {file.fileMeta.fileName}
-
-  //               <div>
-  //                 <button className='button_delete' onDoubleClick={(event) => {
-  //                   if (event.detail === 2) {
-  //                     deleteFiles(file.id);
-  //                   }
-  //                 }}>Удалить</button>
-  //               </div>
-  //             </div>
-  //             </li>
-
-  //         ))}
-  //       </ul>
-  //     )}
-  //   </div>
-  // );
 }
 
 
@@ -213,6 +167,7 @@ function LessonRow() {
   const [newFolderNameLesson, setNewFolderNameLesson] = useState('')
 
   const [allfiles, setAllFiles] = useState({});
+  const [subblockMount, showSubblockMount] = useState(false);
 
   // ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
@@ -238,7 +193,7 @@ function LessonRow() {
   // useEffect(() => {
   //   console.log(files);
   // }, [files]);
-  
+
   // ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
   useEffect(async () => {
@@ -249,7 +204,6 @@ function LessonRow() {
 
       const response = await apiFiles.getList(request);
       setFiles(response.data.message);
-      // console.log(response.data.message)
 
     } catch (error) {
       console.error(error);
@@ -258,10 +212,7 @@ function LessonRow() {
     }
   }, []);
 
-  // console.log(files)
-
   const validateFolderName = (folderName) => {
-    // const forbiddenCharactersRegex = /[^a-zA-Z0-9а-яА-Я]/;
     const forbiddenCharactersRegex = /[^\wа-яА-Я0-9\s]/;
     const isForbidden = forbiddenCharactersRegex.test(folderName);
     const isTooLong = folderName.length > 30;
@@ -395,16 +346,14 @@ function LessonRow() {
 
   return (
     <>
-
       <div className='folder_create_block'>
         <div>
-
           <div className='createFolderBlock'>
             <div className='create_folder_block_component'>
               <input type="text" placeholder='Введите название папки' className='create_input' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
             </div>
             <div className='create_folder_block_component'>
-            <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
+              <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
               <button className='button_delete' onClick={(event) => {
                 if (event.detail === 1) {
                   deleteFolderLessons(currentFolderId);
