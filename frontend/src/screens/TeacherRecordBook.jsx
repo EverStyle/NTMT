@@ -1,50 +1,36 @@
-import React, { useEffect, useState, useMemo } from "react";
-import Headers from "../components/Header/Header";
-import zach from "../json/zachetka";
+import React, { useEffect, useState} from "react";
 import { ToastContainer, toast } from "react-toastify";
 import './style/AdminRecordBook.css';
 import apiRecordBook from "../api/recordBook";
-import apiSubject from "../api/subjects";
-import apiAccount from "../api/account";
+// import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import Select from 'react-select';
+import { CSSTransition} from 'react-transition-group';
 
 function TeacherRecordBook() {
 
 
     const [userRecord, setUserRecord] = useState([]);
 
-    const [subject, setSubject] = useState([]);
+    // const [subject, setSubject] = useState([]);
 
-    const [teachers, setTeachers] = useState([]);
+    // const [teachers, setTeachers] = useState([]);
     const [students, setStudents] = useState([]);
-    const [semester, setSemester] = useState([]);
-    const [exams, setExams] = useState([]);
+    // const [semester, setSemester] = useState([]);
+    // const [exams, setExams] = useState([]);
 
-    const [newStudents, setNewStudents] = useState(0);
+    // const [newStudents, setNewStudents] = useState(0);
     const [newStudents2, setNewStudents2] = useState(0);
 
-    const [newYear, setNewYear] = useState([]);
-    const [newDate, setNewDate] = useState([]);
-    const [newSubjectId, setNewSubjectId] = useState([]);
-    const [newSemesterId, setNewSemesterId] = useState([]);
-    const [newResult, setNewResult] = useState([]);
-
-    const [newStudentsUpd, setNewStudentsUpd] = useState(0);
-    const [newYearUpd, setNewYearUpd] = useState([]);
-    const [newDateUpd, setNewDateUpd] = useState([]);
-    const [newSubjectIdUpd, setNewSubjectIdUpd] = useState([]);
-    const [newSemesterIdUpd, setNewSemesterIdUpd] = useState([]);
     const [newResultUpd, setNewResultUpd] = useState([]);
 
     const [editableSubject, setEditableSubject] = useState({});
 
     const [groups, setGroups] = useState([]);
-    const [newGroups, setNewGroups] = useState([]);
-    const [newGroups2, setNewGroups2] = useState([]);
-    const [userInfo, setUserInfo] = useState({});
+    // const [newGroups, setNewGroups] = useState([]);
 
-    const [placeHolder, setplaceHolder] = useState("Нет информации о зачетной книжке");
+
+    const [subblockMount, showSubblockMount] = useState(false);
 
     const handleEditClick = (subjId) => {
         setEditableSubject({
@@ -60,97 +46,24 @@ function TeacherRecordBook() {
         });
     };
 
-    useEffect(async () => {
-        try {
-            const request = {
-                userId: 0
-            };
-            const request2 = {
-                semestrId: 0,
-                year: 0
-            };
-            const request3 = {
-                roleId: 4
-            };
-            const request4 = {
-                roleId: 3
-            };
-            const request5 = {
-                userId: 3
-            };
-            // const response = await apiRecordBook.get(request);
-            // setUserRecord(response.data.message);
-            // const response4 = await apiRecordBook.getInf(request2);
-            // setYearGrades(response4.data.message);
-            //   const response5 = await apiSubject.get(request);
-            //   setSubject(response.data.message);
-            const response = await apiSubject.get(request);
-            setSubject(response.data.message);
-
-            // const response2 = await apiSubject.getuser(request3);
-            // setStudents(response2.data.message);
-
-            const response3 = await apiSubject.getuser(request4);
-            setTeachers(response3.data.message);
-
-            const response4 = await apiSubject.exams(request4);
-            setExams(response4.data.message);
-
-            const response5 = await apiRecordBook.getSem(request4);
-            setSemester(response5.data.message);
-
-            // const response6 = await apiAccount.info();
-            // setUserInfo(response6.data.message);
-
-            // const response7 = await apiSchedule.groups();
-            // setGroups(response7.data.message);
-
-            // const response6 = await apiRecordBook.get(request5);
-            // setUserRecord(response6.data.message);
-            fetchGroups()
-
-        } catch (error) {
+    useEffect(() => {
+        const fetchData = async () => {
+          try {
+            setTimeout(() => {
+              showSubblockMount(true);
+            }, 100);
+            await fetchGroups();
+          } catch (error) {
             console.error(error);
             console.error('ERROR GET LESSONS');
-            toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
-        }
-
-    }, []);
-
-
-    console.log(userRecord)
-    // console.log(subject)
-    // console.log(teachers)
-    // console.log(students)
-    // console.log(semester)
-    // console.log(exams)
-
-
-
-    async function createRecordBook(mark, newdate, userselect, selectsubj, selectsem, newyear) {
-        //а это типа создание папки в папке студента типо разные папки 
-        const request = {
-            endMark: mark,
-            date: newdate,
-            userId: userselect,
-            subjectId: selectsubj,
-            semestrId: selectsem,
-            year: newdate.split('.')[2]
+            toast.error(
+              'Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку'
+            );
+          }
         };
-        const request2 = { userId: userselect, };
-        try {
-            console.log(request)
-            const response = await apiRecordBook.createRecord(request);
-            toast.success("Data updated successfully");
-
-            const response6 = await apiRecordBook.get(request2);
-            setUserRecord(response6.data.message);
-        } catch (error) {
-            console.error(error);
-            console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-        }
-    }
+      
+        fetchData();
+      }, []);
 
     async function updateRecordBook(recId, mark, userselect) {
         const request = {
@@ -161,11 +74,7 @@ function TeacherRecordBook() {
             userId: userselect
         };
         try {
-            console.log(request)
-            console.log(request2)
             const response = await apiRecordBook.updateTeacherRecord(request);
-            //   handleEditClickExit(subjId);
-
             const response6 = await apiRecordBook.get(request2);
             setUserRecord(response6.data.message);
             toast.success("Data updated successfully");
@@ -194,29 +103,6 @@ function TeacherRecordBook() {
         }
     }
 
-    async function deleteRecordBook(id) {
-        const request = {
-            recordId: id
-        };
-        const request2 = {};
-        const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-        if (!confirmed) {
-            return;
-        }
-        try {
-            const response = await apiRecordBook.deleteRecord(request);
-            const data = response.data;
-
-            // const response6 = await apiRecordBook.get(request);
-            // setUserRecord(response6.data.message);
-
-            toast.success("Data updated successfully");
-        } catch (error) {
-            console.error(error);
-            console.error('ERROR DOWNLOAD FILE');
-            toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-        }
-    }
 
     const fetchGroups = async () => {
         try {
@@ -247,7 +133,7 @@ function TeacherRecordBook() {
 
     const handleGroupChange = (e) => {
         const groupId = e.value;
-        setNewGroups(groupId);
+        // setNewGroups(groupId);
 
         if (groupId === "") {
             setUserRecord([]);
@@ -282,6 +168,13 @@ function TeacherRecordBook() {
 
 
     return (
+        <CSSTransition
+                in={subblockMount}
+                timeout={300}
+                classNames="subblock_mount"
+                mountOnEnter
+                unmountOnExit
+            >
         <div>
             <div>
                 <div className="title">
@@ -303,7 +196,7 @@ function TeacherRecordBook() {
                     <Select
                         className="new_select_subblock"
                         onChange={(selectedOption) => {
-                            setNewStudents(selectedOption.value);
+                            // setNewStudents(selectedOption.value);
                             uploadStudents(selectedOption.value);
                             handleStudentChange(selectedOption);
                         }}
@@ -378,7 +271,7 @@ function TeacherRecordBook() {
                                 </div>
                             ))
                         ) : (
-                            <div>{placeHolder}</div>
+                            <div>Нет информации о зачетной книжке</div>
                         )}
                     </div>
                 ) : (
@@ -428,7 +321,7 @@ function TeacherRecordBook() {
                                 </div>
                             ))
                         ) : (
-                            <div>{placeHolder}</div>
+                            <div>Нет информации о зачетной книжке</div>
                         )}
                     </div>
                 )}
@@ -447,54 +340,10 @@ function TeacherRecordBook() {
                 theme="colored"
                 style={{ width: '500px' }}
             />
-
-
-
         </div>
+        </CSSTransition>
     )
 }
 
 export default TeacherRecordBook;
 
-{/* <div className="record_container">
-    <div className="heading">
-        <div className="rec">Дисциплина</div>
-        <div className="rec">Количество часов</div>
-        <div className="rec">Итоговая оценка</div>
-        <div className="rec">Дата сдачи</div>
-        <div className="rec">Преподаватель</div>
-        <div className="">Действия</div>
-    </div>
-    {userRecord.map((records) => (
-        <div key={records.id}>
-            <div className="record_student_block">
-                <div className="rec">{records.subjectName}</div>
-                <div className="rec">{records.summaryHours}</div>
-                <div className="rec">{records.endMark}</div>
-                <div className="rec">{records.date}</div>
-                <div className="rec">{records.teacher}</div>
-                <div>
-                    <button className="recordbook_buttons" onClick={() => handleEditClick(records.id)}>
-                        Обновить
-                    </button>
-                </div>
-            </div>
-            {!editableSubject[records.id] ? (
-                <div className="record_buttons">
-
-                </div>
-            ) : (
-                <div>
-                    <input className="select_block_record"
-                        type="text"
-                        placeholder='Введите результат'
-                        value={newResultUpd}
-                        onChange={(e) => setNewResultUpd(e.target.value)}
-                    />
-                    <button className="select_block_button_record" onClick={() => updateRecordBook(records.id, newResultUpd, newStudents2)}>Сохранить</button>
-                    <button className="select_block_button_record_delete" onClick={() => handleEditClickExit(records.id)}>Отмена</button>
-                </div>
-            )}
-        </div>
-    ))}
-</div>  */}

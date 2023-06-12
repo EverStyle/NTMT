@@ -1,16 +1,13 @@
 import React from "react";
-import { useEffect, useState, useMemo } from "react";
-import { plan, practise } from "../json/plan";
+import { useEffect, useState} from "react";
 import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import './style/AdminPlanScreen.css';
 import Select from 'react-select';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition } from 'react-transition-group';
 
 function AdminPlanScreen() {
-  // const { subjects } = plan[0];
-  const { subjects_pr } = practise[0];
   const [subject, setSubject] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [exams, setExams] = useState([]);
@@ -25,10 +22,9 @@ function AdminPlanScreen() {
   const [groups, setGroups] = useState([]);
   const [newGroups, setNewGroups] = useState([]);
   const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
-  const [newSubject, setNewSubject] = useState([]);
   const [newteachers, setNewTeachers] = useState([]);
   const [selectSubject, setSelectSubject] = useState([]);
-  const [showGroupCurriculum, setShowGroupCurriculum] = useState(false);
+
 
 
   const handleEditClick = (subjId) => {
@@ -46,29 +42,34 @@ function AdminPlanScreen() {
   };
   const [subblockMount, showSubblockMount] = useState(false);
 
-  useEffect(async () => {
-    try {
-      const request = {
-        roleId: 3
-      };
-      setTimeout(() => {
-        showSubblockMount(true);
-      }, 100);
-      const response = await apiSubject.get(request);
-      setSubject(response.data.message);
-      setSelectSubject(response.data.message);
-      const response2 = await apiSubject.getuser(request);
-      setTeachers(response2.data.message);
-      const response3 = await apiSubject.exams(request);
-      setExams(response3.data.message);
-      const response4 = await apiSchedule.groups();
-      setGroups(response4.data.message);
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении информации о учебном плане. Попробуйте позже или обратитесь в техподдержку');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const request = {
+          roleId: 3
+        };
+        setTimeout(() => {
+          showSubblockMount(true);
+        }, 100);
+        const response = await apiSubject.get(request);
+        setSubject(response.data.message);
+        setSelectSubject(response.data.message);
+        const response2 = await apiSubject.getuser(request);
+        setTeachers(response2.data.message);
+        const response3 = await apiSubject.exams(request);
+        setExams(response3.data.message);
+        const response4 = await apiSchedule.groups();
+        setGroups(response4.data.message);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET LESSONS');
+        toast.error('Произошла ошибка при получении информации о учебном плане. Попробуйте позже или обратитесь в техподдержку');
+      }
     }
-
+    setTimeout(() => {
+      showSubblockMount(true);
+    }, 100);
+    fetchData();
   }, []);
 
   async function createSubject(newTitle, newhours, exam, techerselect) {
@@ -131,8 +132,6 @@ function AdminPlanScreen() {
     }
     try {
       const response = await apiSubject.deleteSubj(request);
-      const data = response.data;
-
       const response2 = await apiSubject.get(request2);
       setSubject(response2.data.message);
       setSelectSubject(response2.data.message);
@@ -204,7 +203,7 @@ function AdminPlanScreen() {
 
     const groupId = parseInt(e.value);
     setNewGroups(groupId);
-    setShowGroupCurriculum(true);
+    // setShowGroupCurriculum(true);
     // setSubject([])
     try {
       const request = {
@@ -221,18 +220,7 @@ function AdminPlanScreen() {
       toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
     }
   };
-  const handleMultipleGroupChange = async (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions);
-    const selectedGroups = selectedOptions.map((option) => option.value);
-    setnewMultipleSubjects(selectedGroups);
-    setShowGroupCurriculum(true);
-  };
 
-  const handleSubjectChange = (e) => {
-    const subjId = e.target.value;
-    setNewSubject(subjId);
-    setShowGroupCurriculum(false);
-  };
   const handleTeacherChange = (e) => {
     const teachId = e.value;
     setNewTeachers(teachId)
@@ -267,10 +255,6 @@ function AdminPlanScreen() {
       }
     }
   };
-
-  console.log(subject)
-
-  console.log(selectSubject)
 
   return (
     <div>
@@ -307,11 +291,6 @@ function AdminPlanScreen() {
                   classNamePrefix="select"
                   placeholder="Выберите предмет"
                 />
-
-
-                {/* !!!!!!!!!!!!!!!!!!!!!!!!!ВНИМАНИЕ!!!!!!!!!!!!!!!!!!!!!!!!! */}
-
-
               </div>
               <div className="subj_subblock">
                 <div className="subblock_text">

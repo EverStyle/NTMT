@@ -1,7 +1,6 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState} from "react";
 import "./SheduleCard.css";
-import apiSchedule from "../../api/schedule";
-import { ToastContainer, toast } from "react-toastify";
+
 
 function SheduleCard(props) {
 

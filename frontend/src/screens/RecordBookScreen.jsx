@@ -1,67 +1,55 @@
 
-import React, { useEffect, useState, useMemo } from "react";
-import Headers from "../components/Header/Header";
-import { ToastContainer, toast } from "react-toastify";
+import React, { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
 import './style/AdminRecordBook.css';
 import apiRecordBook from "../api/recordBook";
-import apiSchedule from "../api/schedule";
-import apiSubject from "../api/subjects";
+// import apiSubject from "../api/subjects";
 import apiAccount from "../api/account";
+import { CSSTransition } from 'react-transition-group';
 
 function RecordBookScreen() {
     const [userRecord, setUserRecord] = useState([]);
-    const [subject, setSubject] = useState([]);
+    // const [subject, setSubject] = useState([]);
     const [semester, setSemester] = useState([]);
-    const [exams, setExams] = useState([]);
+    // const [exams, setExams] = useState([]);
     const [newYear, setNewYear] = useState(0);
     const [newSemesterId, setNewSemesterId] = useState(0);
     const [placeHolder, setplaceHolder] = useState("Нет информации о зачетной книжке");
     const [userGroupInfo, setUserGroupInfo] = useState([]);
+    const [subblockMount, showSubblockMount] = useState(false);
 
-    useEffect(async () => {
-        try {
-            const request = {
-                userId: 0
-            };
+    useEffect(() => {
+        async function fetchData() {
+          try {
+            setTimeout(() => {
+                showSubblockMount(true);
+              }, 50);
             const request4 = {
-                roleId: 3
+              roleId: 3
             };
             const request5 = {
-                semestrId: newSemesterId,
-                year: newYear
+              semestrId: newSemesterId,
+              year: newYear
             };
-            const response = await apiSubject.get(request);
-            setSubject(response.data.message);
-
             const response2 = await apiAccount.info();
-            setUserGroupInfo(response2.data.message)
-
-            const response4 = await apiSubject.exams(request4);
-            setExams(response4.data.message);
-
+            setUserGroupInfo(response2.data.message);
             const response5 = await apiRecordBook.getSem(request4);
             setSemester(response5.data.message);
-
             const response6 = await apiRecordBook.getInf(request5);
-
             if (response6.data.message.length === 0) {
-                setUserRecord([]);
+              setUserRecord([]);
+              setplaceHolder("Нет информации о зачетной книжке");
             } else {
-                setUserRecord(response6.data.message);
+              setUserRecord(response6.data.message);
             }
-
-        } catch (error) {
-            console.log(error);
-            if (error) {
-                setUserRecord([]);
-                setplaceHolder("Нет информации о зачетной книжке")
-            }
+            showSubblockMount(true);
+          } catch (error) {
             console.error(error);
             console.error('ERROR GET LESSONS');
-            // toast.error('Произошла ошибка при получении информации о зачетной книжке студента. Попробуйте позже или обратитесь в техподдержку');
+          }
         }
-
-    }, [newSemesterId, newYear]);
+        fetchData();
+      }, [newSemesterId, newYear]);
 
 
 
@@ -109,18 +97,24 @@ function RecordBookScreen() {
     }, []);
 
     return (
+        <CSSTransition
+                in={subblockMount}
+                timeout={300}
+                classNames="subblock_mount"
+                mountOnEnter
+                unmountOnExit
+            >
         <div>
             <div>
                 <div>
                     <div className="title">
                         Зачетная книжка
                     </div>
-
                     <div className="short_user_info">
                         <div className="short_user_info_subblock">
                             <strong> Номер группы : </strong> {userGroupInfo.code}
                         </div>
-                        <select className="select_block_record" value={newSemesterId} onChange={(e) => setNewSemesterId(e.target.value)}>
+                        <select className="select_block_record_stud" value={newSemesterId} onChange={(e) => setNewSemesterId(e.target.value)}>
                             <option value="Some">Выберите семестр</option>
                             {semester.map((sem) => (
                                 <option key={sem.id} value={sem.id}>
@@ -128,7 +122,7 @@ function RecordBookScreen() {
                                 </option>
                             ))}
                         </select>
-                        <select className="select_block_record" value={newYear} onChange={(e) => setNewYear(e.target.value)}>
+                        <select className="select_block_record_stud" value={newYear} onChange={(e) => setNewYear(e.target.value)}>
                             <option value="Some">Выберите год</option>
                             <option value={getCurrentYear()}>{getCurrentYear()}</option>
                             <option value={getPreviousYear()}>{getPreviousYear()}</option>
@@ -278,6 +272,7 @@ function RecordBookScreen() {
             />
 
         </div>
+        </CSSTransition>
     )
 }
 

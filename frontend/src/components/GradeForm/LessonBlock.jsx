@@ -7,9 +7,8 @@ import './LessonRow.css';
 import file_downloader from '../../scripts/file_downloader';
 import { useEffect } from "react";
 import apiFiles from "../../api/files";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
-import MyFileBlock from './MyFileBlock';
 
 
 
@@ -18,7 +17,6 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
   const handleClick = (event) => {
     if (event.detail === 1) {
       if (isOpen) {
-        const parentFolderId = path.substring(0, path.lastIndexOf('/')).split('/').pop();
         // onFolderSelect(parentFolderId || null);
         onFolderSelect(id);
         onFolderName(name)
@@ -44,7 +42,6 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     }
     try {
       const response = await apiFiles.delete(request);
-      const data = response.data;
       const response2 = await apiFiles.getList(request2);
       // setFiles(response2.data.message);
       onDataChanged(response2.data.message)
@@ -74,7 +71,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  const indentation = depth * 10; // 10 pixels per level
+
   const folderImageSrc = isOpen ? folderOpen : folderClosed;
   const folderImageStyle = isOpen ? { width: '40px', height: '40px' } : { width: '30px', height: '30px' };
 
@@ -149,25 +146,18 @@ function LessonRow() {
 
   const [file, setFile] = useState('');
   const [files, setFiles] = useState({});
-
   const [currentFolderId, setCurrentFolderId] = useState(1);
-
   if (currentFolderId === null) {
     setCurrentFolderId(1)
   }
-
   const handleFolderSelect = (folderId) => {
     setCurrentFolderId(folderId);
   }
   const [currentFolderName, setCurrentFolderName] = useState("")
-
   const handleFolderSelectName = (folderName) => {
     setCurrentFolderName(folderName);
   }
   const [newFolderNameLesson, setNewFolderNameLesson] = useState('')
-
-  const [allfiles, setAllFiles] = useState({});
-  const [subblockMount, showSubblockMount] = useState(false);
 
   // ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
@@ -242,8 +232,6 @@ function LessonRow() {
     try {
       validateFolderName(newFolderNameLesson);
       const response = await apiFiles.newFolderLesson(request);
-      const data = response.data.message[0];
-
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
       toast.success("Папка успешно созданна");
@@ -296,7 +284,6 @@ function LessonRow() {
     }
     try {
       const response = await apiFiles.deleteFolderLessonApi(request);
-      const deletedFolderId = response.data.message[0]; // get the ID of the deleted folder
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
 
@@ -326,7 +313,6 @@ function LessonRow() {
     try {
 
       const response = await apiFiles.upload(request);
-      const data = response.data.message[0];
       const response2 = await apiFiles.getList(request2);
       setFiles(response2.data.message)
       //крч смотри на то что ты закидываешь в стейт, там объект приходит с бека и ты создал стейт с пустым массивом, и пытался передать в стейт массив, поменяли на объект снизу и вроде работает.

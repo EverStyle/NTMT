@@ -6,24 +6,22 @@ import './style/AdminNotification.css';
 import { toast, ToastContainer } from "react-toastify";
 import apiSchedule from "../api/schedule";
 import Select from 'react-select';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition} from 'react-transition-group';
 
 function AdminNotification() {
   const [page, setPage] = useState(1);
   const [notifications, setNotifications] = useState([]);
-  const [userInfo, setUserInfo] = useState([])
+  // const [userInfo, setUserInfo] = useState([])
   const [newNotificationTitle, setNewNotificationTitle] = useState('')
   const [newNotificationText, setNewNotificationText] = useState('')
   const messageBlockRef = useRef(null);
-
-
   const [groups, setGroups] = useState([]);
-  const [newGroups, setNewGroups] = useState([]);
+  // const [newGroups, setNewGroups] = useState([]);
   const [students, setStudents] = useState([]);
   const [teachers, setTeachers] = useState([]);
   const [admins, setAdmins] = useState([]);
   const [subblockMount, showSubblockMount] = useState(false);
-
+  const [counter, setCounter] = useState(0);
   useEffect(() => {
     const messageBlockHeight = messageBlockRef.current?.clientHeight;
     if (messageBlockHeight > 500) {
@@ -43,8 +41,9 @@ function AdminNotification() {
         setAdmins(response4.data.message);
         const response = await apiMessages.get(page);
         setNotifications([...response.data.message]);
-        const response2 = await apiMessages.newUserInfo();
-        setUserInfo([...response2.data.message]);
+        setCounter(response.data.count)
+        // const response2 = await apiMessages.newUserInfo();
+        // setUserInfo([...response2.data.message]);
         setTimeout(() => {
           showSubblockMount(true);
         }, 50)
@@ -58,10 +57,10 @@ function AdminNotification() {
     getNotifications();
   }, [page])
 
-console.log(notifications)
+  console.log(counter)
 
   async function createNotifiaction(newname, newtext, seluser) {
-    const invalidCharsRegex = /[^A-Za-zА-Яа-я0-9\s!?.(),[\]]/;
+    const invalidCharsRegex = /[^A-Za-zА-Яа-я0-9\s!?.(),[\]<>{}:;"'@#$%^&*|\\\/~`+=_-]/;
 
     // Check if the newtext contains any invalid character
     if (invalidCharsRegex.test(newname)) {
@@ -81,7 +80,6 @@ console.log(notifications)
     try {
       console.log(request)
       const response = await apiMessages.newNotf(request);
-      const data = response.data;
       const response2 = await apiMessages.get(page);
       setNotifications([...response2.data.message]);
       toast.success("Уведомление успешно созданно и отправленно");
@@ -108,7 +106,6 @@ console.log(notifications)
   const handleDeleteNotification = async (notificationId) => {
     try {
       const response = await apiMessages.deleteMess({ listMessages: [notificationId] });
-      const data = response.data;
       toast.success("Уведомление успешно удалено");
       setNotifications(notifications.filter(notification => notification.id !== notificationId));
     } catch (error) {
@@ -147,7 +144,7 @@ console.log(notifications)
 
   const handleGroupChange = (e) => {
     const groupId = e.value;
-    setNewGroups(groupId);
+    // setNewGroups(groupId);
     if (groupId === "") {
       setStudents([]); // Clear the students array when the default value is selected
     } else {
@@ -234,12 +231,27 @@ console.log(notifications)
     })),
   ];
 
-  console.log(selectedUserIds)
-  console.log(selectedUserIds2)
-  console.log(selectedUserIds3)
-  console.log(uniqueSelectedUserIds)
+  console.log(notifications)
 
-  // console.log(admins)
+  // Calculate the total number of pages
+  const totalPages = Math.ceil(counter / 5);
+
+  // Generate the array of page numbers
+  const pageNumbers = Array.from({ length: totalPages }, (_, index) => index + 1);
+
+  const handlePageClick = (selectedPage) => {
+    setPage(selectedPage);
+  };
+
+  const renderPageButtons = pageNumbers.map((pageNumber) => (
+    <button
+      key={pageNumber}
+      className={`button_page ${pageNumber === page ? 'active' : ''}`}
+      onClick={() => handlePageClick(pageNumber)}
+    >
+      {pageNumber}
+    </button>
+  ));
 
   return (
     <div>
@@ -327,7 +339,11 @@ console.log(notifications)
               <button type='button' className="select_block_button_record" onClick={() => createNotifiaction(newNotificationTitle, newNotificationText, uniqueSelectedUserIds)}>Отправить</button>
             </div>
           </div>
+
           <div className="all_notification">
+            <div className="container_page_counter_block">
+              <div className="container_page_counter">{renderPageButtons}</div>
+            </div>
             <div className="center-content" ref={messageBlockRef}>
               {notifications.map((notification, index) => {
                 return <div>

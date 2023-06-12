@@ -1,15 +1,13 @@
 
 import React, { useState } from 'react';
-import logo from '../../img/icon_nb.png';
-import filelogo from '../../img/file.png';
 import './LessonRow.css';
 import file_downloader from '../../scripts/file_downloader';
 import { useEffect } from "react";
 import apiFiles from "../../api/files";
-import { ToastContainer, toast } from "react-toastify";
-import UploadIcon from '@mui/icons-material/Upload';
-import MyFileBlock from './MyFileBlock';
-import { Button } from '@mui/material';
+import { toast } from "react-toastify";
+import folderClosed from '../../img/folderClose.png';
+import filelogo from '../../img/file.png';
+import folderOpen from '../../img/icon_nb.png';
 
 
 function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, onDataChanged, selectedFolderId, depth }) {
@@ -17,7 +15,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
   const handleClick = (event) => {
     if (event.detail === 1) {
       if (isOpen) {
-        const parentFolderId = path.substring(0, path.lastIndexOf('/')).split('/').pop();
+
         // onFolderSelect(parentFolderId || null);
         onFolderSelect(id);
         onFolderName(name)
@@ -50,14 +48,16 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  const indentation = depth * 10; // 10 pixels per level
+  const folderImageSrc = isOpen ? folderOpen : folderClosed;
+  const folderImageStyle = isOpen ? { width: '40px', height: '40px' } : { width: '30px', height: '30px' };
+
 
   return (
     <div style={{ marginLeft: window.innerWidth >= 600 ? `${depth + 10}px` : 0 }}>
       <div className={`folder_container ${folderClass}`} onClick={handleClick}>
         <div className="folder_name">
           <div className='folder_block_component'>
-            <img src={logo} style={{ width: '30px', height: '30px' }} />
+            <img src={folderImageSrc} style={folderImageStyle} alt={isOpen ? 'Open Folder' : 'Closed Folder'} />
           </div>
           <div className='folder_block_component'>
             {name}
@@ -76,14 +76,14 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                 <li key={file.id}>
                   <div className='file_block'>
                     <div className='file_two_components'>
-                    <div className='file_block_components'>
-                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
-                    </div>
-                    <div className='file_block_components'>
-                      {file.id && (
-                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                      )}
-                    </div>
+                      <div className='file_block_components'>
+                        <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                      </div>
+                      <div className='file_block_components'>
+                        {file.id && (
+                          <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                        )}
+                      </div>
                     </div>
                     {/* <div className='file_block_components'>Номер = {file.id}</div> */}
                     <div className='file_block_components'>
@@ -113,59 +113,12 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       )}
     </div>
   );
-  // return (
-  //   <div>
-  //     <div className={folderClass} onClick={handleClick}>
-  //     <img src={logo} style={{ width: '30px', height: '30px' }} />
-  //       {name}
-  //     </div>
 
-  //     {isOpen && (
-  //       <>
-  //         {folders.map(folder => (
-  //           <Folder
-  //             key={folder.id}
-  //             {...folder}
-  //             path={`${path}/${folder.id}`}
-  //             onFolderSelect={onFolderSelect}
-  //             selectedFolderId={selectedFolderId}
-  //             onDataChanged={onDataChanged}
-  //           />
-  //         ))}
-  //       </>
-  //     )}
-
-  //     {isOpen && (
-
-  //       <ul>
-  //         {files.map(file => (
-  //             <li>
-  //               <div key={file.id}>
-  //               <img src={filelogo}></img>
-  //               <div>Номер = {file.id}</div>
-  //               {file.fileMeta.fileName}
-
-  //               <div>
-  //                 <button className='button_delete' onDoubleClick={(event) => {
-  //                   if (event.detail === 2) {
-  //                     deleteFiles(file.id);
-  //                   }
-  //                 }}>Удалить</button>
-  //               </div>
-  //             </div>
-  //             </li>
-
-  //         ))}
-  //       </ul>
-  //     )}
-  //   </div>
-  // );
 }
 
 
 function LessonRow() {
 
-  const [file, setFile] = useState('');
   const [files, setFiles] = useState({});
 
   const [currentFolderId, setCurrentFolderId] = useState(1);
@@ -217,7 +170,7 @@ function LessonRow() {
 
       const response = await apiFiles.getList(request);
       setFiles(response.data.message);
-      // console.log(response.data.message)
+
 
     } catch (error) {
       console.error(error);
@@ -226,9 +179,6 @@ function LessonRow() {
     }
   }, []);
 
-  // console.log(files)
-
-
 
   const handleDataChange = (newData) => {
     setFiles(newData);
@@ -236,52 +186,7 @@ function LessonRow() {
 
   return (
     <>
-
-      <div className='folder_create_block'>
-        <div>
-
-          {/* <div className='createFolderBlock'>
-            <div className='create_folder_block_component'>
-              <input type="text" placeholder='Введите название папки' style={{ width: '300px' }} onChange={(e) => setNewFolderNameLesson(e.target.value)} />
-            </div>
-            <div className='create_folder_block_component'>
-              <button type='button' className='button_delete' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
-            </div>
-
-            <button type='button' onClick={() => deleteFolderLessons()}>Удалить</button>
-            <div className='create_folder_block_component'>
-              <button className='button_delete' onClick={(event) => {
-                if (event.detail === 1) {
-                  deleteFolderLessons(currentFolderId);
-                }
-              }}>Удалить выделенную папку</button>
-            </div>
-
-          </div> */}
-        </div>
-        {/* <div className='Lexa'>
-          <div
-            style={{ fontSize: '13px', textAlign: 'center', position: 'relative' }}
-            className="file-link"
-          >
-            <label htmlFor="file2" style={{ position: 'absolute', opacity: '0', width: '100%', height: '100%', cursor: 'pointer' }}></label>
-            <input
-              value={file}
-              type="file"
-              id="file2"
-              //Важно id html и id input изменить и все работает
-              style={{ position: 'absolute', display: 'none', width: '100%', height: '100%' }}
-              onChange={(e) => uploadFilesLesson(e.target.files, currentFolderId)}
-            />
-            <UploadIcon sx={{ fontSize: '80px' }} color="primary" />
-            <p style={{ textAlign: 'center' }}>Загрузить файлы</p>
-          </div>
-        </div> */}
-      </div>
-
-
       <div><strong>Ваша текущая папка : </strong> {currentFolderName}</div>
-
 
       <div className="folder_row">
         <Folder {...files} onDataChanged={handleDataChange} path={files.id} onFolderSelect={handleFolderSelect} onFolderName={handleFolderSelectName} selectedFolderId={currentFolderId} depth={1} />

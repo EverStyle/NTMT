@@ -1,48 +1,31 @@
-import React, { useEffect, useState, useMemo } from "react";
-import Headers from "../components/Header/Header";
-import zach from "../json/zachetka";
+import React, { useEffect, useState} from "react";
 import { ToastContainer, toast } from "react-toastify";
 import './style/AdminRecordBook.css';
 import apiRecordBook from "../api/recordBook";
 import apiSubject from "../api/subjects";
-import apiAccount from "../api/account";
 import apiSchedule from "../api/schedule";
 import Select from 'react-select';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition} from 'react-transition-group';
 
 function AdminRecordBook() {
-
-
     const [userRecord, setUserRecord] = useState([]);
-
     const [subject, setSubject] = useState([]);
-
-    const [teachers, setTeachers] = useState([]);
     const [students, setStudents] = useState([]);
     const [semester, setSemester] = useState([]);
-    const [exams, setExams] = useState([]);
-
     const [newStudents, setNewStudents] = useState(0);
-    const [newStudents2, setNewStudents2] = useState(0);
-
     const [newYear, setNewYear] = useState([]);
     const [newDate, setNewDate] = useState([]);
     const [newSubjectId, setNewSubjectId] = useState([]);
     const [newSemesterId, setNewSemesterId] = useState([]);
     const [newResult, setNewResult] = useState([]);
-
     const [newStudentsUpd, setNewStudentsUpd] = useState(0);
     const [newYearUpd, setNewYearUpd] = useState([]);
     const [newDateUpd, setNewDateUpd] = useState([]);
     const [newSubjectIdUpd, setNewSubjectIdUpd] = useState([]);
     const [newSemesterIdUpd, setNewSemesterIdUpd] = useState([]);
     const [newResultUpd, setNewResultUpd] = useState([]);
-
     const [editableSubject, setEditableSubject] = useState({});
-
     const [groups, setGroups] = useState([]);
-    const [newGroups, setNewGroups] = useState([]);
-
     const [subblockMount, showSubblockMount] = useState(false);
 
     const handleEditClick = (subjId) => {
@@ -59,38 +42,63 @@ function AdminRecordBook() {
         });
     };
 
-    useEffect(async () => {
-        try {
+    // useEffect(async () => {
+    //     try {
+    //         const request = {
+    //             userId: 0
+    //         };
+    //         const request4 = {
+    //             roleId: 3
+    //         };
+    //         setTimeout(() => {
+    //             showSubblockMount(true);
+    //         }, 100);
+    //         const response = await apiSubject.get(request);
+    //         setSubject(response.data.message);
+    //         const response5 = await apiRecordBook.getSem(request4);
+    //         setSemester(response5.data.message);
+    //         fetchGroups()
+    //     } catch (error) {
+    //         console.error(error);
+    //         console.error('ERROR GET LESSONS');
+    //         toast.error('Произошла ошибка при получении информации о зачетных книжек. Попробуйте позже или обратитесь в техподдержку');
+    //     }
+    // }, []);
+    useEffect(() => {
+        async function fetchData() {
+          try {
             const request = {
-                userId: 0
+              userId: 0
             };
             const request4 = {
-                roleId: 3
+              roleId: 3
             };
-            setTimeout(() => {
-                showSubblockMount(true);
-            }, 100);
             const response = await apiSubject.get(request);
             setSubject(response.data.message);
-
-            const response3 = await apiSubject.getuser(request4);
-            setTeachers(response3.data.message);
-
-            const response4 = await apiSubject.exams(request4);
-            setExams(response4.data.message);
-
             const response5 = await apiRecordBook.getSem(request4);
             setSemester(response5.data.message);
-
-            fetchGroups()
-
-        } catch (error) {
+            fetchGroups();
+          } catch (error) {
             console.error(error);
             console.error('ERROR GET LESSONS');
             toast.error('Произошла ошибка при получении информации о зачетных книжек. Попробуйте позже или обратитесь в техподдержку');
+          }
         }
+        setTimeout(() => {
+          showSubblockMount(true);
+        }, 100);
+        fetchData();
+      }, []);
 
-    }, []);
+    //   useEffect(() => {
+    //     async function fetchData() {
+          
+    //     }
+    //     setTimeout(() => {
+    //       showSubblockMount(true);
+    //     }, 100);
+    //     fetchData();
+    //   }, []);
 
     async function createRecordBook(mark, newdate, userselect, selectsubj, selectsem) {
         const request = {
@@ -171,7 +179,6 @@ function AdminRecordBook() {
         }
         try {
             const response = await apiRecordBook.deleteRecord(request);
-            const data = response.data;
             toast.success("Данные успешно удаленны");
         } catch (error) {
             console.error(error);
@@ -208,7 +215,7 @@ function AdminRecordBook() {
 
     const handleGroupChange = (e) => {
         const groupId = e.value;
-        setNewGroups(groupId);
+        // setNewGroups(groupId);
         console.log(groupId);
         if (groupId === "") {
             console.log("Stud CLEAR")
@@ -224,21 +231,11 @@ function AdminRecordBook() {
         setNewStudents("Some"); // Reset the selected student to the default value
     };
 
-    const handleStudentChange = (e) => {
-        const studentId = e.value;
-        setNewStudents2(studentId);
-    };
+    // const handleStudentChange = (e) => {
+    //     const studentId = e.value;
+    //     // setNewStudents2(studentId);
+    // };
 
-
-
-    // const options = [
-    //     { value: "Some", label: "СБРОС" },
-    //     ...students.map((student) => ({
-    //         value: student.id,
-    //         label: student.fio,
-    //     })),
-    // ]
-    // console.log(options[0])
 
     return (
         <div>
@@ -371,7 +368,7 @@ function AdminRecordBook() {
                             onChange={(selectedOption) => {
                                 setNewStudents(selectedOption.value);
                                 uploadStudents(selectedOption.value);
-                                handleStudentChange(selectedOption);
+                                // handleStudentChange(selectedOption);
                             }}
                             options={[
                                 { value: 0, label: "Выберите студента" },

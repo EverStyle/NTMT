@@ -1,17 +1,16 @@
 import React from "react";
-import { useEffect, useState, useMemo } from "react";
-import { plan, practise } from "../json/plan";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import apiAccount from "../api/account";
 import './style/PlanScreen.css';
+import { CSSTransition } from 'react-transition-group';
 
 function PlanScreen() {
   const [subject, setSubject] = useState([]);
-  const [groups, setGroups] = useState([]);
   const [userGroupInfo, setUserGroupInfo] = useState([]);
-
+  const [subblockMount, showSubblockMount] = useState(false);
 
   function findMatchingGroupId(apiResponse1, apiResponse2) {
     const groupCode = apiResponse1.code;
@@ -20,32 +19,34 @@ function PlanScreen() {
         return apiResponse2[i].id;
       }
     }
-    return null; // Return null if no matching group is found
+    return null; 
   }
 
-  useEffect(async (newGroupId) => {
-    try {
-      const response = await apiAccount.info();
-      console.log(response.data.message);
-      setUserGroupInfo(response.data.message)
-      const response2 = await apiSchedule.groups();
-      console.log(response2.data.message);
-      setGroups(response2.data.message);
-      const matchingGroupId = findMatchingGroupId(response.data.message, response2.data.message);
-      console.log(matchingGroupId);
-      const request2 = {
-        groupId: matchingGroupId
-      };
-      const response3 = await apiSubject.getGroupsSubject(request2);
-      console.log(response3.data.message);
-      setSubject(response3.data.message);
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setTimeout(() => {
+          showSubblockMount(true);
+        }, 50);
+        const response = await apiAccount.info();
+        console.log(response.data.message);
+        setUserGroupInfo(response.data.message);
+        const response2 = await apiSchedule.groups();
+        const matchingGroupId = findMatchingGroupId(response.data.message, response2.data.message);
+        console.log(matchingGroupId);
+        const request2 = {
+          groupId: matchingGroupId
+        };
+        const response3 = await apiSubject.getGroupsSubject(request2);
+        console.log(response3.data.message);
+        setSubject(response3.data.message);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET LESSONS');
+        toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+      }
     }
-
+    fetchData();
   }, []);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -66,6 +67,13 @@ function PlanScreen() {
 
 
   return (
+    <CSSTransition
+                in={subblockMount}
+                timeout={300}
+                classNames="subblock_mount"
+                mountOnEnter
+                unmountOnExit
+            >
     <div>
       <div>
         <div className="title">
@@ -155,6 +163,7 @@ function PlanScreen() {
         style={{ width: '500px' }}
       />
     </div>
+    </CSSTransition>
   );
 }
 
@@ -163,71 +172,3 @@ export default PlanScreen;
 
 
 
-
-// import React from "react";
-// // import { plan, practise } from "../json/plan";
-
-// function PlanScreen() {
-//   // const { subjects } = plan[0];
-//   // const { subjects_pr } = practise[0];
-//   return (
-//     <div>
-//       {/* <div className='title'>Учебный план</div>
-//       <div className='detail-record-book'>
-//         <div className='detail-napr'>
-//           <span>Направление:</span> Компьютерные системы и комплексы
-//         </div>
-//         <div className='detail-qval'>
-//           <span>Квалификация:</span> Техник
-//         </div>
-//         <div className='detail-form'>
-//           <span>Выбор семестра:</span> Все семестры
-//         </div>
-//       </div>
-//       <div className='details-table plan-table'>
-//         <table className='detail-table'>
-//           <thead className='detail-thead'>
-//             <tr className='main-tr'>
-//               <td>Дисциплина</td>
-//               <td>Кол-во зачетных единиц/часов</td>
-//               <td>Отчетность</td>
-//               <td>Семестры</td>
-//             </tr>
-//           </thead>
-//           <tbody>
-//             <tr className='main-tr'>
-//               <td className='zach-detail'>{plan[0].disp}</td>
-//               <td className='zach-detail'>{plan[0].allTime}</td>
-//               <td className='zach-detail'></td>
-//               <td className='zach-detail'></td>
-//             </tr>
-//             {subjects.map((sub, index) => (
-//               <tr key={index}>
-//                 <td className='zach-detail'>{sub.subject}</td>
-//                 <td className='zach-detail'>{sub.hours}</td>
-//                 <td className='zach-detail'>{sub.result}</td>
-//                 <td className='zach-detail'>{sub.semestrs}</td>
-//               </tr>
-//             ))}
-//             <tr className='main-tr'>
-//               <td className='zach-detail'>{practise[0].disp}</td>
-//               <td className='zach-detail'>{practise[0].allTime}</td>
-//               <td className='zach-detail'></td>
-//               <td className='zach-detail'></td>
-//             </tr>
-//             {subjects_pr.map((pract, index) => (
-//               <tr key={index}>
-//                 <td className='zach-detail'>{pract.subject}</td>
-//                 <td className='zach-detail'>{pract.hours}</td>
-//                 <td className='zach-detail'>{pract.result}</td>
-//                 <td className='zach-detail'>{pract.semestrs}</td>
-//               </tr>
-//             ))}
-//           </tbody>
-//         </table>
-//       </div> */}
-//     </div>
-//   );
-// }
-
-// export default PlanScreen;

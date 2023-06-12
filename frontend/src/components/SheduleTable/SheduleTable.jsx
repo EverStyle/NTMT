@@ -1,15 +1,15 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState} from "react";
 import "./SheduleTable.css";
 import apiSchedule from "../../api/schedule";
 import SheduleCard from "../SheduleCard/SheduleCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { registerLocale, setDefaultLocale } from "react-datepicker";
+import { registerLocale} from "react-datepicker";
 import ru from 'date-fns/locale/ru';
 import { ToastContainer, toast } from "react-toastify";
 import UploadIcon from '@mui/icons-material/Upload';
 import Select from 'react-select';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import { CSSTransition} from 'react-transition-group';
 
 function SheduleTable() {
   const [lessons, setLessons] = useState([]);
@@ -88,9 +88,7 @@ function SheduleTable() {
     };
     try {
       const response = await apiSchedule.sendSched(request);
-      const data = response.data.message[0];
       const response2 = await apiSchedule.get(request2);
-      console.log(data)
       toast.success("Загрузка успешна, обновите дату");
     } catch (error) {
       console.error(error);

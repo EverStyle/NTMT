@@ -1,13 +1,12 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState} from "react";
 import "./SheduleTable.css";
 import apiSchedule from "../../api/schedule";
 import SheduleCard from "../SheduleCard/SheduleCard";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { registerLocale, setDefaultLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import ru from 'date-fns/locale/ru';
 import { ToastContainer, toast } from "react-toastify";
-import UploadIcon from '@mui/icons-material/Upload';
 import Select from 'react-select';
 
 function TeacherScheduleTable() {
@@ -36,97 +35,43 @@ function TeacherScheduleTable() {
       setSelectedGroup(selectedGroup);
     }
   };
-  // const handleChange = (event) => {
-  //   const selectedGroup = event.target.value;
-  //   console.log("WORK")
-  //   console.log(selectedGroup)
-  //   if (selectedGroup == "retShedule") {
-  //     setswitchSchedule(false)
-  //     setSelectedGroup(event.target.value);
-  //   } else {
-  //     setswitchSchedule(true)
-  //     setSelectedGroup(event.target.value);
-  //   }
-  // };
 
-  // const handlscheduleChange = (event) => {
-  //   setswitchSchedule(!switchSchedule)
-  //   setSelectedGroup(event.target.value);
-  // };
   const formattedDate = startDate.toLocaleDateString('ru', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric'
   }).replace(/\//g, '.');
 
-  // let schedules = 0
-  // if (trackPress) {
-  //   schedules = [lessons]
-  //   // console.log(Array.isArray(newarr))
-  // }
-  // console.log(newarr)
-  // console.log(lessons)
-  // console.log(trackPress)
-  // console.log(selectedGroup)
-
-
-  useEffect(async () => {
-    try {
-      const request = {
-        date: formattedDate,
-        // group: selectedGroup
-      };
-      const request2 = {
-      };
-      const request3 = {
-        date: formattedDate,
-        group: selectedGroup
-      };
-      console.log("request", startDate)
-      const response = await apiSchedule.get(request);
-      const response2 = await apiSchedule.groups(request2);
-      const response3 = await apiSchedule.get(request3);
-      setLessons(response.data.message);
-      setallGroups(response2.data.message);
-      setsertainGroups(response3.data.message)
-      // console.log(response3.data.message)
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const request = {
+          date: formattedDate,
+          // group: selectedGroup
+        };
+        const request2 = {
+        };
+        const request3 = {
+          date: formattedDate,
+          group: selectedGroup
+        };
+        console.log("request", startDate)
+        const response = await apiSchedule.get(request);
+        const response2 = await apiSchedule.groups(request2);
+        const response3 = await apiSchedule.get(request3);
+        setLessons(response.data.message);
+        setallGroups(response2.data.message);
+        setsertainGroups(response3.data.message)
+        // console.log(response3.data.message)
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET LESSONS');
+        toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+      }
     }
-
+    
+    fetchData();
   }, [startDate, selectedGroup, switchSchedule, file]);
-
-
-
-  async function uploadSchedule(file) {
-
-    const fileTypes = {
-      'txt': 1,
-      'xlsx': 2,
-      'docx': 3,
-    };
-    const request = new FormData();
-    request.append('files', file[0])
-    request.append('fileType', fileTypes[file[0].name.split('.').pop()])
-    const request2 = {
-    };
-    try {
-      const response = await apiSchedule.sendSched(request);
-      const data = response.data.message[0];
-      const response2 = await apiSchedule.get(request2);
-      console.log(data)
-      toast.success("Загрузка успешна, обновите дату");
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR UPLOAD FILES');
-      toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  console.log(selectedGroup)
-
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -142,46 +87,21 @@ function TeacherScheduleTable() {
   }, []);
 
 
-
   return (
-
-
     <div className='shedule-table'>
-
-      {isMobile ? (
-        // JSX for small screens (width <= 600)
-        <div>Mobile view</div>
-      ) : (
-        // JSX for large screens (width > 600)
-        <div>Desktop view</div>
-      )}
-
       <div className="date_block_student" >
         <div className="date_container">
-
           <div className="subblock_text">
             Выберите дату
             <DatePicker selected={startDate} customInput={<input type="button" value="Select date" />} dateFormat="dd/MM/yyyy" locale="ru" onChange={(date) => setStartDate(date)} />
           </div>
-
         </div>
         <div className="date_container">
-          {/* <button onClick={() => setStartDate(new Date())}>Reset</button> */}
           <div>
-
             <div className="subblock_text">
               Выберите группу
             </div>
             <div>
-
-              {/* <select className="select_block" value={selectedGroup} onChange={handleChange}>
-                <option value="retShedule">Рассписание всех групп</option>
-                {allGroups?.map((group) => (
-                  <option key={group.id} value={group.code}>
-                    {group.groupName} ({group.code})
-                  </option>
-                ))}
-              </select> */}
               <Select
                 onChange={handleChange}
                 options={[
@@ -191,7 +111,7 @@ function TeacherScheduleTable() {
                     label: `${group.groupName} (${group.code})`,
                   }))
                 ]}
-                placeholder="Enter a group"
+                placeholder="Выберите группу"
               />
             </div>
           </div>
@@ -209,17 +129,7 @@ function TeacherScheduleTable() {
         </div>}
 
         {isMobile ? (
-          // JSX for small screens (width <= 600)
           <div className="heading_shedule-container">
-
-            {/* <div className="heading_shedule">
-              <div className="rec_shedule">Номер группы</div>
-              <div className="rec_shedule">Номер пары</div>
-              <div className="rec_shedule">Предмет</div>
-              <div className="rec_shedule">Аудитория</div>
-              <div className="rec_shedule">Преподаватель</div>
-            </div> */}
-
             {
               !switchSchedule ? (
                 lessons.groups?.map((lesson) => <SheduleCard {...lesson} />)
@@ -229,12 +139,7 @@ function TeacherScheduleTable() {
                 <div className="certain_schedule">
                   {typeof sertainGroups === 'object' ? (
                     <ul className="custom-ul">
-
                       <div className="all_certain_schedule_block">
-                        {/* <div className="group_number">
-                          {sertainGroups && sertainGroups.code}
-                        </div> */}
-
                         <div className="all_certain_schedule_subblock">
                           {sertainGroups?.schedule &&
                             Object.entries(sertainGroups.schedule).map(

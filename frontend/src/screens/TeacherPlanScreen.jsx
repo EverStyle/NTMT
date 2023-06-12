@@ -1,205 +1,63 @@
 import React from "react";
-import { useEffect, useState, useMemo } from "react";
-import { plan, practise } from "../json/plan";
+import { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import apiSubject from "../api/subjects";
 import apiSchedule from "../api/schedule";
 import './style/AdminPlanScreen.css';
 import Select from 'react-select';
+import { CSSTransition} from 'react-transition-group';
 
 function TeacherPlanScreen() {
-  const { subjects } = plan[0];
-  const { subjects_pr } = practise[0];
+
   const [subject, setSubject] = useState([]);
-  const [teachers, setTeachers] = useState([]);
-  const [exams, setExams] = useState([]);
+  // const [teachers, setTeachers] = useState([]);
+  // const [exams, setExams] = useState([]);
 
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [selectedExamIds, setSelectedExamIds] = useState([]);
-
-  const [newSubjectTitle, setNewSubjectTitle] = useState('')
-  const [newHours, setNewHours] = useState(0)
-
-  const [editMode, setEditMode] = useState(false);
-
-  const [editableSubject, setEditableSubject] = useState({});
-
-  const [newTitle, setNewTitle] = useState('');
-  const [newHoursSubj, setNewHoursSubj] = useState('');
-  const [newExamType, setNewExamType] = useState('');
-  const [newTeacherId, setNewTeacherId] = useState('');
-
-
+  // const [editableSubject, setEditableSubject] = useState({});
   const [groups, setGroups] = useState([]);
-  const [newGroups, setNewGroups] = useState([]);
-  const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
-  const [newSubject, setNewSubject] = useState([]);
-  const [newteachers, setNewTeachers] = useState([]);
-  const [selectSubject, setSelectSubject] = useState([]);
-  const [showGroupCurriculum, setShowGroupCurriculum] = useState(false);
+  // const [newGroups, setNewGroups] = useState([]);
+  // const [newMultipleSubjects, setnewMultipleSubjects] = useState([]);
+  // const [newSubject, setNewSubject] = useState([]);
+  // const [newteachers, setNewTeachers] = useState([]);
+  // const [selectSubject, setSelectSubject] = useState([]);
+  // const [showGroupCurriculum, setShowGroupCurriculum] = useState(false);
 
+  const [subblockMount, showSubblockMount] = useState(false);
 
-  const handleEditClick = (subjId) => {
-    setEditableSubject({
-      ...editableSubject,
-      [subjId]: true,
-    });
-  };
+  // const handleEditClick = (subjId) => {
+  //   setEditableSubject({
+  //     ...editableSubject,
+  //     [subjId]: true,
+  //   });
+  // };
 
-  const handleEditClickExit = (subjId) => {
-    setEditableSubject({
-      ...editableSubject,
-      [subjId]: false,
-    });
-  };
+  // const handleEditClickExit = (subjId) => {
+  //   setEditableSubject({
+  //     ...editableSubject,
+  //     [subjId]: false,
+  //   });
+  // };
 
-  useEffect(async () => {
-    try {
-      const request = {
-        roleId: 3
-      };
-      const response = await apiSubject.get(request);
-      setSubject(response.data.message);
-      setSelectSubject(response.data.message);
-      const response2 = await apiSubject.getuser(request);
-      setTeachers(response2.data.message);
-      const response3 = await apiSubject.exams(request);
-      setExams(response3.data.message);
-      const response4 = await apiSchedule.groups();
-      setGroups(response4.data.message);
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const request = {
+          roleId: 3
+        };
+        const response = await apiSubject.get(request);
+        setSubject(response.data.message);
+        const response4 = await apiSchedule.groups();
+        setGroups(response4.data.message);
+        showSubblockMount(true);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET LESSONS');
+        toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
+      }
     }
-
+    fetchData();
   }, []);
 
-  async function createSubject(newTitle, newhours, exam, techerselect) {
-
-    const request = {
-      name: newTitle,
-      teacherId: techerselect,
-      examType: exam,
-      hours: newhours
-    };
-    console.log(request);
-    const request2 = {};
-    try {
-      const response = await apiSubject.subjCreate(request);
-      toast.success("Data updated successfully");
-      const data = response.data;
-      const response2 = await apiSubject.get(request2);
-      setSubject(response2.data.message);
-      setSelectSubject(response2.data.message);
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-
-
-  async function updateSubject(subjId, newTitle, techerselect, exam, newhours) {
-    const request = {
-      subjectId: subjId,
-      name: newTitle,
-      teacherId: techerselect,
-      examType: exam,
-      hours: newhours
-    };
-    const request2 = {};
-    try {
-      console.log(request)
-      const response = await apiSubject.updateSubj(request);
-      handleEditClickExit(subjId);
-
-      const response2 = await apiSubject.get(request2);
-      setSubject(response2.data.message);
-      toast.success("Data updated successfully");
-    } catch (error) {
-
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  async function deleteSubject(id) {
-    const request = {
-      subjectId: id
-    };
-    const request2 = {};
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-    if (!confirmed) {
-      return;
-    }
-    try {
-      const response = await apiSubject.deleteSubj(request);
-      const data = response.data;
-
-      const response2 = await apiSubject.get(request2);
-      setSubject(response2.data.message);
-      setSelectSubject(response2.data.message);
-      toast.success("Data updated successfully");
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-
-  async function createSubjectForGroup(newGroupId, newSubjId) {
-    //а это типа создание папки в папке студента типо разные папки 
-    const request = {
-      groupId: newGroupId,
-      subjects: newSubjId
-    };
-    const request2 = {
-      groupId: newGroupId
-    };
-    try {
-      const response = await apiSubject.addToGroup(request);
-      toast.success("Data updated successfully");
-
-
-      const response2 = await apiSubject.getGroupsSubject(request2);
-      console.log(response2);
-      setSubject(response2.data.message);
-
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
-  async function deleteSubjectFromGroup(id, newGroupId) {
-    const request = {
-      subjectGroupId: id
-    };
-    const request2 = {
-      groupId: newGroupId
-    };
-    const confirmed = window.confirm('Вы точно хотите удалить выбранный файл ?');
-    if (!confirmed) {
-      return;
-    }
-    try {
-      const response = await apiSubject.deleteFromGroup(request);
-      toast.success("Data updated successfully");
-
-      const response2 = await apiSubject.getGroupsSubject(request2);
-      console.log(response2);
-      setSubject(response2.data.message);
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR DOWNLOAD FILE');
-      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
-    }
-  }
   const [newGroupCode, setNewGroupCode] = useState("");
 
   const handleGroupChange = async (e) => {
@@ -212,10 +70,9 @@ function TeacherPlanScreen() {
       setNewGroupCode(selectedGroup.code);
     }
     const groupId = parseInt(e.value);
-    setNewGroups(groupId);
-    setShowGroupCurriculum(true);
+    // setNewGroups(groupId);
+    // setShowGroupCurriculum(true);
     // setSubject([])
-
     try {
       const request = {
         groupId: groupId
@@ -231,26 +88,8 @@ function TeacherPlanScreen() {
       toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
     }
   };
-  const handleMultipleGroupChange = async (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions);
-    const selectedGroups = selectedOptions.map((option) => option.value);
-    setnewMultipleSubjects(selectedGroups);
-    setShowGroupCurriculum(true);
-  };
 
-  const handleSubjectChange = (e) => {
-    const subjId = e.target.value;
-    setNewSubject(subjId);
-    setShowGroupCurriculum(false);
-  };
-  const handleTeacherChange = (e) => {
-    const teachId = e.target.value;
-    setNewTeachers(teachId)
-  };
-  const handleExamChange = (e) => {
-    const exId = e.target.value;
-    setSelectedExamIds(exId)
-  };
+
   const [selectedBlockId, setSelectedBlockId] = useState(null);
 
   const handleBlockClick = async (blockId) => {
@@ -259,7 +98,7 @@ function TeacherPlanScreen() {
     }
     setSubject([])
     setSelectedBlockId(blockId);
-    setNewGroups(''); // Assuming an empty string is the default value
+    // setNewGroups(''); // Assuming an empty string is the default value
     setNewGroupCode('')
 
     if (blockId === 'plan') {
@@ -294,8 +133,14 @@ function TeacherPlanScreen() {
   }, []);
 
   return (
+    <CSSTransition
+                in={subblockMount}
+                timeout={300}
+                classNames="subblock_mount"
+                mountOnEnter
+                unmountOnExit
+            >
     <div>
-
 
       <div className="title">
         Учебный план группы
@@ -322,14 +167,7 @@ function TeacherPlanScreen() {
           ]}
           placeholder="Выберите группу"
         />
-        {/* <select className="select_block" value={newGroups.toString()} onChange={handleGroupChange}>
-              <option value="">Выберите группу</option>
-              {groups.map((grp) => (
-                <option key={grp.id} value={grp.id}>
-                  {grp.code} {grp.groupName} {grp.type}
-                </option>
-              ))}
-            </select> */}
+
       </div>
 
       {isMobile ? (
@@ -429,18 +267,17 @@ function TeacherPlanScreen() {
                   <div key={subj.id}>
                     <div className="plan_block">
                       <div className="plan_rec">
-                        {subj.name}
+                        {subj.subjectName}
                       </div>
                       <div className="plan_rec">
                         {subj.summaryHours}
                       </div>
                       <div className="plan_rec" >
-                        {subj.examType}
+                        {subj.type}
                       </div>
                       <div className="plan_rec">
                         {subj.teacher}
                       </div>
-
                     </div>
                   </div>
                 ))}
@@ -500,6 +337,7 @@ function TeacherPlanScreen() {
         style={{ width: '500px' }}
       />
     </div>
+    </CSSTransition>
   );
 }
 
