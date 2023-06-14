@@ -7,28 +7,31 @@
 // и еще сделай везде квадратный полупрозрачный стиль блоков как в селекторах
 // так как антон убрал админов и преподов из групп сделай их в 2 отдельных селектора
 
-useEffect(async () => {
-  try {
-      setTimeout(() => {
-          showSubblockMount(true);
-      }, 100);
-      fetchGroups()
-  } catch (error) {
-      console.error(error);
-      console.error('ERROR GET LESSONS');
-      toast.error('Произошла ошибка при получении расписания. Попробуйте позже или обратитесь в техподдержку');
-  }
-}, []);
+const [showBriefInfo, setShowBriefInfo] = useState(true);
 
-const fetchGroups = async () => {
-  try {
-      const response = await apiSchedule.groups();
-      setGroups(response.data.message);
-  } catch (error) {
-      console.error(error);
-      console.error('ERROR GET GROUPS');
-      toast.error(
-          'Произошла ошибка при получении групп. Попробуйте позже или обратитесь в техподдержку'
-      );
-  }
+const handleBlockClick = () => {
+  setShowBriefInfo(false);
 };
+
+<main className='container'>
+    <Headers
+        setToken={setToken}
+        user={user}
+        setUser={setUser}
+    />
+    <div className='content'>
+        <PersonalArea role={json43.roleId} onClick={handleBlockClick} />
+        <div className='routers'>
+            <Route path='/adminyvedomlenia' component={AdminNotification} />
+            <Route path='/adminras' component={AdminSchedule} />
+            <Route path='/adminfail' component={AdminFileScreen} />
+            <Route path='/adminzachetka' component={AdminRecordBook} />
+            <Route path='/adminplan' component={AdminPlanScreen} />
+        </div>
+    </div>
+    {showBriefInfo && (
+        <div className='brief-info'>
+            <FirstInfoBlock></FirstInfoBlock>
+        </div>
+    )}
+</main>

@@ -247,7 +247,7 @@ function TeacherRecordBook() {
                                         </div>
                                         <div className="schedule_mobile_data">
                                             <div className="rec_shedule">Действия :</div>
-                                            <button style={{ textAlign: 'left' }} className="recordbook_buttons" onClick={() => handleEditClick(record.id)}>
+                                            <button  style={{ textAlign: 'left' }} className="recordbook_buttons_create" onClick={() => handleEditClick(record.id)}>
                                             <span>Сменить оценку</span>
                                             </button>
                                         </div>
@@ -284,7 +284,7 @@ function TeacherRecordBook() {
                             <div className="rec">Итоговая оценка</div>
                             <div className="rec">Дата сдачи</div>
                             <div className="rec">Преподаватель</div>
-                            {/* <div className="">Действия</div> */}
+                            <div className="">Действия</div>
 
                         </div>
                         {userRecord.length > 0 ? (
@@ -297,7 +297,7 @@ function TeacherRecordBook() {
                                         <div className="rec">{record.date}</div>
                                         <div className="rec">{record.teacher}</div>
                                         <div>
-                                            <button className="recordbook_buttons" onClick={() => handleEditClick(record.id)}>
+                                            <button className="recordbook_buttons_create" onClick={() => handleEditClick(record.id)}>
                                             Сменить оценку
                                             </button>
                                         </div>

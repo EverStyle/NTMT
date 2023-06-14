@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, useLocation } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
 import Headers from "./components/Header/Header";
 import PersonalArea from "./screens/PersonalArea";
@@ -17,7 +17,7 @@ import TeacherNotification from "./screens/TeacherNotification";
 import TeacherPlanScreen from "./screens/TeacherPlanScreen";
 import TeacherSchedule from "./screens/TeacherShedule";
 import TeacherRecordBook from "./screens/TeacherRecordBook";
-// import FirstInfoBlock from "./components/FirstInfoBlock";
+import FirstInfoBlock from "./components/FirstInfoBlock";
 import { useState, useEffect } from "react";
 import Login from "./screens/Login/Login";
 
@@ -25,7 +25,15 @@ function App() {
   const [user, setUser] = useState({});
   const [token, setToken] = useState('');
   const [tokenExpiration, setTokenExpiration] = useState(null);
+  const location = useLocation();
+  // console.log(location);
+  const [showBriefInfo, setShowBriefInfo] = useState(true);
+  
+  // console.log(useLocation);
 
+  const handleBlockClick = () => {
+    setShowBriefInfo(false);
+  };
   // useEffect(() => {
   //   setToken(localStorage.getItem('token') || '');
   //   if (token) {
@@ -35,6 +43,13 @@ function App() {
   useEffect(() => {
     const storedToken = localStorage.getItem('token') || '';
     setToken(storedToken);
+    if (location.pathname === '/') {
+      console.log("Works");
+      setShowBriefInfo(true);
+    } else {
+      console.log("Else Works");
+      setShowBriefInfo(false);
+    }
     if (storedToken) {
       localStorage.setItem('token', storedToken);
       const decodedToken = parseJwt(storedToken);
@@ -48,7 +63,7 @@ function App() {
         setTokenExpiration(expirationTime);
       }
     }
-  }, []);
+  }, [location.pathname]);
 
   function parseJwt(token) {
     var base64Url = token.split('.')[1];
@@ -60,15 +75,10 @@ function App() {
     return JSON.parse(jsonPayload);
   }
 
-  // console.log(parseJwt(token))
-  const [showBriefInfo, setShowBriefInfo] = useState(true);
-
-  const handleBlockClick = () => {
-    setShowBriefInfo(false);
-  };
 
   return (
-    <Router>
+  
+      <div>
       {token && tokenExpiration && tokenExpiration > Date.now() ? (
         // token
         <>
@@ -95,12 +105,12 @@ function App() {
                         <Route path='/adminzachetka' component={AdminRecordBook} />
                         <Route path='/adminplan' component={AdminPlanScreen} />
                       </div>
-                    </div>
-                    {/* {showBriefInfo && (
+                      {showBriefInfo && (
                       <div className='brief-info'>
                       <FirstInfoBlock></FirstInfoBlock>
                       </div>
-                    )} */}
+                    )}
+                    </div>
                   </main>
                   <Footer />
                 </>
@@ -144,6 +154,11 @@ function App() {
                         <Route path='/teacherzachetka' component={TeacherRecordBook} />
                         <Route path='/teacherplan' component={TeacherPlanScreen} />
                       </div>
+                      {showBriefInfo && (
+                      <div className='brief-info'>
+                      <FirstInfoBlock></FirstInfoBlock>
+                      </div>
+                    )}
                     </div>
                   </main>
                   <Footer />
@@ -166,6 +181,11 @@ function App() {
                         <Route path='/zachetka' component={RecordBookScreen} />
                         <Route path='/plan' component={PlanScreen} />
                       </div>
+                      {showBriefInfo && (
+                      <div className='brief-info'>
+                      <FirstInfoBlock></FirstInfoBlock>
+                      </div>
+                    )}
                     </div>
                   </main>
                   <Footer />
@@ -192,7 +212,8 @@ function App() {
           </Route>
         </main>
       )}
-    </Router>
+      </div>
+    
   );
 }
 export default App;
