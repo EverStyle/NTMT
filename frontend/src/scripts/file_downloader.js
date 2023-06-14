@@ -9,13 +9,10 @@ function downloadFiles(data, filename, type) {
         window.navigator.msSaveBlob(blob, filename);
         return;
     }
-
     const urlData = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-
     link.href = urlData;
     link.setAttribute('download', filename);
-
     // Safari thinks _blank anchor are pop ups. We only want to set _blank
     // target if the browser does not support the HTML5 download attribute.
     // This allows you to download files in desktop safari if pop up blocking
@@ -23,11 +20,9 @@ function downloadFiles(data, filename, type) {
     if (typeof link.download === 'undefined') {
         link.setAttribute('target', '_blank');
     }
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
     setTimeout(() => {
         // For Firefox it is necessary to delay revoking the ObjectURL
         window.URL.revokeObjectURL(urlData);
@@ -39,7 +34,6 @@ function downloadFilesBase64(data, filename) {
     const link = document.createElement('a');
     link.href = `data:application/pdf;base64,${ data }`;
     link.setAttribute('download', filename);
-
     // Safari thinks _blank anchor are pop ups. We only want to set _blank
     // target if the browser does not support the HTML5 download attribute.
     // This allows you to download files in desktop safari if pop up blocking
@@ -47,17 +41,12 @@ function downloadFilesBase64(data, filename) {
     if (typeof link.download === 'undefined') {
         link.setAttribute('target', '_blank');
     }
-
     console.log('2', data)
-
     document.body.appendChild(link);
     link.click();
     // document.body.removeChild(link);
-
     console.log('3', data)
 }
-
-
 export default {
     downloadFiles:       downloadFiles,
     downloadFilesBase64: downloadFilesBase64,

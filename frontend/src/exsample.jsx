@@ -7,31 +7,63 @@
 // и еще сделай везде квадратный полупрозрачный стиль блоков как в селекторах
 // так как антон убрал админов и преподов из групп сделай их в 2 отдельных селектора
 
-const [showBriefInfo, setShowBriefInfo] = useState(true);
+function downloadFiles(data, filename, type) {
+    const blob = new Blob([ data ], { type: type || 'application/octet-stream' });
+    if (typeof window.navigator.msSaveBlob !== 'undefined') {
+        window.navigator.msSaveBlob(blob, filename);
+        return;
+    }
+    const urlData = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = urlData;
+    link.setAttribute('download', filename);
+    if (typeof link.download === 'undefined') {
+        link.setAttribute('target', '_blank');
+    }
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => {
+        window.URL.revokeObjectURL(urlData);
+    }, 100);
+}
 
-const handleBlockClick = () => {
-  setShowBriefInfo(false);
+function downloadFilesBase64(data, filename) {
+    console.log('1', data)
+    const link = document.createElement('a');
+    link.href = `data:application/pdf;base64,${ data }`;
+    link.setAttribute('download', filename);
+    if (typeof link.download === 'undefined') {
+        link.setAttribute('target', '_blank');
+    }
+    console.log('2', data)
+    document.body.appendChild(link);
+    link.click();
+    console.log('3', data)
+}
+export default {
+    downloadFiles:       downloadFiles,
+    downloadFilesBase64: downloadFilesBase64,
 };
 
-<main className='container'>
-    <Headers
-        setToken={setToken}
-        user={user}
-        setUser={setUser}
-    />
-    <div className='content'>
-        <PersonalArea role={json43.roleId} onClick={handleBlockClick} />
-        <div className='routers'>
-            <Route path='/adminyvedomlenia' component={AdminNotification} />
-            <Route path='/adminras' component={AdminSchedule} />
-            <Route path='/adminfail' component={AdminFileScreen} />
-            <Route path='/adminzachetka' component={AdminRecordBook} />
-            <Route path='/adminplan' component={AdminPlanScreen} />
-        </div>
-    </div>
-    {showBriefInfo && (
-        <div className='brief-info'>
-            <FirstInfoBlock></FirstInfoBlock>
-        </div>
-    )}
-</main>
+
+import file_downloader from '../../scripts/file_downloader';
+async function downloadFile(index) {
+    const request = {
+      fileId: files[index].id,
+    };
+    console.log(files[index])
+    try {
+      const response = await apiFiles.download(request);
+      const data = response.data;
+      const mime = response.headers['content-type'];
+      const filename = files[index].fileName;
+      const type = files[index].filePath.split('.').pop();
+      file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
+      toast.success("Файл скачан");
+    } catch (error) {
+      console.error(error);
+      console.error('ERROR DOWNLOAD FILE');
+      toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+    }
+  }

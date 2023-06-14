@@ -50,6 +50,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       toast.error('Произошла ошибка при удалении файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
+  console.log('Files:', files);
   async function downloadFile(index) {
     const request = {
       fileId: files[index].id,
@@ -59,8 +60,10 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       const response = await apiFiles.download(request);
       const data = response.data;
       const mime = response.headers['content-type'];
-      const filename = files[index].fileName;
+      const filename = files[index].fileMeta.fileName;
       const type = files[index].filePath.split('.').pop();
+      console.log('Filename:', files[index].fileName);
+      console.log('Type:', type);
       file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
       toast.success("Файл скачан");
     } catch (error) {
@@ -96,16 +99,16 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                 <li key={file.id}>
                   <div className='file_block'>
                     <div className='file_two_components'>
-                    <div className='file_block_components'>
-                      <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
-                    </div>
-                    <div className='file_block_components'>
-                    {file.id && (
-                        <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
-                      )}
-                      <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
-                      
-                    </div>
+                      <div className='file_block_components'>
+                        <img className='img_file' src={filelogo} style={{ width: '30px', height: '30px' }} />
+                      </div>
+                      <div className='file_block_components'>
+                        {file.id && (
+                          <button className='button_upload' onClick={() => downloadFile(index)}>Скачать</button>
+                        )}
+                        <button className='button_delete_file' onClick={() => deleteFiles(file.id)}>Удалить</button>
+
+                      </div>
                     </div>
 
                     {/* <div className='file_block_components'>Номер = {file.id}</div> */}
@@ -113,12 +116,12 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
                       {file.fileMeta.fileName}
                     </div>
 
-                    
+
                   </div>
                 </li>
               ))}
             </ul>
-            
+
           )}
 
           {folders?.map(folder => (
@@ -133,7 +136,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
               depth={depth}
             />
           ))}
-          
+
         </>
       )}
     </div>
@@ -163,7 +166,7 @@ function StudentRow() {
   }
   const [newFolderNameLesson, setNewFolderNameLesson] = useState('')
 
-// ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
+  // ВАЖНО!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
   // async function fetchFiles() {
   //   const request = {
   //     folderId: 1
@@ -178,26 +181,26 @@ function StudentRow() {
   //     toast.error('Произошла ошибка при получении файлов. Попробуйте позже или обратитесь в техподдержку');
   //   }
   // }
-  
+
   // useEffect(() => {
   //   fetchFiles();
   // }, []);
-  
+
   // useEffect(() => {
   //   console.log(files);
   // }, [files]);
-// ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
+  // ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
   useEffect(async () => {
     const request = {
-      
+
     };
     try {
 
       const response = await apiFiles.getMyFolder(request);
       setFiles(response.data.message);
       // console.log(response.data.message)
-      
+
     } catch (error) {
       console.error(error);
       console.error('ERROR GET FILES');
@@ -212,18 +215,18 @@ function StudentRow() {
     const isForbidden = forbiddenCharactersRegex.test(folderName);
     const isTooLong = folderName.length > 30;
     const isEmpty = folderName.trim().length === 0;
-  
+
     if (isForbidden) {
       toast.error('Содержит недопустимые символы');
       throw new Error('Folder name contains forbidden characters');
-      
+
     }
-  
+
     if (isTooLong) {
       toast.error('Название слишком длинное');
       throw new Error('Folder name is too long');
     }
-  
+
     if (isEmpty) {
       toast.error('Пустые названия недопустимы');
       throw new Error('Folder name cannot be empty');
@@ -237,7 +240,7 @@ function StudentRow() {
       folderId: nextFolderid
     };
     const request2 = {
-      
+
     };
 
     try {
@@ -259,7 +262,7 @@ function StudentRow() {
       folderId: newfolderId
     };
     const request2 = {
-      
+
     };
 
     const confirmed = window.confirm('Вы точно хотите удалить выбранную папку ? Все находящиеся там файлы будут удалены !!');
@@ -286,16 +289,15 @@ function StudentRow() {
       'txt': 1,
       'xlsx': 2,
       'docx': 3,
+      'doc': 4,
     };
     const request2 = {
-      
     };
     const request = new FormData();
     request.append('folderId', requestFolder)
     request.append('files', file[0])
     request.append('fileType', fileTypes[file[0].name.split('.').pop()])
     try {
-
       const response = await apiFiles.upload(request);
       const response2 = await apiFiles.getMyFolder(request2);
       setFiles(response2.data.message);
@@ -326,7 +328,7 @@ function StudentRow() {
               <input type="text" placeholder='Введите название папки' className='create_input' onChange={(e) => setNewFolderNameLesson(e.target.value)} />
             </div>
             <div className='create_folder_block_component'>
-            <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
+              <button type='button' className='button_create' onClick={() => createFolderLessons(newFolderNameLesson, currentFolderId)}>Создать</button>
               <button className='button_delete' onClick={(event) => {
                 if (event.detail === 1) {
                   deleteFolderLessons(currentFolderId);
@@ -377,9 +379,9 @@ function MyFileBlock() {
 
   return (
     <div className='ffff'>
-<StudentRow></StudentRow>
+      <StudentRow></StudentRow>
     </div>
-    
+
   )
 }
 export default MyFileBlock;

@@ -61,7 +61,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
       const response = await apiFiles.download(request);
       const data = response.data;
       const mime = response.headers['content-type'];
-      const filename = files[index].fileName;
+      const filename = files[index].fileMeta.fileName;
       const type = files[index].filePath.split('.').pop();
       file_downloader.downloadFiles(data, `${filename}.${type}`.trim(), mime);
       toast.success("Файл скачан");
@@ -302,6 +302,7 @@ function LessonRow() {
       'txt': 1,
       'xlsx': 2,
       'docx': 3,
+      'doc': 4,
     };
     const request2 = {
       folderId: 1
