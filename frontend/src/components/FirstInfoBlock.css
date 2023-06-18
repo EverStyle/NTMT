@@ -3,3 +3,11 @@
     margin: 0 auto;
     padding-top: 20px;
 }
+
+@media (max-width: 600px) {
+    .small_text_block{
+        max-width: 300px;
+        margin: 0 auto;
+        padding-top: 20px;
+    }
+  }

@@ -1,5 +1,3 @@
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import AdminNotification from '../screens/AdminNotification';
 import Slider from './Slider';
 import { CSSTransition } from 'react-transition-group';
 import React, { useEffect, useState } from "react";
@@ -15,6 +13,22 @@ function FirstInfoBlock() {
     fetchData();
   }, []);
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+      const handleResize = () => {
+          setIsMobile(window.innerWidth <= 600);
+      };
+
+      handleResize(); // Check on initial render
+
+      window.addEventListener('resize', handleResize);
+
+      return () => {
+          window.removeEventListener('resize', handleResize);
+      };
+  }, []);
+
   return (
     <CSSTransition
       in={subblockMount}
@@ -24,40 +38,17 @@ function FirstInfoBlock() {
       unmountOnExit
     >
       <div >
-        <div className="title">
+
+<div>
+<div className="title">
           Новости техникума
         </div>
-        {/* <div className='personal_block_container'>
-        <div className='personal_block' >
-          Уведомления
-        </div>
-        <div className='personal_block'>
-          Расписание
-        </div>
-        <div className='personal_block'>
-          Файлы
-        </div>
-        <div className='personal_block'>
-          Зачетная книжка
-        </div>
-        <div className='personal_block'>
-          Учебный план
-        </div>
-      </div> */}
         <Slider></Slider>
         <div>
           <div className="title">
             О техникуме
           </div>
           <div className="img_block">
-
-
-
-
-
-
-
-
 
           </div>
           <div className="small_text_block">
@@ -99,9 +90,26 @@ function FirstInfoBlock() {
             переходящее Красное знамя Народного комиссариата танковой промышленности СССР.
           </div>
         </div>
+</div>
+
+
+        
       </div>
     </CSSTransition>
   );
 }
 
 export default FirstInfoBlock;
+
+
+// {isMobile ? (
+//   // JSX for small screens (width <= 600)
+//   <div >
+      
+//   </div>
+// ) : (
+//   // JSX for large screens (width > 600)
+//   <div >
+
+// </div> 
+// )}

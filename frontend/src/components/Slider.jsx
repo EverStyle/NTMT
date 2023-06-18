@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import './Slider.css';
 import image1 from '../img/ntmt.jpg';
 import image2 from '../img/web.jpg';
@@ -32,38 +32,98 @@ const Slider = () => {
     const prevSlide = () => {
         setCurrentSlide((prevSlide) => (prevSlide === 0 ? slides.length - 1 : prevSlide - 1));
     };
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth <= 600);
+        };
+
+        handleResize(); // Check on initial render
+
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
 
     return (
-        <div className="slider">
-            <div
-                className="slides-container"
-                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-            >
-                {slides.map((slide, index) => (
-                    <div
-                        className={`slide ${index === currentSlide ? 'active' : ''}`}
-                        key={slide.id}
-                    >
-                        <div className='slider_subblock'>
-                            <div>
-                                <img src={slide.image} alt={slide.text} />
+        <div>
+            {isMobile ? (
+                // JSX for small screens (width <= 600)
+                <div >
+                    <div >
+                        <div className="slider">
+                            <div
+                                className="slides-container"
+                                style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+                            >
+                                {slides.map((slide, index) => (
+                                    <div
+                                        className={`slide ${index === currentSlide ? 'active' : ''}`}
+                                        key={slide.id}
+                                    >
+                                        <div className='slider_subblock'>
+                                            <div className='image-container'>
+                                                <img src={slide.image} alt={slide.text} />
+                                            </div>
+                                            <div>
+                                                <p>{slide.text}</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                ))}
                             </div>
-                            <div>
-                                <p>{slide.text}</p>
+                            <div className="navigation">
+                                <button onClick={prevSlide}>Следующий</button>
+                                <button onClick={nextSlide}>Предыдущий</button>
                             </div>
                         </div>
-
-                        {/* <img src={slide.image} alt={slide.text} />
-            <p>{slide.text}</p> */}
                     </div>
-                ))}
-            </div>
-            <div className="navigation">
-                <button onClick={prevSlide}>Следующий</button>
-                <button onClick={nextSlide}>Предыдущий</button>
-            </div>
+                </div>
+            ) : (
+                // JSX for large screens (width > 600)
+                <div >
+                    <div className="slider">
+                        <div
+                            className="slides-container"
+                            style={{ transform: `translateX(-${currentSlide * 105}%)` }}
+                        >
+                            {slides.map((slide, index) => (
+                                <div
+                                    className={`slide ${index === currentSlide ? 'active' : ''}`}
+                                    key={slide.id}
+                                >
+                                    <div className='slider_subblock'>
+                                        <div>
+                                            <img src={slide.image} alt={slide.text} />
+                                        </div>
+                                        <div>
+                                            <p>{slide.text}</p>
+                                        </div>
+                                    </div>
+
+                                    {/* <img src={slide.image} alt={slide.text} />
+            <p>{slide.text}</p> */}
+                                </div>
+                            ))}
+                        </div>
+                        <div className="navigation">
+                            <button onClick={prevSlide}>Следующий</button>
+                            <button onClick={nextSlide}>Предыдущий</button>
+                        </div>
+                    </div>
+                </div>
+            )
+            }
         </div>
+
+
+
     );
 };
 
 export default Slider;
+

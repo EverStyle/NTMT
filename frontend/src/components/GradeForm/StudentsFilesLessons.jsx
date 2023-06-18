@@ -162,21 +162,22 @@ function LessonRow() {
   // }, [files]);
   // ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 
-  useEffect(async () => {
-    const request = {
-      folderId: 1
+  useEffect(() => {
+    const fetchData = async () => {
+      const request = {
+        folderId: 1
+      };
+      try {
+        const response = await apiFiles.getList(request);
+        setFiles(response.data.message);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET FILES');
+        toast.error('Произошла ошибка при получении информации о файловой системе. Попробуйте позже или обратитесь в техподдержку');
+      }
     };
-    try {
-
-      const response = await apiFiles.getList(request);
-      setFiles(response.data.message);
-
-
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET FILES');
-      toast.error('Произошла ошибка при получении информации о файловой системе. Попробуйте позже или обратитесь в техподдержку');
-    }
+  
+    fetchData();
   }, []);
 
 

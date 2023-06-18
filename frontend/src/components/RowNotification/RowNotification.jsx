@@ -11,35 +11,38 @@ function RowNotification({ notification, onDeleteNotification }) {
   const [admins, setAdmins] = useState([]);
   const [students, setStudents] = useState([]);
 
-  useEffect(async () => {
-    try {
-      const request = {
-        roleId: 3
-      };
-      const request2 = {
-        roleId: 1
-      };
-      const request3 = {
-        roleId: 4
-      };
-      const response = await apiSubject.getuser(request3);
-      setStudents(response.data.message);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const request = {
+          roleId: 3
+        };
+        const request2 = {
+          roleId: 1
+        };
+        const request3 = {
+          roleId: 4
+        };
+        const response = await apiSubject.getuser(request);
+        setStudents(response.data.message);
+  
+        const response3 = await apiSubject.getuser(request2);
+        setTeachers(response3.data.message);
+  
+        const response4 = await apiSubject.getuser(request3);
+        setAdmins(response4.data.message);
+  
+        setTimeout(() => {
+          showSubblockMount(true);
+        }, 50);
+      } catch (error) {
+        console.error(error);
+        console.error('ERROR GET NOTIFICATIONS');
+        toast.error('Произошла ошибка при получении уведомлений. Попробуйте позже или обратитесь в техподдержку');
+      }
+    };
 
-      const response3 = await apiSubject.getuser(request);
-      setTeachers(response3.data.message);
-
-      const response4 = await apiSubject.getuser(request2);
-      setAdmins(response4.data.message);
-
-      setTimeout(() => {
-        showSubblockMount(true);
-      }, 50)
-    } catch (error) {
-      console.error(error);
-      console.error('ERROR GET NOTIFICATIONS');
-      toast.error('Произошла при информации о уведомлений. Попробуйте позже или обратитесь в техподдержку');
-    }
-
+    fetchData();
   }, []);
 
   console.log(students)
