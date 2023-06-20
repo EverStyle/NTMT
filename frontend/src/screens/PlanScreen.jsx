@@ -29,16 +29,16 @@ function PlanScreen() {
           showSubblockMount(true);
         }, 50);
         const response = await apiAccount.info();
-        console.log(response.data.message);
+         ;
         setUserGroupInfo(response.data.message);
         const response2 = await apiSchedule.groups();
         const matchingGroupId = findMatchingGroupId(response.data.message, response2.data.message);
-        console.log(matchingGroupId);
+         ;
         const request2 = {
           groupId: matchingGroupId
         };
         const response3 = await apiSubject.getGroupsSubject(request2);
-        console.log(response3.data.message);
+         ;
         setSubject(response3.data.message);
       } catch (error) {
         console.error(error);

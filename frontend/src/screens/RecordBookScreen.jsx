@@ -53,7 +53,7 @@ function RecordBookScreen() {
 
 
 
-    console.log(userRecord)
+     
 
     function getCurrentYear() {
         return new Date().getFullYear();
@@ -67,7 +67,7 @@ function RecordBookScreen() {
         return new Date().getFullYear() + 1;
     }
 
-    console.log(userGroupInfo)
+     
 
 
     const dateStr = '2023-03-05T05:00:00.000Z';
@@ -78,7 +78,7 @@ function RecordBookScreen() {
         year: 'numeric',
     });
 
-    console.log(formattedDate); // Output: 03.05.2023
+     ; // Output: 03.05.2023
 
     const [isMobile, setIsMobile] = useState(false);
 
@@ -225,7 +225,7 @@ function RecordBookScreen() {
                 <input type="date" onChange={(e) => {
                     const selectedDate = new Date(e.target.value);
                     const formattedDate = selectedDate.toLocaleDateString('ru-RU');
-                    { console.log(formattedDate) }
+                    {   }
 
                     setNewDate(formattedDate);
                 }} />

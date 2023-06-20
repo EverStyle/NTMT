@@ -24,8 +24,8 @@ function TeacherScheduleTable() {
 
   const handleChange = (selectedOption) => {
     const selectedGroup = selectedOption.value;
-    console.log("WORK");
-    console.log(selectedGroup);
+     
+     
 
     if (selectedGroup === "retShedule") {
       setSwitchSchedule(false);
@@ -55,14 +55,14 @@ function TeacherScheduleTable() {
           date: formattedDate,
           group: selectedGroup
         };
-        console.log("request", startDate)
+         
         const response = await apiSchedule.get(request);
         const response2 = await apiSchedule.groups(request2);
         const response3 = await apiSchedule.get(request3);
         setLessons(response.data.message);
         setallGroups(response2.data.message);
         setsertainGroups(response3.data.message)
-        // console.log(response3.data.message)
+        //  
       } catch (error) {
         console.error(error);
         console.error('ERROR GET LESSONS');
@@ -139,7 +139,11 @@ function TeacherScheduleTable() {
                 <div className="certain_schedule">
                   {typeof sertainGroups === 'object' ? (
                     <ul className="custom-ul">
+                      <div className="group_number_mobile">
+                          <strong>Выбранная группа / {sertainGroups.code}</strong>
+                        </div>
                       <div className="all_certain_schedule_block">
+                      
                         <div className="all_certain_schedule_subblock">
                           {sertainGroups?.schedule &&
                             Object.entries(sertainGroups.schedule).map(

@@ -48,8 +48,8 @@ function Login({ setToken, setUser }) {
                 };
                 const response = await $api.login(request);
 
-                console.log(response.status)
-                console.log(response.data.statusCode)
+                 
+                 
 
                 // Крч бред какойто КОДЕ Выводит Undefined, статус 200 , все должно работать !!!!!!!!!!!!!!!!!!!!
                 // if (response.statusCode === 200) { !!!!!!!ПРОВЕРИТЬ НЕ РАБОТАЕТ НА АДМИНКЕ!!!!!!!!!!!!!!

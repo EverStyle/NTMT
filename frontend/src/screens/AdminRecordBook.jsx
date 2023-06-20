@@ -111,7 +111,7 @@ function AdminRecordBook() {
         };
         const request2 = { userId: userselect, };
         try {
-            console.log(request)
+             
             const response = await apiRecordBook.createRecord(request);
             toast.success("Данные успешно добавленны");
 
@@ -138,7 +138,7 @@ function AdminRecordBook() {
             userId: userselect
         };
         try {
-            console.log(request)
+             
             const response = await apiRecordBook.updateRecord(request);
             //   handleEditClickExit(subjId);
 
@@ -158,7 +158,7 @@ function AdminRecordBook() {
             userId: studId
         };
         try {
-            console.log(request)
+             
             const response6 = await apiRecordBook.get(request);
             setUserRecord(response6.data.message);
         } catch (error) {
@@ -216,9 +216,9 @@ function AdminRecordBook() {
     const handleGroupChange = (e) => {
         const groupId = e.value;
         // setNewGroups(groupId);
-        console.log(groupId);
+         ;
         if (groupId === "") {
-            console.log("Stud CLEAR")
+             
             setUserRecord([]);
             setStudents([]); // Clear the students array when the default value is selected
             setNewStudents([]); // Clear the students array when the default value 
@@ -267,7 +267,7 @@ function AdminRecordBook() {
                                 <input className="select_block_record" type="date" onChange={(e) => {
                                     const selectedDate = new Date(e.target.value);
                                     const formattedDate = selectedDate.toLocaleDateString('ru-RU');
-                                    { console.log(formattedDate) }
+                                    {   }
 
                                     setNewDate(formattedDate);
                                 }} />

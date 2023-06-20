@@ -55,7 +55,7 @@ function TeacherNotification() {
     getNotifications();
   }, [page])
 
-  console.log(counter)
+   
 
   async function createNotifiaction(newname, newtext, seluser) {
     const invalidCharsRegex = /[^A-Za-zА-Яа-я0-9\s!?.(),[\]<>{}:;"'@#$%^&*|\\\/~`+=_-]/;
@@ -76,7 +76,7 @@ function TeacherNotification() {
       text: newtext
     };
     try {
-      console.log(request)
+       
       const response = await apiMessages.newNotf(request);
       const response2 = await apiMessages.get(page);
       setNotifications([...response2.data.message]);
@@ -119,7 +119,7 @@ function TeacherNotification() {
   const fetchStudents = async (groupId) => {
     try {
       const response = await apiSchedule.certainGroups(groupId);
-      console.log(response.data.message)
+       
       setStudents(response.data.message);
     } catch (error) {
       console.error(error);
@@ -142,14 +142,14 @@ function TeacherNotification() {
 
 
   const handleUserSelection = (selectedOptions) => {
-    console.log(selectedOptions)
+     
     const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
     if (containsSelectAll) {
-      console.log('Select All option selected');
+       ;
       // Perform your logic for selecting all students
       setSelectedUserIds(students.map((student) => student.id));
     } else {
-      console.log('Individual student(s) selected');
+       ;
       // Perform your logic for handling individual student selection
       const selectedIds = selectedOptions.map((option) => option.value);
       setSelectedUserIds(selectedIds);
@@ -160,28 +160,28 @@ function TeacherNotification() {
   const [selectedUserIds3, setSelectedUserIds3] = useState([]);
 
   const handleUserSelection2 = (selectedOptions) => {
-    console.log(selectedOptions)
+     
     const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
     if (containsSelectAll) {
-      console.log('Select All option selected');
+       ;
       // Perform your logic for selecting all students
       setSelectedUserIds2(teachers.map((teacher) => teacher.id));
     } else {
-      console.log('Individual student(s) selected');
+       ;
       // Perform your logic for handling individual student selection
       const selectedIds = selectedOptions.map((option) => option.value);
       setSelectedUserIds2(selectedIds);
     }
   };
   const handleUserSelection3 = (selectedOptions) => {
-    console.log(selectedOptions)
+     
     const containsSelectAll = selectedOptions.some((option) => option.value === 'all');
     if (containsSelectAll) {
-      console.log('Select All option selected');
+       ;
       // Perform your logic for selecting all students
       setSelectedUserIds3(admins.map((admin) => admin.id));
     } else {
-      console.log('Individual student(s) selected');
+       ;
       // Perform your logic for handling individual student selection
       const selectedIds = selectedOptions.map((option) => option.value);
       setSelectedUserIds3(selectedIds);
@@ -219,7 +219,7 @@ function TeacherNotification() {
     })),
   ];
 
-  console.log(notifications)
+   
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(counter / 5);

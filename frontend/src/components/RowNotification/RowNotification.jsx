@@ -45,9 +45,9 @@ function RowNotification({ notification, onDeleteNotification }) {
     fetchData();
   }, []);
 
-  console.log(students)
-  console.log(teachers)
-  console.log(admins)
+   
+   
+   
 
   const getAuthorName = (authorId) => {
     const allUsers = [...students, ...teachers, ...admins];
@@ -61,7 +61,7 @@ function RowNotification({ notification, onDeleteNotification }) {
       onDeleteNotification(notification.id);
     }
   }
-  console.log(notification)
+   
 
 
   return (

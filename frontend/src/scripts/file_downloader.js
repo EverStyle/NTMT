@@ -30,7 +30,7 @@ function downloadFiles(data, filename, type) {
 }
 
 function downloadFilesBase64(data, filename) {
-    console.log('1', data)
+     
     const link = document.createElement('a');
     link.href = `data:application/pdf;base64,${ data }`;
     link.setAttribute('download', filename);
@@ -41,11 +41,11 @@ function downloadFilesBase64(data, filename) {
     if (typeof link.download === 'undefined') {
         link.setAttribute('target', '_blank');
     }
-    console.log('2', data)
+     
     document.body.appendChild(link);
     link.click();
     // document.body.removeChild(link);
-    console.log('3', data)
+     
 }
 export default {
     downloadFiles:       downloadFiles,

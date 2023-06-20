@@ -80,7 +80,7 @@ function AdminPlanScreen() {
       examType: exam,
       hours: newhours
     };
-    console.log(request);
+     ;
     const request2 = {};
     try {
       const response = await apiSubject.subjCreate(request);
@@ -106,7 +106,7 @@ function AdminPlanScreen() {
     };
     const request2 = {};
     try {
-      console.log(request)
+       
       const response = await apiSubject.updateSubj(request);
       handleEditClickExit(subjId);
       const response2 = await apiSubject.get(request2);
@@ -156,7 +156,7 @@ function AdminPlanScreen() {
       const response = await apiSubject.addToGroup(request);
       toast.success("Data updated successfully");
       const response2 = await apiSubject.getGroupsSubject(request2);
-      console.log(response2);
+       ;
       setSubject(response2.data.message);
     } catch (error) {
       console.error(error);
@@ -180,7 +180,7 @@ function AdminPlanScreen() {
       toast.success("Data updated successfully");
 
       const response2 = await apiSubject.getGroupsSubject(request2);
-      console.log(response2);
+       ;
       setSubject(response2.data.message);
 
     } catch (error) {
@@ -193,7 +193,7 @@ function AdminPlanScreen() {
 
   const handleGroupChange = async (e) => {
     const selectedGroupId = e.value;
-    console.log(selectedGroupId)
+     
     if (selectedGroupId === '') {
       setNewGroupCode(''); // Set empty group code
     } else {
@@ -209,9 +209,9 @@ function AdminPlanScreen() {
       const request = {
         groupId: groupId
       };
-      console.log(request);
+       ;
       const response = await apiSubject.getGroupsSubject(request);
-      console.log(response);
+       ;
       setSubject(response.data.message);
 
     } catch (error) {

@@ -33,7 +33,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
     const request = {
       fileId: files[index].id,
     };
-    console.log(files[index])
+     
     try {
       const response = await apiFiles.download(request);
       const data = response.data;
@@ -71,7 +71,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
 
           {files.length > 0 && (
 
-            <ul>
+            <ul className='files_supblock'>
               {files.map((file, index) => (
                 <li key={file.id}>
                   <div className='file_block'>
@@ -145,7 +145,7 @@ function LessonRow() {
   //   try {
   //     const response = await apiFiles.getList(request);
   //     setFiles(response.data.message);
-  //     console.log(response.data.message);
+  //      ;
   //   } catch (error) {
   //     console.error(error);
   //     console.error('ERROR GET FILES');
@@ -158,7 +158,7 @@ function LessonRow() {
   // }, []);
 
   // useEffect(() => {
-  //   console.log(files);
+  //    ;
   // }, [files]);
   // ВАЖНО!!!! НЕ УДАЛЯТЬ ФИКСИТ ПРОБЛЕМУ С ПОДЗАГРУЗКОЙ
 

@@ -91,7 +91,7 @@ function TeacherRecordBook() {
             userId: studId
         };
         try {
-            console.log(request)
+             
             const response6 = await apiRecordBook.get(request);
             setUserRecord(response6.data.message);
 
@@ -120,7 +120,7 @@ function TeacherRecordBook() {
     const fetchStudents = async (groupId) => {
         try {
             const response = await apiSchedule.certainGroups(groupId);
-            console.log(response.data.message)
+             
             setStudents(response.data.message);
         } catch (error) {
             console.error(error);

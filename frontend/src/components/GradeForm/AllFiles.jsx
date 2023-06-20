@@ -33,7 +33,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
         const request = {
             fileId: files[index].id,
         };
-        console.log(files[index])
+         
         try {
             const response = await apiFiles.download(request);
             const data = response.data;
@@ -71,7 +71,7 @@ function Folder({ id, name, files, folders, path, onFolderSelect, onFolderName, 
 
                     {files.length > 0 && (
 
-                        <ul>
+                        <ul className='files_supblock'>
                             {files?.map((file, index) => (
                                 <li key={file.id}>
                                     <div className='file_block'>
@@ -176,7 +176,7 @@ function AllRow() {
     const fetchStudents = async (groupId) => {
         try {
             const response = await apiSchedule.certainGroups(groupId);
-            console.log(response.data.message)
+             
             setStudents(response.data.message);
         } catch (error) {
             console.error(error);
@@ -217,11 +217,11 @@ function AllRow() {
                 group: ""
             };
             const response = await apiFiles.getAllList(request);
-            console.log(response)
+             
             setFiles(response.data.message);
 
             const filteredFolders = response.data.message.filter((folder) => folder.userId === userId);
-            console.log(filteredFolders)
+             
             setFiles(filteredFolders);
         }
     };
@@ -231,7 +231,7 @@ function AllRow() {
         setFiles(newData);
     };
 
-    console.log(files)
+     
     return (
         <>
             <div>Название текущей папки: {currentFolderName}</div>

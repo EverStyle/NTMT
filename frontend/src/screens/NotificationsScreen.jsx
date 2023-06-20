@@ -35,7 +35,7 @@ function  NotificationsScreen() {
     getNotifications();
   }, [page])
 
-  console.log(notifications)
+   
 
   const handleDeleteNotification = async (notificationId) => {
     try {
@@ -62,7 +62,7 @@ function  NotificationsScreen() {
   //   }
   // };
 
-  console.log(notifications)
+   
 
   // Calculate the total number of pages
   const totalPages = Math.ceil(counter / 5);

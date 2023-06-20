@@ -94,6 +94,15 @@
   /* Hide the first vertical line */
 }
 
+.all_blocks_schedule{
+
+}
+
+@media (max-width: 600px) {
+  .all_blocks_schedule{
+margin-bottom: 20px;
+  }
+}
 @media (max-width: 600px) {
   .card_container {
     min-width: fit-content;

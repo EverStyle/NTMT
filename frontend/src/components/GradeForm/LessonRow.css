@@ -239,10 +239,16 @@
   }
 }
 @media (max-width: 600px) {
+  .files_supblock {
+    padding-left: 10px;
+  }
+}
+
+@media (max-width: 600px) {
   .folder_row {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    padding-left: 20px;
+    /* padding-left: 20px; */
   }
 }

@@ -201,6 +201,9 @@
 transition: opacity 1.0s ease;
 }
 
+.group_number_mobile{
+
+}
 
 @media (max-width: 600px) {
   .date_block {
@@ -237,14 +240,14 @@ transition: opacity 1.0s ease;
 @media (max-width: 600px) {
   .certain_schedule {
     min-width: fit-content;
-    width: 30rem;
+    /* width: 30rem; */
     scroll-snap-type: x mandatory;
     scroll-snap-align: start; /* Scroll snap alignment at the start */
   }
 }
 @media (max-width: 600px) {
   .all_certain_schedule_subblock {
-    flex-basis: 80%;
+    flex-basis: 100%;
     border: 2px solid black;
     border-radius: 20px;
   }
@@ -256,9 +259,10 @@ transition: opacity 1.0s ease;
   place-items: center;
   flex-basis: 20%;
   font-size: x-large;
-  border: 2px solid black;
-  border-radius: 20px 00px 00px 20px;
+  border: 0px solid black;
+  border-bottom: 2px solid black;
+  border-radius: 0px ;
   padding-left: 1rem;
-  padding-top: 1rem;
+  padding-top: 10px;
   }
 }

@@ -62,7 +62,7 @@ function TeacherPlanScreen() {
 
   const handleGroupChange = async (e) => {
     const selectedGroupId = e.value;
-    console.log(selectedGroupId)
+     
     if (selectedGroupId === 'plan') {
       setNewGroupCode(''); // Set empty group code
     } else {
@@ -73,9 +73,9 @@ function TeacherPlanScreen() {
         const request = {
           groupId: groupId
         };
-        console.log(request);
+         ;
         const response = await apiSubject.getGroupsSubject(request);
-        console.log(response);
+         ;
         setSubject(response.data.message);
 
       } catch (error) {
@@ -97,10 +97,10 @@ function TeacherPlanScreen() {
   const handleBlockClick = async (blockId) => {
 
     if (blockId.value === selectedBlockId) {
-      console.log("Do nothing")
+       
       return; // Do nothing if the block is already selected
     }
-    console.log(blockId.value)
+     
     if (blockId.value === 'plan') {
       setSelectedBlockId(blockId);
       try {
@@ -119,9 +119,9 @@ function TeacherPlanScreen() {
     }
   };
 
-  console.log(subject)
-  // console.log(selectedBlockId.value)
-  // console.log(typeof selectedBlockId.value)
+   
+  //  
+  //  
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -162,7 +162,7 @@ function TeacherPlanScreen() {
             onChange={(selectedOption) => {
               handleBlockClick(selectedOption);
               handleGroupChange(selectedOption);
-              console.log(selectedOption)
+               
             }}
             options={[
               { value: "plan", label: "Все дисциплины" },
@@ -183,7 +183,7 @@ function TeacherPlanScreen() {
             {selectedBlockId.value !== 'plan' ? (
               // Render curriculum for selected group
               <div>
-                {console.log("Small,Selected")}
+                { }
                 {/* Render curriculum for selected group here */}
                 <div>
                   {/* {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>} */}
@@ -225,7 +225,7 @@ function TeacherPlanScreen() {
                 Все дисциплины
                 {/* Render entire curriculum here */}
                 <div>
-                  {console.log("Small,entire")}
+                  { }
                   {/* <div className="plan_heading">
                   <div className="plan_rec">Дисциплина</div>
                   <div className="plan_rec">Количество часов</div>
@@ -267,7 +267,7 @@ function TeacherPlanScreen() {
             {selectedBlockId.value !== 'plan' ? (
               // Render curriculum for selected group
               <div>
-                {console.log("Large,selected")}
+                { }
                 {/* Render curriculum for selected group here */}
                 <div>
                   {/* {newGroupCode && <div>Выбранная группа: {newGroupCode}</div>} */}
@@ -297,7 +297,7 @@ function TeacherPlanScreen() {
             ) : (
               // Render entire curriculum
               <div>
-                {console.log("Large,entire")}
+                { }
                 
                 {/* Render entire curriculum here */}
                 <div>

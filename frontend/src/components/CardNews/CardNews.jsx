@@ -9,7 +9,7 @@ import { Link, useLocation } from 'react-router-dom';
 function CardNews(props) {
   const path = window.location.pathname.substring(1);
   const [activeCard, setActiveCard] = useState(path);
-  console.log(activeCard)
+   
   const location = useLocation();
 
   useEffect(() => {

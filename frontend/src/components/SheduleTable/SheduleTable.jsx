@@ -25,8 +25,8 @@ function SheduleTable() {
 
   const handleChange = (selectedOption) => {
     const selectedGroup = selectedOption.value;
-    console.log("WORK");
-    console.log(selectedGroup);
+     ;
+     ;
 
     if (selectedGroup === "retShedule") {
       setSwitchSchedule(false);
@@ -54,7 +54,7 @@ function SheduleTable() {
         date: formattedDate,
         group: selectedGroup
       };
-      console.log("request", startDate)
+       
       const response = await apiSchedule.get(request);
       const response2 = await apiSchedule.groups(request2);
       const response3 = await apiSchedule.get(request3);
@@ -65,7 +65,7 @@ function SheduleTable() {
       setTimeout(() => {
         showSubblockMount(true);
       }, 50)
-      // console.log(response3.data.message)
+      //  
     } catch (error) {
       console.error(error);
       console.error('ERROR GET LESSONS');
@@ -96,8 +96,8 @@ function SheduleTable() {
       toast.error('Произошла ошибка при загрузке файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
-  console.log(sertainGroups.schedule)
-  console.log(lessons)
+   
+   
   const [subblockMount, showSubblockMount] = useState(false);
   return (
     <div className='shedule-table'>

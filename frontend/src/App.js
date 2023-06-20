@@ -26,10 +26,10 @@ function App() {
   const [token, setToken] = useState('');
   const [tokenExpiration, setTokenExpiration] = useState(null);
   const location = useLocation();
-  // console.log(location);
+  //  ;
   const [showBriefInfo, setShowBriefInfo] = useState(true);
   
-  // console.log(useLocation);
+  //  ;
 
   const handleBlockClick = () => {
     setShowBriefInfo(false);
@@ -44,10 +44,10 @@ function App() {
     const storedToken = localStorage.getItem('token') || '';
     setToken(storedToken);
     if (location.pathname === '/') {
-      console.log("Works");
+       ;
       setShowBriefInfo(true);
     } else {
-      console.log("Else Works");
+       ;
       setShowBriefInfo(false);
     }
     if (storedToken) {
@@ -85,7 +85,7 @@ function App() {
           {(() => {
             let json43 = parseJwt(token);
             //распаристь двт там строка а не число
-            console.log(json43)
+             
             switch (parseInt(json43.roleId)) {
               //админ
               case 1:

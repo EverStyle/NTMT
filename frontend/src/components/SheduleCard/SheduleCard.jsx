@@ -4,10 +4,10 @@ import "./SheduleCard.css";
 
 function SheduleCard(props) {
 
-  // console.log(props)
+  //  
   const arr = Object.values(props.schedule);
-  // console.log(arr)
-  // console.log(Array.isArray(arr))
+  //  
+  //  
 
   const [isMobile, setIsMobile] = useState(false);
 
@@ -24,12 +24,16 @@ function SheduleCard(props) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+console.log(arr)
 
   return (
-    <div>
+    <div className="all_blocks_schedule"> 
       {isMobile ? (
         // JSX for small screens (width <= 600)
         <div className="all_certain_schedule_subblock" >
+          <div className="group_number">
+            {props.code}
+          </div>
           {arr?.map((lesson, index) => (
             <li className={`custom-li ${!lesson.subject && 'no_lessons'}`} key={index}>
               {lesson.subject ? (

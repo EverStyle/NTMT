@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 function Headers({ setToken, setUser, user }) {
 
 
-  console.log(user)
+   
   useEffect(async () => {
       try {
         const response = await apiAccount.info();

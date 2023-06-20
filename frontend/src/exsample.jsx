@@ -2,10 +2,7 @@
 // пометки че нада пофиксить, заебался забывать
 // 
 // 
-// обновление зачетки сделай через 3 грид фрейм
-// короче сделай файлы как в винде без границ белым цветом чтобы при наводе подсвечивались серым и
-// и еще сделай везде квадратный полупрозрачный стиль блоков как в селекторах
-// так как антон убрал админов и преподов из групп сделай их в 2 отдельных селектора
+
 
 function downloadFiles(data, filename, type) {
     const blob = new Blob([ data ], { type: type || 'application/octet-stream' });
@@ -29,17 +26,17 @@ function downloadFiles(data, filename, type) {
 }
 
 function downloadFilesBase64(data, filename) {
-    console.log('1', data)
+     
     const link = document.createElement('a');
     link.href = `data:application/pdf;base64,${ data }`;
     link.setAttribute('download', filename);
     if (typeof link.download === 'undefined') {
         link.setAttribute('target', '_blank');
     }
-    console.log('2', data)
+     
     document.body.appendChild(link);
     link.click();
-    console.log('3', data)
+     
 }
 export default {
     downloadFiles:       downloadFiles,
@@ -52,7 +49,7 @@ async function downloadFile(index) {
     const request = {
       fileId: files[index].id,
     };
-    console.log(files[index])
+     
     try {
       const response = await apiFiles.download(request);
       const data = response.data;
@@ -67,3 +64,24 @@ async function downloadFile(index) {
       toast.error('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
     }
   }
+
+  
+  jest.mock('./apiRecordBook', () => ({
+  get: jest.fn().mockResolvedValue({ data: { message: 'mockedUserRecordData' } }),
+}));
+jest.mock('./toast', () => ({
+  error: jest.fn(),
+}));
+test('uploadStudents should fetch and set user records', async () => {
+  await uploadStudents(123);
+  expect(apiRecordBook.get).toHaveBeenCalledWith({ userId: 123 });
+  expect(setUserRecord).toHaveBeenCalledWith('mockedUserRecordData');
+  expect(toast.error).not.toHaveBeenCalled();
+});
+test('uploadStudents should handle errors', async () => {
+  apiRecordBook.get.mockRejectedValue(new Error('API error'));
+  await uploadStudents(123);
+  expect(console.error).toHaveBeenCalledWith(new Error('API error'));
+  expect(console.error).toHaveBeenCalledWith('ERROR DOWNLOAD FILE');
+  expect(toast.error).toHaveBeenCalledWith('Произошла ошибка при скачивании файла. Попробуйте позже или обратитесь в техподдержку');
+});
