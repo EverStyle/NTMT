@@ -10,7 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function Login({ setToken, setUser }) {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-    const [role, setRole] = useState('2');
+    const [role, setRole] = useState('1');
     const [errors, setErrors] = useState({
         login: false,
         password: false,

@@ -86,7 +86,7 @@ function StudentSchedule() {
     };
   }, []);
 
-  console.log(sertainGroups)
+
 
   return (
     // {isMobile ? (

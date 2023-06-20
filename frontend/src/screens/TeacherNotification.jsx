@@ -61,6 +61,14 @@ function TeacherNotification() {
     const invalidCharsRegex = /[^A-Za-zА-Яа-я0-9\s!?.(),[\]<>{}:;"'@#$%^&*|\\\/~`+=_-]/;
 
     // Check if the newtext contains any invalid character
+    if (newname.trim().length === 0) {
+      toast.error('Название не может быть пустым');
+      throw new Error('Название не может быть пустым');
+    }
+    if (newtext.trim().length === 0) {
+      toast.error('Текст не может быть пустым');
+      throw new Error('Текст не может быть пустым');
+    }
     if (invalidCharsRegex.test(newname)) {
       toast.error('Содержит недопустимые символы');
       throw new Error('Содержит недопустимые символы');
@@ -69,7 +77,10 @@ function TeacherNotification() {
       toast.error('Содержит недопустимые символы');
       throw new Error('Содержит недопустимые символы');
     }
-
+    if (seluser.length === 0) {
+      toast.error('Пользователь не выбран');
+      throw new Error('Пользователь не выбран');
+    }
     const request = {
       userid: seluser,
       title: newname,

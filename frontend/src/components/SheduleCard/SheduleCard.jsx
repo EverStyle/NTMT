@@ -24,7 +24,7 @@ function SheduleCard(props) {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-console.log(arr)
+
 
   return (
     <div className="all_blocks_schedule"> 
