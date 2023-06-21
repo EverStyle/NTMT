@@ -243,11 +243,11 @@
     }
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
     .heading {
         width: 50rem;
     }
-}
+} */
 @media (max-width: 600px) {
     .recordbook_buttons {
         margin-left: 1px;

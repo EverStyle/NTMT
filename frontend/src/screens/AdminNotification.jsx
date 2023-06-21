@@ -220,27 +220,61 @@ function AdminNotification() {
     label: 'Выбрать всех',
   };
 
-  const options = [
-    { ...selectAllOption },
-    ...students.map((user) => ({
-      value: user.id,
-      label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
-    })),
-  ];
-  const options2 = [
+
+  let options = [];
+  if (students.length > 0) {
+    options = [
+      { ...selectAllOption },
+      ...students.map((user) => ({
+        value: user.id,
+        label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+      })),
+    ];
+  }
+
+  let options2 = [];
+if (teachers.length > 0) {
+  options2 = [
     { ...selectAllOption },
     ...teachers.map((user) => ({
       value: user.id,
       label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
     })),
   ];
-  const options3 = [
+}
+
+let options3 = [];
+if (admins.length > 0) {
+  options3 = [
     { ...selectAllOption },
     ...admins.map((user) => ({
       value: user.id,
       label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
     })),
   ];
+}
+
+  // const options = [
+  //   { ...selectAllOption },
+  //   ...students.map((user) => ({
+  //     value: user.id,
+  //     label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+  //   })),
+  // ];
+  // const options2 = [
+  //   { ...selectAllOption },
+  //   ...teachers.map((user) => ({
+  //     value: user.id,
+  //     label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+  //   })),
+  // ];
+  // const options3 = [
+  //   { ...selectAllOption },
+  //   ...admins.map((user) => ({
+  //     value: user.id,
+  //     label: `${user.fio} ${uniqueSelectedUserIds.includes(user.id) ? '(выбран)' : ''}`,
+  //   })),
+  // ];
 
    
 

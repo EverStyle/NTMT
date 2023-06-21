@@ -154,7 +154,7 @@ function AdminPlanScreen() {
     };
     try {
       const response = await apiSubject.addToGroup(request);
-      toast.success("Data updated successfully");
+      toast.success("Присвоение успешно");
       const response2 = await apiSubject.getGroupsSubject(request2);
        ;
       setSubject(response2.data.message);
@@ -177,7 +177,7 @@ function AdminPlanScreen() {
     }
     try {
       const response = await apiSubject.deleteFromGroup(request);
-      toast.success("Data updated successfully");
+      toast.success("Удаление успешно");
 
       const response2 = await apiSubject.getGroupsSubject(request2);
        ;
