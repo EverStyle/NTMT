@@ -16,7 +16,7 @@ function AdminPlanScreen() {
   const [newHours, setNewHours] = useState(0)
   const [editableSubject, setEditableSubject] = useState({});
   const [newTitle, setNewTitle] = useState('');
-  const [newHoursSubj, setNewHoursSubj] = useState('');
+  const [newHoursSubj, setNewHoursSubj] = useState(0);
   const [newExamType, setNewExamType] = useState('');
   const [newTeacherId, setNewTeacherId] = useState('');
   const [groups, setGroups] = useState([]);
@@ -102,8 +102,10 @@ function AdminPlanScreen() {
       name: newTitle,
       teacherId: techerselect,
       examType: exam,
-      hours: newhours
+      summaryHours: newhours
     };
+    console.log(request);
+
     const request2 = {};
     try {
        
@@ -255,6 +257,8 @@ function AdminPlanScreen() {
       }
     }
   };
+
+console.log(newHoursSubj)
 
   return (
     <div>

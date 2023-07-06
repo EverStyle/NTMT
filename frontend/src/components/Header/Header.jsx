@@ -8,8 +8,6 @@ import { useHistory } from 'react-router-dom';
 
 function Headers({ setToken, setUser, user }) {
 
-
-   
   useEffect(async () => {
       try {
         const response = await apiAccount.info();
@@ -33,8 +31,8 @@ function logOut() {
         <Link to='/' className='logo'>
           <img
             className='logo-img'
-            src='images/logo.png'
-            alt='images/logo.png'
+            src='images/logoNTMT.png'
+            alt='images/logoNTMT.png'
           />
         </Link>
         <div className='user'>
